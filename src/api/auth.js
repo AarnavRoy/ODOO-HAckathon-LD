@@ -11,8 +11,9 @@ export const signup = async ({ name, username, email, password }) => {
   return data;
 };
 
-export const login = async ({ username, password }) => {
-  const data = await api.post('/auth/login', { username, password });
+export const login = async (credentials) => {
+  localStorage.removeItem('token');
+  const data = await api.post('/auth/login', credentials);
   if (data.token) {
     localStorage.setItem('token', data.token);
     if (data.user) {

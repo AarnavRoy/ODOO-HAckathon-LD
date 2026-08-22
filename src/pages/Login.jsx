@@ -53,8 +53,8 @@ export default function Login() {
     } catch (err) {
       if (err.message && (err.message.includes('Failed to fetch') || err.message.includes('NetworkError'))) {
         setError('Cannot connect to backend server. Please run ./start.sh or mvn spring-boot:run in terminal.');
-      } else if (err.status === 401) {
-        setError('Invalid username or password. Please try again.');
+      } else if (err.status === 401 || err.status === 403) {
+        setError('Invalid username or password. If you do not have an account yet, please click "Create one" below.');
       } else {
         setError(err.message || 'Authentication failed. Please check your credentials.');
       }

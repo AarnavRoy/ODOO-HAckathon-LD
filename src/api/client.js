@@ -12,9 +12,10 @@ export async function request(path, options = {}) {
                             normalizedPath.startsWith('/auth/forgot-password') ||
                             (normalizedPath.startsWith('/public') && !normalizedPath.endsWith('/copy'));
 
+  const isAuthRoute = path.startsWith('/auth') || path.startsWith('auth');
   const headers = {
     'Content-Type': 'application/json',
-    ...(!isPublicAuthRoute && token ? { Authorization: `Bearer ${token}` } : {}),
+    ...(token && !isAuthRoute ? { Authorization: `Bearer ${token}` } : {}),
     ...(options.headers || {})
   };
 
