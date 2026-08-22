@@ -5,7 +5,8 @@ import { getDashboard } from '../api/trips';
 import { getMe } from '../api/auth';
 import { 
   Plane, MapPin, IndianRupee, ArrowRight, Sparkles, TrendingUp, 
-  Wallet, CheckCircle2, Map, Navigation, ChevronLeft, ChevronRight 
+  Wallet, CheckCircle2, Map, Navigation, ChevronLeft, ChevronRight,
+  ShieldCheck
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
