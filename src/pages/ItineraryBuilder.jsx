@@ -1,20 +1,19 @@
-﻿import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import AppLayout from "../components/AppLayout";
 import PlacesAutocomplete from "../components/PlacesAutocomplete";
 import TransportLeg from "../components/TransportLeg";
-import WeatherWidget from "../components/WeatherWidget";
 import AccommodationForm from "../components/AccommodationForm";
-import CurrencyWidget from "../components/CurrencyWidget";
-import { getTrip } from "../api/trips";
+import { getTrip, updateTrip } from "../api/trips";
 import { upsertCity } from "../api/cities";
 import { createStop, reorderStops, deleteStop, patchStop } from "../api/stops";
 import { getTimezone } from "../api/travel";
 import {
   Plus, GripVertical, Trash2, ChevronUp, ChevronDown,
-  CalendarDays, AlertTriangle, MapPin, CheckCircle2,
-  Globe, StickyNote, Save, Loader2,
+  CalendarDays, MapPin, Globe, StickyNote, Save, 
+  Edit3, Settings, Clock, Utensils, Camera, Moon, Compass, Sparkles, Check
 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function ItineraryBuilder() {
   const { tripId } = useParams();
@@ -23,6 +22,19 @@ export default function ItineraryBuilder() {
   const [addError, setAddError] = useState("");
   const [addLoading, setAddLoading] = useState(false);
   const [timezones, setTimezones] = useState({});
+
+  // Trip Settings Editor Modal
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [tripSettings, setTripSettings] = useState({
+    name: "",
+    destination: "",
+    startDate: "",
+    endDate: "",
+    budgetLimit: "",
+    description: "",
+    coverPhotoUrl: ""
+  });
+  const [savingSettings, setSavingSettings] = useState(false);
 
   // Add stop form state
   const [cityQuery, setCityQuery] = useState("");
@@ -34,6 +46,18 @@ export default function ItineraryBuilder() {
   const [editingNotes, setEditingNotes] = useState({});
   const [savingNotes, setSavingNotes] = useState({});
 
+  // AI Plan Local State (Day-wise activities)
+  const [aiPlan, setAiPlan] = useState(null);
+  const [showAddActivityModal, setShowAddActivityModal] = useState(false);
+  const [selectedDayNumber, setSelectedDayNumber] = useState(1);
+  const [newActivity, setNewActivity] = useState({
+    name: "",
+    time: "10:00 AM",
+    category: "SIGHTSEEING",
+    cost: "",
+    description: ""
+  });
+
   const loadData = async () => {
     setLoading(true);
     const tripData = await getTrip(tripId);
@@ -43,9 +67,43 @@ export default function ItineraryBuilder() {
       tripData.stops = [];
     }
     setTrip(tripData);
+    if (tripData) {
+      setTripSettings({
+        name: tripData.name || "",
+        destination: tripData.destination || "",
+        startDate: tripData.startDate || "",
+        endDate: tripData.endDate || "",
+        budgetLimit: tripData.budgetLimit || "",
+        description: tripData.description || "",
+        coverPhotoUrl: tripData.coverPhotoUrl || ""
+      });
+    }
     setLoading(false);
 
-    // Fetch timezones for all stops
+    // Check for stored AI plan
+    const storedAiPlan = localStorage.getItem(`ai_trip_plan_${tripId}`);
+    if (storedAiPlan) {
+      try {
+        setAiPlan(JSON.parse(storedAiPlan));
+      } catch (e) {
+        console.error(e);
+      }
+    } else if (tripData) {
+      // Create initial AI plan structure if missing
+      setAiPlan({
+        days: [
+          {
+            dayNumber: 1,
+            title: "Day 1: Exploration",
+            activities: [
+              { id: 'a1', time: '10:00 AM', name: 'City Center Walk', category: 'SIGHTSEEING', cost: 500, description: 'Explore local sights.' }
+            ]
+          }
+        ]
+      });
+    }
+
+    // Fetch timezones for stops
     if (tripData?.stops) {
       const tzMap = {};
       for (const stop of tripData.stops) {
@@ -62,21 +120,31 @@ export default function ItineraryBuilder() {
 
   useEffect(() => { loadData(); }, [tripId]);
 
-  const tripStart = trip?.startDate;
-  const tripEnd = trip?.endDate;
-
-  const stopDateError = (() => {
-    if (!newStartDate || !newEndDate) return null;
-    if (newStartDate > newEndDate) return "Stop end date must be after start date.";
-    if (tripStart && newStartDate < tripStart) return `Cannot start before trip (${tripStart}).`;
-    if (tripEnd && newEndDate > tripEnd) return `Cannot end after trip (${tripEnd}).`;
-    return null;
-  })();
+  const handleSaveSettings = async (e) => {
+    e.preventDefault();
+    setSavingSettings(true);
+    try {
+      const updated = await updateTrip(tripId, {
+        name: tripSettings.name,
+        destination: tripSettings.destination,
+        startDate: tripSettings.startDate,
+        endDate: tripSettings.endDate,
+        budgetLimit: tripSettings.budgetLimit ? Number(tripSettings.budgetLimit) : null,
+        description: tripSettings.description,
+        coverPhotoUrl: tripSettings.coverPhotoUrl
+      });
+      setTrip(updated);
+      setShowSettingsModal(false);
+    } catch (err) {
+      alert("Failed to update trip settings: " + (err.message || "Unknown error"));
+    } finally {
+      setSavingSettings(false);
+    }
+  };
 
   const handleAddStop = async (e) => {
     e.preventDefault();
     if (!selectedPlace) { setAddError("Select a city from suggestions."); return; }
-    if (stopDateError) { setAddError(stopDateError); return; }
     setAddError("");
     setAddLoading(true);
     try {
@@ -119,13 +187,48 @@ export default function ItineraryBuilder() {
     }
   };
 
-  const handleSaveNotes = async (stopId) => {
-    setSavingNotes((p) => ({ ...p, [stopId]: true }));
-    try {
-      await patchStop(stopId, { notes: editingNotes[stopId] ?? "" });
-      loadData();
-    } catch {} finally {
-      setSavingNotes((p) => ({ ...p, [stopId]: false }));
+  const handleAddActivity = (e) => {
+    e.preventDefault();
+    if (!newActivity.name) return;
+
+    const updatedPlan = { ...aiPlan };
+    if (!updatedPlan.days) updatedPlan.days = [];
+    
+    let targetDay = updatedPlan.days.find(d => d.dayNumber === selectedDayNumber);
+    if (!targetDay) {
+      targetDay = {
+        dayNumber: selectedDayNumber,
+        title: `Day ${selectedDayNumber}: Custom Schedule`,
+        activities: []
+      };
+      updatedPlan.days.push(targetDay);
+      updatedPlan.days.sort((a, b) => a.dayNumber - b.dayNumber);
+    }
+
+    const activityItem = {
+      id: 'act-' + Date.now(),
+      time: newActivity.time || '10:00 AM',
+      name: newActivity.name,
+      category: newActivity.category || 'SIGHTSEEING',
+      cost: Number(newActivity.cost) || 0,
+      description: newActivity.description || ''
+    };
+
+    targetDay.activities.push(activityItem);
+    setAiPlan(updatedPlan);
+    localStorage.setItem(`ai_trip_plan_${tripId}`, JSON.stringify(updatedPlan));
+
+    setShowAddActivityModal(false);
+    setNewActivity({ name: "", time: "10:00 AM", category: "SIGHTSEEING", cost: "", description: "" });
+  };
+
+  const handleDeleteActivity = (dayNumber, actId) => {
+    const updatedPlan = { ...aiPlan };
+    const day = updatedPlan.days.find(d => d.dayNumber === dayNumber);
+    if (day) {
+      day.activities = day.activities.filter(a => a.id !== actId);
+      setAiPlan(updatedPlan);
+      localStorage.setItem(`ai_trip_plan_${tripId}`, JSON.stringify(updatedPlan));
     }
   };
 
@@ -137,273 +240,407 @@ export default function ItineraryBuilder() {
   if (loading) return (
     <AppLayout title="Itinerary Builder">
       <div className="flex items-center gap-3 py-10 text-slate-500">
-        <span className="w-5 h-5 border-2 border-slate-300 border-t-violet-500 rounded-full animate-spin" />
-        Loading trip...
+        <span className="w-5 h-5 border-2 border-slate-300 border-t-amber-500 rounded-full animate-spin" />
+        Loading trip builder...
       </div>
     </AppLayout>
   );
-  if (!trip) return <AppLayout title="Not Found"><p className="text-slate-500">Trip not found.</p></AppLayout>;
 
   return (
-    <AppLayout title={`Build: ${trip.name}`}>
-      {/* Sub-header */}
-      <div className="flex flex-wrap justify-between items-start gap-4 mb-8">
+    <AppLayout title={`Edit Trip: ${trip?.name}`}>
+      {/* Sub-header Controls */}
+      <div className="flex flex-wrap justify-between items-center gap-4 mb-8">
         <div>
-          <h1 className="text-2xl font-black tracking-tight text-slate-900">{trip.name}</h1>
-          <p className="text-sm text-slate-500 font-medium mt-0.5">
-            {trip.startDate} → {trip.endDate}
-            {trip.startDate && trip.endDate && (
-              <span className="ml-2 bg-violet-100 text-violet-700 px-2 py-0.5 rounded-full text-xs font-bold">
-                {daysBetween(trip.startDate, trip.endDate)} days
+          <h1 className="text-3xl font-extrabold tracking-tight text-white flex items-center">
+            {trip?.name}
+            <button 
+              onClick={() => setShowSettingsModal(true)} 
+              className="ml-3 p-2 bg-white/5 hover:bg-white/10 text-slate-400 hover:text-amber-400 rounded-xl transition-all"
+              title="Edit Trip Settings"
+            >
+              <Settings className="w-5 h-5" />
+            </button>
+          </h1>
+          <p className="text-sm text-slate-400 font-medium mt-1 flex items-center gap-2">
+            <CalendarDays className="w-4 h-4 text-cyan-400" />
+            {trip?.startDate} → {trip?.endDate}
+            {trip?.budgetLimit && (
+              <span className="bg-amber-400/10 text-amber-400 px-2.5 py-0.5 rounded-full text-xs font-bold border border-amber-400/20">
+                Budget: ₹{trip.budgetLimit.toLocaleString('en-IN')}
               </span>
             )}
           </p>
         </div>
-        <div className="flex gap-2">
-          <Link
-            to={`/trips/${trip.id}/budget`}
-            className="bg-white border-2 border-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-bold hover:bg-slate-50 transition-all"
+
+        <div className="flex flex-wrap gap-3">
+          <button
+            onClick={() => setShowSettingsModal(true)}
+            className="bg-white/5 border border-white/10 hover:bg-white/10 text-white px-4 py-2.5 rounded-xl text-sm font-bold transition-all flex items-center"
           >
-            💰 Budget
-          </Link>
-          <Link
-            to={`/trips/${trip.id}`}
-            className="bg-white border-2 border-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-bold hover:bg-slate-50 transition-all"
+            <Edit3 className="w-4 h-4 mr-2 text-amber-400" /> Edit Trip Info
+          </button>
+          <button
+            onClick={() => setShowAddActivityModal(true)}
+            className="bg-amber-400 hover:bg-amber-300 text-[#0c0f1a] px-4 py-2.5 rounded-xl text-sm font-extrabold shadow-lg shadow-amber-500/20 transition-all flex items-center"
           >
-            Preview Itinerary
+            <Plus className="w-4 h-4 mr-2" /> Add Activity
+          </button>
+          <Link
+            to={`/trips/${tripId}`}
+            className="bg-white/5 border border-white/10 hover:bg-white/10 text-cyan-400 px-4 py-2.5 rounded-xl text-sm font-bold transition-all flex items-center"
+          >
+            View Itinerary
           </Link>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Left: Stops list with transport legs between them */}
-        <div className="lg:col-span-2 space-y-0">
-          <h3 className="text-base font-bold text-slate-800 flex items-center gap-2 mb-4">
-            <MapPin className="w-4 h-4 text-violet-500" /> Your Stops
-            <span className="ml-auto text-xs font-medium text-slate-400">{trip.stops.length} stop{trip.stops.length !== 1 ? "s" : ""}</span>
-          </h3>
-
-          {trip.stops.length === 0 && (
-            <div className="text-center py-14 border-2 border-dashed border-slate-200 rounded-2xl text-slate-400">
-              <MapPin className="w-8 h-8 mx-auto mb-3 opacity-50" />
-              <p className="font-semibold">No stops yet</p>
-              <p className="text-sm mt-1">Search for a city on the right to add your first stop.</p>
+        
+        {/* Left Column: Stops & Day-wise Activities */}
+        <div className="lg:col-span-2 space-y-8">
+          
+          {/* Day-wise Activity List Editor */}
+          <div className="bg-white/[0.03] border border-white/[0.06] rounded-3xl p-6">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-xl font-extrabold text-white flex items-center">
+                <Sparkles className="w-5 h-5 text-amber-400 mr-2" /> Day-by-Day Activities
+              </h3>
+              <button 
+                onClick={() => setShowAddActivityModal(true)}
+                className="text-xs font-bold text-amber-400 bg-amber-400/10 hover:bg-amber-400/20 px-3 py-1.5 rounded-lg transition-colors flex items-center"
+              >
+                <Plus className="w-3.5 h-3.5 mr-1" /> Add Activity
+              </button>
             </div>
-          )}
 
-          {trip.stops.map((stop, index) => {
-            const nights = daysBetween(stop.startDate, stop.endDate);
-            const tz = timezones[stop.id];
-            const notesKey = stop.id;
-            const currentNotes = editingNotes[notesKey] !== undefined ? editingNotes[notesKey] : (stop.notes || "");
+            {aiPlan?.days?.map((day) => (
+              <div key={day.dayNumber} className="mb-6 last:mb-0 bg-white/5 border border-white/5 rounded-2xl p-5">
+                <div className="flex justify-between items-center mb-4 pb-2 border-b border-white/5">
+                  <h4 className="font-extrabold text-amber-400 text-sm">{day.title || `Day ${day.dayNumber}`}</h4>
+                  <button 
+                    onClick={() => { setSelectedDayNumber(day.dayNumber); setShowAddActivityModal(true); }}
+                    className="text-xs text-slate-400 hover:text-white flex items-center"
+                  >
+                    <Plus className="w-3 h-3 mr-1" /> Add to Day {day.dayNumber}
+                  </button>
+                </div>
 
-            return (
-              <div key={stop.id}>
-                {/* Transport Leg BETWEEN stops (shown above every stop except the first) */}
-                {index > 0 && (
-                  <TransportLeg
-                    fromStop={trip.stops[index - 1]}
-                    toStop={stop}
-                    onUpdate={loadData}
-                  />
-                )}
-
-                {/* Stop Card */}
-                <div className="bg-white border border-slate-100 rounded-2xl p-4 shadow-sm flex items-start gap-3 group my-1">
-                  {/* Reorder controls */}
-                  <div className="flex flex-col items-center space-y-0.5 text-slate-300 pt-1">
-                    <button onClick={() => handleMoveStop(index, -1)} disabled={index === 0} className="hover:text-violet-500 disabled:opacity-20 transition-colors p-1 rounded">
-                      <ChevronUp className="w-4 h-4" />
-                    </button>
-                    <GripVertical className="w-4 h-4 cursor-move" />
-                    <button onClick={() => handleMoveStop(index, 1)} disabled={index === trip.stops.length - 1} className="hover:text-violet-500 disabled:opacity-20 transition-colors p-1 rounded">
-                      <ChevronDown className="w-4 h-4" />
-                    </button>
-                  </div>
-
-                  {/* Stop number badge */}
-                  <div className="w-7 h-7 rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-600 text-white text-xs font-black flex items-center justify-center shrink-0 mt-0.5">
-                    {index + 1}
-                  </div>
-
-                  <div className="flex-1 min-w-0">
-                    <div className="flex justify-between items-start">
+                <div className="space-y-3">
+                  {day.activities?.map((act) => (
+                    <div key={act.id} className="bg-white/[0.03] border border-white/[0.06] rounded-xl p-4 flex justify-between items-start group">
                       <div>
-                        <h4 className="text-base font-bold text-slate-900">
-                          {stop.city?.name || `City #${stop.cityId}`}
-                          <span className="text-slate-400 text-sm font-normal ml-1">{stop.city?.country}</span>
-                        </h4>
-                        <div className="flex flex-wrap items-center gap-2 text-xs text-slate-500 mt-1 font-medium">
-                          <span className="flex items-center gap-1">
-                            <CalendarDays className="w-3 h-3" /> {stop.startDate} → {stop.endDate}
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-xs font-bold text-cyan-400 bg-cyan-400/10 px-2 py-0.5 rounded">
+                            {act.time}
                           </span>
-                          <span className="bg-slate-100 px-2 py-0.5 rounded-full">{nights} day{nights !== 1 ? "s" : ""}</span>
-                          {tz && (
-                            <span className="bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full flex items-center gap-1">
-                              <Globe className="w-3 h-3" />{tz}
-                            </span>
+                          <span className="text-xs font-semibold text-slate-400 bg-white/5 px-2 py-0.5 rounded uppercase">
+                            {act.category}
+                          </span>
+                          {act.cost > 0 && (
+                            <span className="text-xs font-bold text-emerald-400">₹{act.cost}</span>
                           )}
                         </div>
+                        <h5 className="font-bold text-white text-base">{act.name}</h5>
+                        {act.description && <p className="text-xs text-slate-400 mt-1">{act.description}</p>}
                       </div>
-                      <button onClick={() => handleDeleteStop(stop.id)} className="text-slate-300 hover:text-red-500 p-1.5 rounded-lg hover:bg-red-50 transition-all ml-2">
+                      <button 
+                        onClick={() => handleDeleteActivity(day.dayNumber, act.id)}
+                        className="text-slate-600 hover:text-red-400 p-1.5 rounded-lg transition-colors"
+                      >
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
-
-                    {/* Weather Widget */}
-                    {stop.city?.latitude && stop.city?.longitude && (
-                      <WeatherWidget
-                        lat={stop.city.latitude}
-                        lon={stop.city.longitude}
-                        startDate={stop.startDate}
-                        endDate={stop.endDate}
-                      />
-                    )}
-
-                    {/* Accommodation */}
-                    <AccommodationForm stop={stop} onUpdate={loadData} />
-
-                    {/* Day Notes */}
-                    <div className="mt-2 border border-slate-100 rounded-xl p-3">
-                      <div className="flex items-center justify-between mb-1.5">
-                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1">
-                          <StickyNote className="w-3 h-3" /> Notes
-                        </span>
-                        {currentNotes !== (stop.notes || "") && (
-                          <button
-                            onClick={() => handleSaveNotes(stop.id)}
-                            disabled={savingNotes[stop.id]}
-                            className="text-[10px] font-bold text-violet-600 hover:text-violet-700 flex items-center gap-0.5"
-                          >
-                            {savingNotes[stop.id] ? <Loader2 className="w-3 h-3 animate-spin" /> : <Save className="w-3 h-3" />}
-                            Save
-                          </button>
-                        )}
-                      </div>
-                      <textarea
-                        value={currentNotes}
-                        onChange={(e) => setEditingNotes((p) => ({ ...p, [notesKey]: e.target.value }))}
-                        rows={2}
-                        placeholder="Day plans, reminders, tips..."
-                        className="w-full border border-slate-100 rounded-lg py-1.5 px-2 text-xs font-medium bg-slate-50/50 focus:outline-none focus:ring-2 focus:ring-violet-500/10 focus:bg-white resize-none transition-all"
-                      />
-                    </div>
-
-                    {/* Activities mini section */}
-                    <div className="mt-2 bg-slate-50 p-3 rounded-xl border border-slate-100">
-                      <div className="flex justify-between items-center mb-1.5">
-                        <span className="text-xs font-bold text-slate-600">Activities</span>
-                        <Link to={`/trips/${tripId}/activities?cityId=${stop.cityId || stop.city?.id}`} className="text-xs font-bold text-violet-600 hover:text-violet-700">+ Add</Link>
-                      </div>
-                      {!stop.tripActivities?.length ? (
-                        <p className="text-xs text-slate-400 italic">No activities planned yet.</p>
-                      ) : (
-                        <ul className="space-y-1">
-                          {stop.tripActivities.map((act) => (
-                            <li key={act.id} className="text-xs bg-white p-2 rounded-lg border border-slate-100 flex justify-between items-center">
-                              <span className="font-medium text-slate-700">{act.dayDate} {act.startTime && `@ ${act.startTime}`}</span>
-                              <span className="text-slate-400">{"\u20B9"}{act.cost}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                    </div>
-                  </div>
+                  ))}
+                  {(!day.activities || day.activities.length === 0) && (
+                    <p className="text-xs text-slate-500 italic py-2">No activities added yet for this day.</p>
+                  )}
                 </div>
               </div>
-            );
-          })}
-        </div>
+            ))}
+          </div>
 
-        {/* Right: Add stop panel */}
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 h-fit sticky top-6 overflow-hidden">
-          <div className="h-1 bg-gradient-to-r from-violet-600 to-fuchsia-500" />
-          <div className="p-6">
-            <h3 className="text-base font-bold text-slate-800 mb-4">Add a Stop</h3>
+          {/* Stops List */}
+          <div className="bg-white/[0.03] border border-white/[0.06] rounded-3xl p-6">
+            <h3 className="text-xl font-extrabold text-white flex items-center mb-6">
+              <MapPin className="w-5 h-5 text-rose-400 mr-2" /> City Destinations & Accommodation
+            </h3>
 
-            {addError && (
-              <div className="flex items-start gap-2 bg-red-50 text-red-600 p-3 mb-4 rounded-xl text-xs font-semibold border border-red-100">
-                <AlertTriangle className="w-3.5 h-3.5 mt-0.5 shrink-0" />{addError}
+            {trip?.stops?.length === 0 && (
+              <div className="text-center py-10 border border-dashed border-white/10 rounded-2xl text-slate-500">
+                <p className="font-medium">No destination stops added yet.</p>
               </div>
             )}
+
+            {trip?.stops?.map((stop, index) => (
+              <div key={stop.id} className="mb-4 bg-white/5 border border-white/5 rounded-2xl p-5">
+                <div className="flex justify-between items-center">
+                  <div>
+                    <h4 className="font-extrabold text-white text-lg">{stop.city?.name || `Stop #${index + 1}`}</h4>
+                    <p className="text-xs text-slate-400 mt-0.5">{stop.startDate} → {stop.endDate}</p>
+                  </div>
+                  <button onClick={() => handleDeleteStop(stop.id)} className="text-slate-500 hover:text-red-400 p-2">
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+                <div className="mt-4">
+                  <AccommodationForm stop={stop} onUpdate={loadData} />
+                </div>
+              </div>
+            ))}
+          </div>
+
+        </div>
+
+        {/* Right Column: Add Stop Form */}
+        <div className="space-y-6">
+          <div className="bg-white/[0.03] border border-white/[0.06] rounded-3xl p-6 sticky top-24">
+            <h3 className="text-lg font-extrabold text-white mb-4 flex items-center">
+              <Plus className="w-5 h-5 text-amber-400 mr-2" /> Add City Stop
+            </h3>
+
+            {addError && <p className="text-xs text-red-400 font-bold mb-3">{addError}</p>}
 
             <form onSubmit={handleAddStop} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-slate-600 mb-1.5">City *</label>
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Search City</label>
                 <PlacesAutocomplete
                   value={cityQuery}
-                  onChange={(v) => { setCityQuery(v); if (!v) setSelectedPlace(null); }}
-                  onSelect={(place) => setSelectedPlace(place)}
-                  placeholder="Search any city worldwide..."
-                />
-                {selectedPlace && (
-                  <div className="mt-1.5 flex items-center gap-1.5 text-xs text-violet-700 font-semibold bg-violet-50 px-2.5 py-1.5 rounded-lg border border-violet-100">
-                    <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
-                    {selectedPlace.name}, {selectedPlace.country}
-                  </div>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-slate-600 mb-1.5">Start Date *</label>
-                <input
-                  type="date" required
-                  value={newStartDate}
-                  min={tripStart || undefined}
-                  max={tripEnd || undefined}
-                  onChange={(e) => setNewStartDate(e.target.value)}
-                  className="w-full border-2 border-slate-200 bg-slate-50 rounded-xl py-2 px-3 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500 focus:bg-white transition-all"
+                  onChange={setCityQuery}
+                  onSelect={(place) => { setSelectedPlace(place); setCityQuery(place.name); }}
                 />
               </div>
 
-              <div>
-                <label className="block text-xs font-bold text-slate-600 mb-1.5">End Date *</label>
-                <input
-                  type="date" required
-                  value={newEndDate}
-                  min={newStartDate || tripStart || undefined}
-                  max={tripEnd || undefined}
-                  onChange={(e) => setNewEndDate(e.target.value)}
-                  className="w-full border-2 border-slate-200 bg-slate-50 rounded-xl py-2 px-3 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500 focus:bg-white transition-all"
-                />
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Start Date</label>
+                  <input
+                    type="date"
+                    required
+                    value={newStartDate}
+                    onChange={(e) => setNewStartDate(e.target.value)}
+                    className="w-full bg-slate-900 border border-slate-700 text-white rounded-xl px-3 py-2 text-xs font-bold"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">End Date</label>
+                  <input
+                    type="date"
+                    required
+                    value={newEndDate}
+                    onChange={(e) => setNewEndDate(e.target.value)}
+                    className="w-full bg-slate-900 border border-slate-700 text-white rounded-xl px-3 py-2 text-xs font-bold"
+                  />
+                </div>
               </div>
-
-              {stopDateError && (
-                <p className="text-xs text-amber-600 font-semibold flex items-center gap-1.5 bg-amber-50 px-2.5 py-1.5 rounded-lg border border-amber-100">
-                  <AlertTriangle className="w-3.5 h-3.5 shrink-0" />{stopDateError}
-                </p>
-              )}
-
-              {newStartDate && newEndDate && !stopDateError && (
-                <p className="text-xs text-violet-600 font-semibold">
-                  {"\uD83D\uDCC5"} {daysBetween(newStartDate, newEndDate)} day{daysBetween(newStartDate, newEndDate) !== 1 ? "s" : ""}
-                </p>
-              )}
 
               <button
                 type="submit"
-                disabled={addLoading || !!stopDateError || !selectedPlace}
-                className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 shadow-md shadow-violet-500/20 focus:outline-none focus:ring-4 focus:ring-violet-500/30 active:scale-95 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+                disabled={addLoading}
+                className="w-full bg-amber-400 hover:bg-amber-300 text-[#0c0f1a] font-extrabold py-3 rounded-xl shadow-lg transition-all"
               >
-                {addLoading ? (
-                  <><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />Adding...</>
-                ) : (
-                  <><Plus className="w-4 h-4" />Add Stop</>
-                )}
+                {addLoading ? "Adding..." : "Add Stop"}
               </button>
             </form>
-
-            {trip.startDate && trip.endDate && (
-              <div className="mt-4 pt-4 border-t border-slate-100 text-xs text-slate-400 font-medium">
-                {"\uD83D\uDCC5"} Trip range: {trip.startDate} {"\u2192"} {trip.endDate}
-              </div>
-            )}
           </div>
         </div>
+
       </div>
 
-      {/* Floating Currency Widget */}
-      <CurrencyWidget />
+      {/* MODAL 1: TRIP SETTINGS EDITOR */}
+      {showSettingsModal && (
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-[#0c0f1a] border border-white/10 rounded-3xl p-6 md:p-8 max-w-lg w-full text-white shadow-2xl">
+            <h3 className="text-2xl font-extrabold mb-4 flex items-center">
+              <Settings className="w-6 h-6 text-amber-400 mr-2" /> Edit Trip Details
+            </h3>
+
+            <form onSubmit={handleSaveSettings} className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Trip Name</label>
+                <input
+                  type="text"
+                  required
+                  value={tripSettings.name}
+                  onChange={(e) => setTripSettings({ ...tripSettings, name: e.target.value })}
+                  className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white font-bold"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Destination</label>
+                <input
+                  type="text"
+                  value={tripSettings.destination}
+                  onChange={(e) => setTripSettings({ ...tripSettings, destination: e.target.value })}
+                  className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white font-bold"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Start Date</label>
+                  <input
+                    type="date"
+                    value={tripSettings.startDate}
+                    onChange={(e) => setTripSettings({ ...tripSettings, startDate: e.target.value })}
+                    className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white font-bold"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">End Date</label>
+                  <input
+                    type="date"
+                    value={tripSettings.endDate}
+                    onChange={(e) => setTripSettings({ ...tripSettings, endDate: e.target.value })}
+                    className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white font-bold"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Budget Limit (₹)</label>
+                <input
+                  type="number"
+                  value={tripSettings.budgetLimit}
+                  onChange={(e) => setTripSettings({ ...tripSettings, budgetLimit: e.target.value })}
+                  className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white font-bold"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Description</label>
+                <textarea
+                  rows="2"
+                  value={tripSettings.description}
+                  onChange={(e) => setTripSettings({ ...tripSettings, description: e.target.value })}
+                  className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-sm text-white font-medium"
+                ></textarea>
+              </div>
+
+              <div className="flex justify-end gap-3 pt-4 border-t border-white/10">
+                <button
+                  type="button"
+                  onClick={() => setShowSettingsModal(false)}
+                  className="px-5 py-2.5 bg-white/5 hover:bg-white/10 text-slate-300 font-bold text-sm rounded-xl"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={savingSettings}
+                  className="px-6 py-2.5 bg-amber-400 hover:bg-amber-300 text-[#0c0f1a] font-extrabold text-sm rounded-xl"
+                >
+                  {savingSettings ? "Saving..." : "Save Changes"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL 2: ADD ACTIVITY MODAL */}
+      {showAddActivityModal && (
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-[#0c0f1a] border border-white/10 rounded-3xl p-6 md:p-8 max-w-lg w-full text-white shadow-2xl">
+            <h3 className="text-2xl font-extrabold mb-4 flex items-center">
+              <Plus className="w-6 h-6 text-amber-400 mr-2" /> Add Custom Activity
+            </h3>
+
+            <form onSubmit={handleAddActivity} className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Select Day</label>
+                <select
+                  value={selectedDayNumber}
+                  onChange={(e) => setSelectedDayNumber(Number(e.target.value))}
+                  className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white font-bold"
+                >
+                  {aiPlan?.days?.map((d) => (
+                    <option key={d.dayNumber} value={d.dayNumber}>Day {d.dayNumber}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Activity Name</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. Scuba Diving at Baga Beach"
+                  value={newActivity.name}
+                  onChange={(e) => setNewActivity({ ...newActivity, name: e.target.value })}
+                  className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white font-bold"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Time</label>
+                  <input
+                    type="text"
+                    placeholder="10:00 AM"
+                    value={newActivity.time}
+                    onChange={(e) => setNewActivity({ ...newActivity, time: e.target.value })}
+                    className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white font-bold"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Category</label>
+                  <select
+                    value={newActivity.category}
+                    onChange={(e) => setNewActivity({ ...newActivity, category: e.target.value })}
+                    className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white font-bold"
+                  >
+                    <option value="SIGHTSEEING">SIGHTSEEING</option>
+                    <option value="FOOD">FOOD</option>
+                    <option value="CULTURE">CULTURE</option>
+                    <option value="RELAXATION">RELAXATION</option>
+                    <option value="SHOPPING">SHOPPING</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Cost (₹)</label>
+                <input
+                  type="number"
+                  placeholder="e.g. 1500"
+                  value={newActivity.cost}
+                  onChange={(e) => setNewActivity({ ...newActivity, cost: e.target.value })}
+                  className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-sm text-white font-bold"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Description / Notes</label>
+                <textarea
+                  rows="2"
+                  placeholder="Details about this activity..."
+                  value={newActivity.description}
+                  onChange={(e) => setNewActivity({ ...newActivity, description: e.target.value })}
+                  className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-sm text-white font-medium"
+                ></textarea>
+              </div>
+
+              <div className="flex justify-end gap-3 pt-4 border-t border-white/10">
+                <button
+                  type="button"
+                  onClick={() => setShowAddActivityModal(false)}
+                  className="px-5 py-2.5 bg-white/5 hover:bg-white/10 text-slate-300 font-bold text-sm rounded-xl"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-6 py-2.5 bg-amber-400 hover:bg-amber-300 text-[#0c0f1a] font-extrabold text-sm rounded-xl"
+                >
+                  Add Activity
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
     </AppLayout>
   );
 }

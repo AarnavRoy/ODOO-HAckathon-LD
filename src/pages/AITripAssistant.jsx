@@ -118,8 +118,10 @@ export default function AITripAssistant() {
         coverPhotoUrl: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800', // Default
         budgetLimit: tripData.budget
       });
-      // In a real app, we'd also iterate through tripData.days and add stops/activities
-      
+      // Save full AI plan object locally for view and edit screens
+      if (newTrip && newTrip.id) {
+        localStorage.setItem(`ai_trip_plan_${newTrip.id}`, JSON.stringify(tripData));
+      }
       setSavedTripId(newTrip.id);
     } catch (err) {
       console.error('Failed to save trip', err);
