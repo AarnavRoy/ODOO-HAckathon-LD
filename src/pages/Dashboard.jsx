@@ -71,7 +71,7 @@ export default function Dashboard() {
     }
   };
 
-  if (loading) return <AppLayout><div className="text-center py-20 text-slate-500 animate-pulse font-semibold">Loading dashboard...</div></AppLayout>;
+  if (loading) return <AppLayout><div className="text-center py-20 text-slate-400 animate-pulse font-semibold">Loading dashboard...</div></AppLayout>;
 
   const tabs = [
     { 
@@ -116,22 +116,22 @@ export default function Dashboard() {
       {/* Welcome Banner */}
       <motion.div variants={fadeUp} initial="hidden" animate="show" className="mb-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-4xl font-black tracking-tight text-slate-900 flex items-center gap-2">
+          <h2 className="text-4xl font-black tracking-tight text-slate-200 flex items-center gap-2">
             Welcome back, {user?.name?.split(' ')[0] || 'Traveler'}! 
             <span className="inline-block animate-bounce">👋</span>
           </h2>
-          <p className="text-slate-500 mt-1 text-base font-medium">Ready to design your next journey across the world?</p>
+          <p className="text-slate-400 mt-1 text-base font-medium">Ready to design your next journey across the world?</p>
         </div>
         <div className="flex items-center gap-3 self-start md:self-auto flex-wrap">
           <Link 
             to="/admin" 
-            className="inline-flex items-center gap-2 bg-white/80 border border-slate-200 hover:bg-slate-100 text-slate-800 font-bold px-6 py-3.5 rounded-full shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all text-sm"
+            className="inline-flex items-center gap-2 bg-[#131A2A]/80 border border-[#1F2937] hover:bg-white/5 text-slate-200 font-bold px-6 py-3.5 rounded-full shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all text-sm"
           >
             <ShieldCheck className="w-4 h-4 text-amber-500" /> Admin Portal
           </Link>
           <Link 
             to="/trips/new" 
-            className="inline-flex items-center gap-2 bg-black text-white hover:bg-yellow-400 hover:text-black font-bold px-8 py-3.5 rounded-full shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all text-sm"
+            className="inline-flex items-center gap-2 bg-[#EAB308] text-white hover:bg-yellow-400 hover:text-white font-bold px-8 py-3.5 rounded-full shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all text-sm"
           >
             <Sparkles className="w-4 h-4" /> Plan a New Trip
           </Link>
@@ -152,20 +152,20 @@ export default function Dashboard() {
               whileTap={{ scale: 0.98 }}
               className={`p-6 rounded-3xl border transition-all text-left relative overflow-hidden cursor-pointer ${
                 isActive 
-                  ? 'bg-white border-black shadow-md shadow-black/5 scale-[1.02]' 
-                  : 'bg-white/60 border-slate-200 hover:bg-white hover:border-slate-300 hover:shadow-sm'
+                  ? 'bg-[#131A2A] border-amber-400 shadow-md shadow-black/5 scale-[1.02]' 
+                  : 'bg-[#131A2A]/60 border-[#1F2937] hover:bg-[#131A2A] hover:border-[#1F2937] hover:shadow-sm'
               }`}
             >
               <div className="flex items-center justify-between mb-4">
                 <div className={`p-3.5 rounded-full ${tab.bg} ${tab.color}`}>
                   <Icon className="w-6 h-6" />
                 </div>
-                <span className={`text-xs font-bold px-3 py-1 rounded-full ${isActive ? 'bg-black text-white' : 'bg-slate-100 text-slate-500'} transition-all`}>
+                <span className={`text-xs font-bold px-3 py-1 rounded-full ${isActive ? 'bg-[#EAB308] text-white' : 'bg-slate-100 text-slate-400'} transition-all`}>
                   {isActive ? 'Active View' : 'Tap to View'}
                 </span>
               </div>
-              <h4 className="text-slate-500 text-xs font-bold uppercase tracking-wider">{tab.label}</h4>
-              <p className="text-3xl font-black text-slate-900 mt-1">{tab.value}</p>
+              <h4 className="text-slate-400 text-xs font-bold uppercase tracking-wider">{tab.label}</h4>
+              <p className="text-3xl font-black text-slate-200 mt-1">{tab.value}</p>
             </motion.button>
           );
         })}
@@ -175,27 +175,27 @@ export default function Dashboard() {
       <motion.div variants={fadeUp} initial="hidden" animate="show" className="mb-12">
         <div className="flex justify-between items-end mb-6">
           <div>
-            <h3 className="text-2xl font-extrabold tracking-tight text-slate-900 flex items-center gap-2">
-              <Map className="w-6 h-6 text-black" /> Explore Iconic Landmarks
+            <h3 className="text-2xl font-extrabold tracking-tight text-slate-200 flex items-center gap-2">
+              <Map className="w-6 h-6 text-white" /> Explore Iconic Landmarks
             </h3>
-            <p className="text-slate-500 text-sm mt-1">Scroll through famous wonders of the world or view them all</p>
+            <p className="text-slate-400 text-sm mt-1">Scroll through famous wonders of the world or view them all</p>
           </div>
           <div className="flex items-center gap-2">
             <button 
               onClick={() => scrollCarousel('left')}
-              className="p-2.5 rounded-full bg-white border border-slate-200 text-slate-900 hover:bg-slate-50 transition-all hover:-translate-y-0.5 shadow-sm"
+              className="p-2.5 rounded-full bg-[#131A2A] border border-[#1F2937] text-slate-200 hover:bg-white/5 transition-all hover:-translate-y-0.5 shadow-sm"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
             <button 
               onClick={() => scrollCarousel('right')}
-              className="p-2.5 rounded-full bg-white border border-slate-200 text-slate-900 hover:bg-slate-50 transition-all hover:-translate-y-0.5 shadow-sm"
+              className="p-2.5 rounded-full bg-[#131A2A] border border-[#1F2937] text-slate-200 hover:bg-white/5 transition-all hover:-translate-y-0.5 shadow-sm"
             >
               <ChevronRight className="w-5 h-5" />
             </button>
             <button
               onClick={() => setViewAllLandmarks(!viewAllLandmarks)}
-              className="ml-2 bg-black hover:bg-yellow-400 text-white hover:text-black px-6 py-2.5 rounded-full text-sm font-bold transition-all shadow-md"
+              className="ml-2 bg-[#EAB308] hover:bg-yellow-400 text-white hover:text-white px-6 py-2.5 rounded-full text-sm font-bold transition-all shadow-md"
             >
               {viewAllLandmarks ? 'Show Carousel' : 'View All'}
             </button>
@@ -245,17 +245,17 @@ export default function Dashboard() {
       </motion.div>
 
       {/* AI Assistant Banner */}
-      <motion.div variants={fadeUp} initial="hidden" animate="show" className="mb-12 p-6 rounded-3xl bg-white border border-slate-100 shadow-md flex flex-col sm:flex-row items-center justify-between gap-4">
+      <motion.div variants={fadeUp} initial="hidden" animate="show" className="mb-12 p-6 rounded-3xl bg-[#131A2A] border border-[#1F2937] shadow-md flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-4">
-          <div className="p-4 bg-yellow-400 text-black rounded-full shadow-inner">
+          <div className="p-4 bg-yellow-400 text-white rounded-full shadow-inner">
             <Navigation className="w-6 h-6" />
           </div>
           <div>
-            <h4 className="text-xl font-bold text-slate-900">Ask GlobeTrotter AI</h4>
-            <p className="text-sm text-slate-500 font-medium mt-1">Generate personalized multi-city itineraries, smart budget splits, and packing checklists.</p>
+            <h4 className="text-xl font-bold text-slate-200">Ask GlobeTrotter AI</h4>
+            <p className="text-sm text-slate-400 font-medium mt-1">Generate personalized multi-city itineraries, smart budget splits, and packing checklists.</p>
           </div>
         </div>
-        <Link to="/ai-planner" className="bg-black text-white hover:bg-yellow-400 hover:text-black font-bold px-6 py-3 rounded-full text-sm transition-all shrink-0 shadow-lg">
+        <Link to="/ai-planner" className="bg-[#EAB308] text-white hover:bg-yellow-400 hover:text-white font-bold px-6 py-3 rounded-full text-sm transition-all shrink-0 shadow-lg">
           Try AI Planner ✨
         </Link>
       </motion.div>
@@ -273,12 +273,12 @@ export default function Dashboard() {
           >
             <div className="flex justify-between items-center mb-6">
               <div>
-                <h3 className="text-2xl font-extrabold tracking-tight text-slate-900 flex items-center gap-2">
+                <h3 className="text-2xl font-extrabold tracking-tight text-slate-200 flex items-center gap-2">
                    Your Recent Trips
                 </h3>
-                <p className="text-sm text-slate-500 mt-1">Manage and view your ongoing and upcoming trip itineraries</p>
+                <p className="text-sm text-slate-400 mt-1">Manage and view your ongoing and upcoming trip itineraries</p>
               </div>
-              <Link to="/trips" className="text-black hover:text-yellow-600 text-sm font-bold transition-colors flex items-center gap-1 bg-white px-4 py-2 rounded-full border border-slate-200 shadow-sm hover:shadow-md">
+              <Link to="/trips" className="text-white hover:text-amber-400 text-sm font-bold transition-colors flex items-center gap-1 bg-[#131A2A] px-4 py-2 rounded-full border border-[#1F2937] shadow-sm hover:shadow-md">
                 View All Trips <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
@@ -290,13 +290,13 @@ export default function Dashboard() {
                   animate={{ opacity: 1, y: 0 }} 
                   transition={{ delay: i * 0.05 }}
                   key={trip.id}
-                  className="p-6 rounded-3xl bg-white border border-slate-100 hover:border-yellow-400 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all group flex flex-col justify-between"
+                  className="p-6 rounded-3xl bg-[#131A2A] border border-[#1F2937] hover:border-amber-400 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all group flex flex-col justify-between"
                 >
                   <div className="mb-6">
-                    <h4 className="font-bold text-xl text-slate-900 transition-colors line-clamp-2 leading-tight">
+                    <h4 className="font-bold text-xl text-slate-200 transition-colors line-clamp-2 leading-tight">
                       {trip.name}
                     </h4>
-                    <p className="text-sm text-slate-500 mt-2 flex items-center gap-1.5 font-medium">
+                    <p className="text-sm text-slate-400 mt-2 flex items-center gap-1.5 font-medium">
                       📅 {trip.startDate} <ArrowRight className="w-3 h-3" /> {trip.endDate}
                     </p>
                     {trip.budgetLimit && (
@@ -310,7 +310,7 @@ export default function Dashboard() {
                   <div className="flex items-center justify-end">
                     <Link 
                       to={`/trips/${trip.id}/build`} 
-                      className="bg-black hover:bg-yellow-400 text-white hover:text-black px-6 py-2.5 rounded-full text-sm font-bold transition-all shadow-md"
+                      className="bg-[#EAB308] hover:bg-yellow-400 text-white hover:text-white px-6 py-2.5 rounded-full text-sm font-bold transition-all shadow-md"
                     >
                       Edit Trip
                     </Link>
@@ -319,11 +319,11 @@ export default function Dashboard() {
               ))}
 
               {(!data?.recentTrips || data?.recentTrips?.length === 0) && (
-                <div className="col-span-full text-center py-16 bg-white rounded-3xl border border-dashed border-slate-300">
+                <div className="col-span-full text-center py-16 bg-[#131A2A] rounded-3xl border border-dashed border-[#1F2937]">
                   <Plane className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-                  <p className="text-xl font-bold text-slate-900">No trips planned yet</p>
-                  <p className="text-sm text-slate-500 mt-1 mb-6">Start creating your first adventure itinerary today.</p>
-                  <Link to="/trips/new" className="inline-flex items-center gap-2 bg-black text-white px-6 py-3 rounded-full font-bold text-sm hover:bg-yellow-400 hover:text-black transition-all shadow-lg">
+                  <p className="text-xl font-bold text-slate-200">No trips planned yet</p>
+                  <p className="text-sm text-slate-400 mt-1 mb-6">Start creating your first adventure itinerary today.</p>
+                  <Link to="/trips/new" className="inline-flex items-center gap-2 bg-[#EAB308] text-white px-6 py-3 rounded-full font-bold text-sm hover:bg-yellow-400 hover:text-white transition-all shadow-lg">
                     Create a Trip <ArrowRight className="w-4 h-4" />
                   </Link>
                 </div>
@@ -343,10 +343,10 @@ export default function Dashboard() {
           >
             <div className="flex justify-between items-center mb-6">
               <div>
-                <h3 className="text-2xl font-extrabold tracking-tight text-slate-900 flex items-center gap-2">
+                <h3 className="text-2xl font-extrabold tracking-tight text-slate-200 flex items-center gap-2">
                    Recommended Destinations
                 </h3>
-                <p className="text-sm text-slate-500 mt-1">Discover popular world-class cities and attractions for your bucket list</p>
+                <p className="text-sm text-slate-400 mt-1">Discover popular world-class cities and attractions for your bucket list</p>
               </div>
             </div>
 
@@ -383,7 +383,7 @@ export default function Dashboard() {
                       <div className="transform transition-transform duration-300 group-hover:-translate-y-1">
                         <span className="block text-white font-black text-2xl leading-tight drop-shadow-md">{city.name}</span>
                         <div className="flex items-center justify-between mt-1.5">
-                          <span className="inline-block bg-white/20 backdrop-blur-md text-white text-xs px-2.5 py-1 rounded-md font-semibold border border-white/10">
+                          <span className="inline-block bg-[#131A2A]/10 backdrop-blur-md text-white text-xs px-2.5 py-1 rounded-md font-semibold border border-white/10">
                             {city.country}
                           </span>
                           <span className="text-xs font-bold text-rose-300 group-hover:text-rose-200 transition-colors flex items-center gap-1">
@@ -397,9 +397,9 @@ export default function Dashboard() {
               ))}
 
               {(!data?.recommendedCities || data?.recommendedCities?.length === 0) && (
-                <div className="col-span-full text-center py-16 bg-white rounded-3xl border border-dashed border-slate-300">
+                <div className="col-span-full text-center py-16 bg-[#131A2A] rounded-3xl border border-dashed border-[#1F2937]">
                   <MapPin className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-                  <p className="text-xl font-bold text-slate-900">No destinations found</p>
+                  <p className="text-xl font-bold text-slate-200">No destinations found</p>
                 </div>
               )}
             </div>
@@ -416,32 +416,32 @@ export default function Dashboard() {
           >
             <div className="flex justify-between items-center mb-6">
               <div>
-                <h3 className="text-2xl font-extrabold tracking-tight text-slate-900 flex items-center gap-2">
+                <h3 className="text-2xl font-extrabold tracking-tight text-slate-200 flex items-center gap-2">
                    Travel Budget Breakdown
                 </h3>
-                <p className="text-sm text-slate-500 mt-1">Keep track of your spending, planned allocations, and savings</p>
+                <p className="text-sm text-slate-400 mt-1">Keep track of your spending, planned allocations, and savings</p>
               </div>
             </div>
 
             {/* Metric KPI Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
-              <div className="p-8 rounded-3xl bg-white border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
-                <div className="flex items-center gap-2 text-slate-500 text-xs font-bold uppercase tracking-wider mb-3">
-                  <Wallet className="w-5 h-5 text-black" /> Total Budget
+              <div className="p-8 rounded-3xl bg-[#131A2A] border border-[#1F2937] shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+                <div className="flex items-center gap-2 text-slate-400 text-xs font-bold uppercase tracking-wider mb-3">
+                  <Wallet className="w-5 h-5 text-white" /> Total Budget
                 </div>
-                <p className="text-4xl font-extrabold text-slate-900">₹{totalBudget.toLocaleString('en-IN')}</p>
+                <p className="text-4xl font-extrabold text-slate-200">₹{totalBudget.toLocaleString('en-IN')}</p>
               </div>
 
-              <div className="p-8 rounded-3xl bg-white border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
-                <div className="flex items-center gap-2 text-slate-500 text-xs font-bold uppercase tracking-wider mb-3">
-                  <TrendingUp className="w-5 h-5 text-black" /> Total Spent
+              <div className="p-8 rounded-3xl bg-[#131A2A] border border-[#1F2937] shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+                <div className="flex items-center gap-2 text-slate-400 text-xs font-bold uppercase tracking-wider mb-3">
+                  <TrendingUp className="w-5 h-5 text-white" /> Total Spent
                 </div>
-                <p className="text-4xl font-extrabold text-slate-900">₹{totalSpent.toLocaleString('en-IN')}</p>
+                <p className="text-4xl font-extrabold text-slate-200">₹{totalSpent.toLocaleString('en-IN')}</p>
               </div>
 
-              <div className="p-8 rounded-3xl bg-white border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
-                <div className="flex items-center gap-2 text-slate-500 text-xs font-bold uppercase tracking-wider mb-3">
-                  <CheckCircle2 className="w-5 h-5 text-black" /> Remaining Balance
+              <div className="p-8 rounded-3xl bg-[#131A2A] border border-[#1F2937] shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+                <div className="flex items-center gap-2 text-slate-400 text-xs font-bold uppercase tracking-wider mb-3">
+                  <CheckCircle2 className="w-5 h-5 text-white" /> Remaining Balance
                 </div>
                 <p className="text-4xl font-extrabold text-emerald-600">₹{remainingBudget.toLocaleString('en-IN')}</p>
               </div>
@@ -449,7 +449,7 @@ export default function Dashboard() {
 
             {/* Per-Trip Budget Progress Bars */}
             <div>
-              <h4 className="text-xl font-bold text-slate-900 mb-6">Trip-by-Trip Spending</h4>
+              <h4 className="text-xl font-bold text-slate-200 mb-6">Trip-by-Trip Spending</h4>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {data?.recentTrips?.map((trip) => {
                   const spent = trip.totalSpent || 0;
@@ -457,17 +457,17 @@ export default function Dashboard() {
                   const pct = limit > 0 ? Math.min(Math.round((spent / limit) * 100), 100) : 0;
                   const isOver = spent > limit && limit > 0;
                   return (
-                    <div key={trip.id} className="p-6 rounded-3xl bg-white shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
+                    <div key={trip.id} className="p-6 rounded-3xl bg-[#131A2A] shadow-sm border border-[#1F2937] hover:shadow-md transition-shadow">
                       <div className="flex justify-between items-center mb-4">
                         <div>
-                          <span className="font-bold text-slate-900 text-lg">{trip.name}</span>
-                          <span className="text-xs text-slate-500 font-medium block mt-1">{trip.startDate}</span>
+                          <span className="font-bold text-slate-200 text-lg">{trip.name}</span>
+                          <span className="text-xs text-slate-400 font-medium block mt-1">{trip.startDate}</span>
                         </div>
                         <div className="text-right bg-slate-50 px-4 py-2 rounded-2xl">
-                          <span className={`text-base font-black ${isOver ? 'text-red-500' : 'text-slate-900'}`}>
+                          <span className={`text-base font-black ${isOver ? 'text-red-500' : 'text-slate-200'}`}>
                             ₹{spent.toLocaleString('en-IN')}
                           </span>
-                          <span className="text-xs text-slate-500 font-bold block"> / ₹{limit.toLocaleString('en-IN')}</span>
+                          <span className="text-xs text-slate-400 font-bold block"> / ₹{limit.toLocaleString('en-IN')}</span>
                         </div>
                       </div>
                       
@@ -478,12 +478,12 @@ export default function Dashboard() {
                               ? 'bg-red-500' 
                               : pct > 80 
                               ? 'bg-yellow-400' 
-                              : 'bg-black'
+                              : 'bg-[#EAB308]'
                           }`}
                           style={{ width: `${limit > 0 ? pct : 0}%` }}
                         ></div>
                       </div>
-                      <div className="flex justify-between items-center mt-3 text-xs font-bold text-slate-500">
+                      <div className="flex justify-between items-center mt-3 text-xs font-bold text-slate-400">
                         <span>{pct}% utilized</span>
                         {isOver && <span className="text-red-500 bg-red-50 px-2 py-1 rounded-md">Exceeded by ₹{(spent - limit).toLocaleString('en-IN')}</span>}
                       </div>
@@ -492,7 +492,7 @@ export default function Dashboard() {
                 })}
 
                 {(!data?.recentTrips || data?.recentTrips?.length === 0) && (
-                  <p className="text-slate-500 py-6 text-center w-full">No trip budget records available.</p>
+                  <p className="text-slate-400 py-6 text-center w-full">No trip budget records available.</p>
                 )}
               </div>
             </div>
@@ -501,3 +501,4 @@ export default function Dashboard() {
     </AppLayout>
   );
 }
+

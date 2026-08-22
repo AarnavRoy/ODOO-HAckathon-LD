@@ -12,8 +12,8 @@
 html, body, #root {
   height: 100%;
   font-family: var(--font-sans);
-  background-color: #fefce8; /* Light warm yellow/cream */
-  color: #0f172a; /* Slate 900 */
+  background-color: #0B0F19; /* Deep Navy */
+  color: #E2E8F0; /* Slate 200 */
 }
 
 /* Custom scrollbar */
@@ -24,22 +24,22 @@ html, body, #root {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: #374151; /* Slate 700 */
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #4B5563; /* Slate 600 */
 }
 
 /* Smooth selection */
 ::selection {
-  background: rgba(234, 179, 8, 0.3); /* Yellow selection */
-  color: #000;
+  background: rgba(234, 179, 8, 0.3); /* Amber selection */
+  color: #FBBF24;
 }
 
-/* Input autofill light theme */
+/* Input autofill dark theme */
 input:-webkit-autofill {
-  -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
-  -webkit-text-fill-color: #0f172a !important;
-  caret-color: #0f172a;
+  -webkit-box-shadow: 0 0 0 1000px #131A2A inset !important;
+  -webkit-text-fill-color: #E2E8F0 !important;
+  caret-color: #E2E8F0;
 }

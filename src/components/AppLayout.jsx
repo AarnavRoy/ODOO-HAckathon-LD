@@ -31,19 +31,13 @@ export default function AppLayout({ children, title }) {
     ];
   }
   
-  const layoutClasses = isAdminRoute 
-    ? "min-h-[100dvh] bg-slate-950 flex flex-col font-sans text-white" 
-    : "min-h-[100dvh] bg-gradient-to-br from-[#FEFCE8] to-[#f8f9fa] flex flex-col font-sans text-slate-900";
+  const layoutClasses = "min-h-[100dvh] bg-[#0B0F19] flex flex-col font-sans text-slate-200";
 
-  const headerClasses = isAdminRoute
-    ? "flex flex-wrap justify-between items-center bg-slate-900/70 backdrop-blur-md border border-white/10 p-3 rounded-3xl shadow-sm gap-3"
-    : "flex flex-wrap justify-between items-center bg-white/70 backdrop-blur-md border border-slate-200/60 p-3 rounded-3xl shadow-sm gap-3";
+  const headerClasses = "flex flex-wrap justify-between items-center bg-[#131A2A]/80 backdrop-blur-md border border-[#1F2937] p-3 rounded-3xl shadow-sm gap-3";
 
-  const logoClasses = isAdminRoute
-    ? "flex-shrink-0 flex items-center text-2xl font-extrabold tracking-tight text-white hover:scale-105 transition-transform"
-    : "flex-shrink-0 flex items-center text-2xl font-extrabold tracking-tight text-slate-900 hover:scale-105 transition-transform";
+  const logoClasses = "flex-shrink-0 flex items-center text-2xl font-extrabold tracking-tight text-white hover:scale-105 transition-transform";
 
-  const globeIconClasses = isAdminRoute ? "w-7 h-7 mr-2 text-white" : "w-7 h-7 mr-2 text-black";
+  const globeIconClasses = "w-7 h-7 mr-2 text-white";
 
   return (
     <div className={layoutClasses}>
@@ -54,11 +48,11 @@ export default function AppLayout({ children, title }) {
             {/* Logo */}
             <Link to="/" className={logoClasses}>
               <Globe className={globeIconClasses} />
-              GlobeTrotter<span className="text-yellow-400">.</span>
+              GlobeTrotter<span className="text-amber-400">.</span>
             </Link>
             
             {/* Pill Navigation */}
-            <nav className="flex space-x-1 items-center bg-black rounded-full px-2 py-1.5 shadow-md shadow-black/10 overflow-x-auto max-w-full">
+            <nav className="flex space-x-1 items-center bg-[#0B0F19] border border-[#1F2937] rounded-full px-2 py-1.5 shadow-md overflow-x-auto max-w-full">
               {navLinks.map(link => {
                 const Icon = link.icon;
                 const active = link.match(location.pathname);
@@ -66,8 +60,8 @@ export default function AppLayout({ children, title }) {
                   <Link 
                     key={link.to} 
                     to={link.to} 
-                    className={`px-4 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-semibold flex items-center gap-1.5 transition-all duration-200 whitespace-nowrap ${
-                      active ? 'bg-yellow-400 text-black shadow-sm font-bold' : 'text-slate-300 hover:text-white hover:bg-white/10'
+                    className={`px-4 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-semibold flex items-center gap-1.5 transition-all duration-200 whitespace-nowrap focus-visible:ring focus-visible:ring-amber-400 ${
+                      active ? 'bg-[#EAB308] text-slate-950 shadow-sm font-bold' : 'text-slate-400 hover:text-white hover:bg-white/10'
                     }`}
                   >
                     <Icon className="w-3.5 h-3.5" />
@@ -80,7 +74,7 @@ export default function AppLayout({ children, title }) {
             {/* Logout */}
             <button 
               onClick={handleLogout} 
-              className={`flex items-center text-xs sm:text-sm font-semibold transition-colors active:scale-95 px-4 py-2 rounded-full cursor-pointer ${isAdminRoute ? 'text-slate-300 hover:text-red-400 hover:bg-white/5' : 'text-slate-600 hover:text-red-500 hover:bg-black/5'}`}
+              className="flex items-center text-xs sm:text-sm font-semibold transition-colors active:scale-95 px-4 py-2 rounded-full cursor-pointer text-slate-300 hover:text-[#F87171] hover:bg-white/5 focus-visible:ring focus-visible:ring-amber-400"
             >
               <LogOut className="w-4 h-4 mr-1.5" /> Logout
             </button>

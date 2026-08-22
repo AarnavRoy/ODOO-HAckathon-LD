@@ -161,23 +161,23 @@ export default function Signup() {
   };
 
   return (
-    <div className="min-h-[100dvh] bg-[#FEFCE8] flex flex-col md:flex-row-reverse overflow-hidden font-sans">
+    <div className="min-h-[100dvh] bg-[#0B0F19] flex flex-col md:flex-row-reverse overflow-hidden font-sans">
       {/* Right side: Form */}
       <motion.div 
         initial={{ x: '100%' }} animate={{ x: 0 }} transition={{ type: "spring", stiffness: 70, damping: 20 }}
         className="w-full md:w-1/2 flex items-center justify-center p-6 lg:p-16 bg-transparent z-10 relative overflow-y-auto max-h-screen"
       >
         
-        <div className="w-full max-w-md p-10 bg-white rounded-[2.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100">
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }} className="flex items-center text-slate-900 mb-6 font-black text-3xl tracking-tighter">
+        <div className="w-full max-w-md p-10 bg-[#131A2A] rounded-[2.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-[#1F2937]">
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }} className="flex items-center text-white mb-6 font-black text-3xl tracking-tighter">
             <Plane className="w-8 h-8 mr-3 text-black" /> GlobeTrotter
           </motion.div>
           
           <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
-            <h2 className="text-3xl md:text-4xl font-black tracking-tighter text-slate-900 mb-2 flex items-center">
+            <h2 className="text-3xl md:text-4xl font-black tracking-tighter text-white mb-2 flex items-center">
               Join the journey <Sparkles className="w-6 h-6 ml-2 text-yellow-500" />
             </h2>
-            <p className="text-slate-500 mb-6 font-medium text-sm">Create an account to start planning your next adventure.</p>
+            <p className="text-slate-400 mb-6 font-medium text-sm">Create an account to start planning your next adventure.</p>
           </motion.div>
           
           {error && (
@@ -201,7 +201,7 @@ export default function Signup() {
                     ? 'border-red-300 bg-red-50 focus:ring-red-500 focus:border-red-500' 
                     : isNameValid 
                     ? 'border-emerald-300 bg-emerald-50 focus:ring-emerald-500 focus:border-emerald-500'
-                    : 'border-slate-200 bg-slate-50 focus:ring-black focus:border-black focus:bg-white'
+                    : 'border-[#1F2937] bg-[#131A2A] focus:ring-black focus:border-black focus:bg-[#131A2A]'
                 }`}
                 placeholder="e.g. Alexander Walker" 
               />
@@ -242,7 +242,7 @@ export default function Signup() {
                     ? 'border-red-300 bg-red-50 focus:ring-red-500 focus:border-red-500'
                     : usernameStatus === 'available'
                     ? 'border-emerald-300 bg-emerald-50 focus:ring-emerald-500 focus:border-emerald-500'
-                    : 'border-slate-200 bg-slate-50 focus:ring-black focus:border-black focus:bg-white'
+                    : 'border-[#1F2937] bg-[#131A2A] focus:ring-black focus:border-black focus:bg-[#131A2A]'
                 }`}
                 placeholder="e.g. alexander99" 
               />
@@ -281,7 +281,7 @@ export default function Signup() {
                     ? 'border-red-300 bg-red-50 focus:ring-red-500 focus:border-red-500'
                     : emailStatus === 'valid'
                     ? 'border-emerald-300 bg-emerald-50 focus:ring-emerald-500 focus:border-emerald-500'
-                    : 'border-slate-200 bg-slate-50 focus:ring-black focus:border-black focus:bg-white'
+                    : 'border-[#1F2937] bg-[#131A2A] focus:ring-black focus:border-black focus:bg-[#131A2A]'
                 }`}
                 placeholder="yourname@gmail.com" 
               />
@@ -299,13 +299,13 @@ export default function Signup() {
                   required 
                   value={password} 
                   onChange={e => setPassword(e.target.value)} 
-                  className="w-full border border-slate-200 bg-slate-50 rounded-full py-2.5 pl-4 pr-10 focus:outline-none focus:ring-1 focus:ring-black focus:border-black focus:bg-white transition-all font-medium text-sm" 
+                  className="w-full border border-[#1F2937] bg-[#131A2A] rounded-full py-2.5 pl-4 pr-10 focus:outline-none focus:ring-1 focus:ring-black focus:border-black focus:bg-[#131A2A] transition-all font-medium text-sm" 
                   placeholder="••••••••"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1 transition-colors cursor-pointer"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-300 p-1 transition-colors cursor-pointer"
                   title={showPassword ? "Hide password" : "Show password"}
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -314,13 +314,13 @@ export default function Signup() {
               {/* Password strength checklist */}
               {password.length > 0 && (
                 <div className="flex flex-wrap gap-2 pt-1 text-[11px] font-semibold">
-                  <span className={`px-2 py-0.5 rounded-md flex items-center gap-1 ${hasMinLength ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-500'}`}>
+                  <span className={`px-2 py-0.5 rounded-md flex items-center gap-1 ${hasMinLength ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-400'}`}>
                     {hasMinLength ? <CheckCircle2 className="w-2.5 h-2.5" /> : '•'} 8+ chars
                   </span>
-                  <span className={`px-2 py-0.5 rounded-md flex items-center gap-1 ${hasNumber ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-500'}`}>
+                  <span className={`px-2 py-0.5 rounded-md flex items-center gap-1 ${hasNumber ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-400'}`}>
                     {hasNumber ? <CheckCircle2 className="w-2.5 h-2.5" /> : '•'} Number (0-9)
                   </span>
-                  <span className={`px-2 py-0.5 rounded-md flex items-center gap-1 ${hasSymbol ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-500'}`}>
+                  <span className={`px-2 py-0.5 rounded-md flex items-center gap-1 ${hasSymbol ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-400'}`}>
                     {hasSymbol ? <CheckCircle2 className="w-2.5 h-2.5" /> : '•'} Symbol (!@#$)
                   </span>
                 </div>
@@ -354,14 +354,14 @@ export default function Signup() {
                       ? 'border-red-300 bg-red-50 focus:ring-red-500 focus:border-red-500'
                       : confirmPassword.length > 0 && isConfirmPasswordMatch
                       ? 'border-emerald-300 bg-emerald-50 focus:ring-emerald-500 focus:border-emerald-500'
-                      : 'border-slate-200 bg-slate-50 focus:ring-black focus:border-black focus:bg-white'
+                      : 'border-[#1F2937] bg-[#131A2A] focus:ring-black focus:border-black focus:bg-[#131A2A]'
                   }`}
                   placeholder="••••••••"
                 />
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1 transition-colors cursor-pointer"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-300 p-1 transition-colors cursor-pointer"
                   title={showConfirmPassword ? "Hide password" : "Show password"}
                 >
                   {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -373,7 +373,7 @@ export default function Signup() {
               whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}
               type="submit" 
               disabled={loading || (confirmPassword.length > 0 && !isConfirmPasswordMatch) || (emailStatus === 'invalid')}
-              className="w-full flex justify-center py-3.5 px-4 mt-2 rounded-full shadow-md text-sm font-bold text-white bg-black hover:bg-yellow-400 hover:text-black focus:outline-none transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
+              className="w-full flex justify-center py-3.5 px-4 mt-2 rounded-full shadow-md text-sm font-bold text-slate-950 bg-amber-400 hover:bg-amber-500 focus:outline-none transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
             >
               {loading ? (
                 <span className="flex items-center gap-2">
@@ -383,8 +383,8 @@ export default function Signup() {
             </motion.button>
           </form>
           
-          <p className="mt-6 text-center text-sm font-medium text-slate-500">
-            Already have an account? <Link to="/login" className="font-bold text-black hover:text-yellow-600">Sign in</Link>
+          <p className="mt-6 text-center text-sm font-medium text-slate-400">
+            Already have an account? <Link to="/login" className="font-bold text-black hover:text-amber-400">Sign in</Link>
           </p>
         </div>
       </motion.div>
@@ -401,10 +401,11 @@ export default function Signup() {
         <div className="absolute inset-0 bg-black/40 flex items-end p-16">
           <motion.blockquote initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }} className="text-white">
             <p className="text-3xl font-black tracking-tighter mb-4 leading-tight">"Not all those who wander are lost."</p>
-            <footer className="text-yellow-400 font-bold">— J.R.R. Tolkien</footer>
+            <footer className="text-[#EAB308] font-bold">— J.R.R. Tolkien</footer>
           </motion.blockquote>
         </div>
       </motion.div>
     </div>
   );
 }
+
