@@ -117,23 +117,17 @@ export default function Dashboard() {
       <motion.div variants={fadeUp} initial="hidden" animate="show" className="mb-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h2 className="text-4xl font-black tracking-tight text-slate-200 flex items-center gap-2">
-            Welcome back, {user?.name?.split(' ')[0] || 'Traveler'}! 
-            <span className="inline-block animate-bounce">👋</span>
+            Welcome, {user?.name?.split(' ')[0] || 'Traveler'}! 
+            <span className="inline-block animate-bounce">🌍</span>
           </h2>
           <p className="text-slate-400 mt-1 text-base font-medium">Ready to design your next journey across the world?</p>
         </div>
         <div className="flex items-center gap-3 self-start md:self-auto flex-wrap">
           <Link 
-            to="/admin" 
-            className="inline-flex items-center gap-2 bg-[#131A2A]/80 border border-[#1F2937] hover:bg-[#131A2A]/5 text-slate-200 font-bold px-6 py-3.5 rounded-full shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all text-sm"
-          >
-            <ShieldCheck className="w-4 h-4 text-amber-500" /> Admin Portal
-          </Link>
-          <Link 
             to="/trips/new" 
-            className="inline-flex items-center gap-2 bg-[#EAB308] text-white hover:bg-amber-400 hover:text-white font-bold px-8 py-3.5 rounded-full shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all text-sm"
+            className="inline-flex items-center gap-2 bg-amber-400 text-slate-950 hover:bg-amber-500 font-bold px-8 py-3.5 rounded-full shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all text-sm"
           >
-            <Sparkles className="w-4 h-4" /> Plan a New Trip
+            <Plane className="w-4 h-4" /> Plan a Trip
           </Link>
         </div>
       </motion.div>
@@ -501,6 +495,7 @@ export default function Dashboard() {
     </AppLayout>
   );
 }
+
 
 
 
