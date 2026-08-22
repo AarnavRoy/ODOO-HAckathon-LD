@@ -43,7 +43,7 @@ export default function CreateTrip() {
 
   return (
     <AppLayout title="Plan a New Trip">
-      <div className="max-w-2xl bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+      <div className="max-w-2xl bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
         {error && <div className="bg-red-50 text-red-700 p-3 mb-4 rounded text-sm">{error}</div>}
         
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -88,11 +88,11 @@ export default function CreateTrip() {
                    placeholder="5000" />
           </div>
           
-          <div className="flex justify-end space-x-3">
-            <button type="button" onClick={() => navigate('/trips')} className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+          <div className="flex justify-end space-x-3 pt-6 border-t border-slate-100">
+            <button type="button" onClick={() => navigate('/trips')} className="bg-white py-3 px-6 border border-slate-200 rounded-xl shadow-sm text-sm font-bold text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-100 active:scale-95 transition-all">
               Cancel
             </button>
-            <button type="submit" disabled={loading} className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+            <button type="submit" disabled={loading} className="inline-flex justify-center py-3 px-6 border border-transparent shadow-lg shadow-violet-500/30 text-sm font-bold rounded-xl text-white bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 focus:outline-none focus:ring-4 focus:ring-violet-500/30 active:scale-95 transition-all">
               {loading ? 'Creating...' : 'Create Trip'}
             </button>
           </div>
