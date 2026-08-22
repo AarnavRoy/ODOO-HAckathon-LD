@@ -170,7 +170,7 @@ export default function AITripAssistant() {
                           }
                         }}
                         placeholder="e.g. Goa, Paris, Japan..."
-                        className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-fuchsia-500/20 focus:border-fuchsia-500 font-medium transition-all"
+                        className="w-full pl-11 pr-4 py-3 bg-slate-50 text-slate-900 border border-slate-200 rounded-xl focus:ring-4 focus:ring-fuchsia-500/20 focus:border-fuchsia-500 font-medium transition-all"
                       />
                     </div>
                     <AnimatePresence>
@@ -182,19 +182,25 @@ export default function AITripAssistant() {
                           transition={{ duration: 0.15 }}
                           className="absolute z-50 left-0 right-0 mt-2 bg-white border border-slate-200 rounded-xl shadow-xl overflow-hidden"
                         >
-                          {filteredDestinations.map((dest, i) => (
-                            <li
-                              key={i}
-                              onMouseDown={() => handleSelectDestination(dest.name)}
-                              className="flex items-center justify-between gap-3 px-4 py-3 hover:bg-fuchsia-50 cursor-pointer transition-colors text-sm border-b border-slate-50 last:border-0"
-                            >
-                              <div className="flex items-center gap-3">
-                                <MapPin className="w-4 h-4 text-fuchsia-400 shrink-0" />
-                                <span className="font-medium text-slate-800">{dest.name}</span>
-                              </div>
-                              <span className="text-xs font-semibold text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full shrink-0">{dest.country}</span>
-                            </li>
-                          ))}
+                          {filteredDestinations.map((dest, i) => {
+                            const name = typeof dest === 'string' ? dest : dest.name;
+                            const country = typeof dest === 'object' ? dest.country : null;
+                            return (
+                              <li
+                                key={i}
+                                onMouseDown={() => handleSelectDestination(name)}
+                                className="flex items-center justify-between gap-3 px-4 py-3 hover:bg-fuchsia-50 cursor-pointer transition-colors text-sm border-b border-slate-100 last:border-0"
+                              >
+                                <div className="flex items-center gap-3">
+                                  <MapPin className="w-4 h-4 text-fuchsia-500 shrink-0" />
+                                  <span className="font-bold text-slate-900">{name}</span>
+                                </div>
+                                {country && (
+                                  <span className="text-xs font-semibold text-fuchsia-700 bg-fuchsia-50 border border-fuchsia-200 px-2.5 py-0.5 rounded-full shrink-0">{country}</span>
+                                )}
+                              </li>
+                            );
+                          })}
                         </motion.ul>
                       )}
                     </AnimatePresence>
