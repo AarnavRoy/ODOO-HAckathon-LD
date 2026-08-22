@@ -128,8 +128,7 @@ export default function CreateTrip() {
         )}
 
         <div className="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
-          {/* Gradient accent top bar */}
-          <div className="h-1.5 bg-gradient-to-r from-violet-600 via-fuchsia-500 to-orange-400" />
+          <div className="h-2 bg-yellow-400" />
 
           <form onSubmit={handleSubmit} className="p-8 space-y-6">
             {error && (
@@ -149,7 +148,7 @@ export default function CreateTrip() {
                 value={formData.name}
                 onChange={handleChange}
                 placeholder="e.g., Summer in Europe"
-                className="w-full border-2 border-slate-200 bg-slate-50 rounded-xl py-2.5 px-4 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500 focus:bg-white transition-all"
+                className="w-full border-2 border-slate-200 bg-slate-50 rounded-xl py-2.5 px-4 text-sm font-medium focus:outline-none focus:ring-1 focus:ring-black focus:border-black focus:bg-white transition-all"
               />
             </div>
 
@@ -191,13 +190,12 @@ export default function CreateTrip() {
                 placeholder="Search any city in the world..."
               />
 
-              {/* Selected place preview */}
               {selectedPlace && (
-                <div className="mt-2 flex items-center gap-2 bg-violet-50 border border-violet-100 text-violet-700 px-3 py-2 rounded-lg text-xs font-semibold">
-                  <MapPin className="w-3.5 h-3.5 shrink-0" />
+                <div className="mt-2 flex items-center gap-2 bg-yellow-50 border border-yellow-200 text-slate-900 px-3 py-2 rounded-lg text-xs font-bold">
+                  <MapPin className="w-4 h-4 shrink-0 text-yellow-600" />
                   <span>{selectedPlace.name}{selectedPlace.country ? `, ${selectedPlace.country}` : ""}</span>
                   {selectedPlace.lat && (
-                    <span className="ml-auto text-violet-400 font-normal">
+                    <span className="ml-auto text-slate-400 font-medium">
                       {selectedPlace.lat.toFixed(2)}°, {selectedPlace.lng.toFixed(2)}°
                     </span>
                   )}
@@ -236,9 +234,8 @@ export default function CreateTrip() {
               </div>
             </div>
 
-            {/* Duration badge */}
             {tripDuration !== null && !dateError && (
-              <p className="text-xs font-semibold text-violet-600 -mt-3">
+              <p className="text-xs font-bold text-slate-900 -mt-3">
                 🗓️ {tripDuration} day{tripDuration !== 1 ? "s" : ""}
               </p>
             )}
@@ -258,7 +255,7 @@ export default function CreateTrip() {
                 value={formData.description}
                 onChange={handleChange}
                 placeholder="Briefly describe your trip goals or theme..."
-                className="w-full border-2 border-slate-200 bg-slate-50 rounded-xl py-2.5 px-4 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500 focus:bg-white transition-all resize-none"
+                className="w-full border-2 border-slate-200 bg-slate-50 rounded-xl py-2.5 px-4 text-sm font-medium focus:outline-none focus:ring-1 focus:ring-black focus:border-black focus:bg-white transition-all resize-none"
               />
             </div>
 
@@ -273,7 +270,7 @@ export default function CreateTrip() {
                 value={formData.coverPhotoUrl}
                 onChange={handleChange}
                 placeholder="https://example.com/photo.jpg"
-                className="w-full border-2 border-slate-200 bg-slate-50 rounded-xl py-2.5 px-4 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500 focus:bg-white transition-all"
+                className="w-full border-2 border-slate-200 bg-slate-50 rounded-xl py-2.5 px-4 text-sm font-medium focus:outline-none focus:ring-1 focus:ring-black focus:border-black focus:bg-white transition-all"
               />
               {formData.coverPhotoUrl && (
                 <img
@@ -305,19 +302,18 @@ export default function CreateTrip() {
               </div>
             </div>
 
-            {/* Actions */}
             <div className="flex justify-end gap-3 pt-4 border-t border-slate-100">
               <button
                 type="button"
                 onClick={() => navigate("/trips")}
-                className="py-2.5 px-6 border-2 border-slate-200 rounded-xl text-sm font-bold text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-100 active:scale-95 transition-all cursor-pointer"
+                className="py-3 px-6 rounded-full text-sm font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 focus:outline-none transition-all cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={loading || !!dateError}
-                className="inline-flex items-center gap-2 py-2.5 px-8 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 shadow-lg shadow-violet-500/30 focus:outline-none focus:ring-4 focus:ring-violet-500/30 active:scale-95 transition-all disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
+                className="inline-flex items-center gap-2 py-3 px-8 rounded-full text-sm font-bold text-white bg-black hover:bg-yellow-400 hover:text-black shadow-md focus:outline-none active:scale-95 transition-all disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
               >
                 {loading ? (
                   <>

@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, MapPin, Calendar, Users, Wallet, CheckCircle, RefreshCw, Save, ArrowLeft, Loader2, TrendingDown, Coffee, Activity, Utensils, Edit3 } from 'lucide-react';
 import { generateTripItinerary, refineTripItinerary } from '../api/ai';
-import { createTrip } from '../api/trips';
+import { importAITrip } from '../api/trips';
 import { searchDestinations } from '../data/destinations';
 
 
@@ -108,20 +108,27 @@ export default function AITripAssistant() {
   const handleSaveTrip = async () => {
     setIsSaving(true);
     try {
-      // Map AI result to existing backend/mock structure
-      const newTrip = await createTrip({
-        name: tripData.tripName,
-        destination: tripData.destination, // Custom backend field or just use name
+      const payload = {
+        tripName: tripData.tripName,
+        startCityName: "", 
+        destinationName: tripData.destination,
+        duration: tripData.duration,
+        budget: tripData.budget,
         startDate: new Date().toISOString().split('T')[0],
-        endDate: new Date(Date.now() + tripData.duration * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-        description: `AI Generated Trip for ${tripData.travelers} travelers. Style: ${preferences.style.join(', ')}`,
-        coverPhotoUrl: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800', // Default
-        budgetLimit: tripData.budget
-      });
-      // Save full AI plan object locally for view and edit screens
-      if (newTrip && newTrip.id) {
-        localStorage.setItem(`ai_trip_plan_${newTrip.id}`, JSON.stringify(tripData));
-      }
+        days: tripData.days.map(day => ({
+           dayNumber: day.dayNumber,
+           title: day.title,
+           activities: day.activities.map(act => ({
+              name: act.name,
+              description: act.description,
+              category: act.category,
+              cost: act.cost,
+              time: act.time
+           }))
+        }))
+      };
+      
+      const newTrip = await importAITrip(payload);
       setSavedTripId(newTrip.id);
     } catch (err) {
       console.error('Failed to save trip', err);
@@ -132,15 +139,15 @@ export default function AITripAssistant() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans text-slate-900 pb-20">
+    <div className="min-h-screen bg-[#FEFCE8] font-sans text-slate-900 pb-20">
       {/* Header */}
       <div className="bg-white border-b border-slate-200 px-6 py-4 sticky top-0 z-50 flex items-center justify-between">
         <div className="flex items-center">
-          <Link to="/" className="mr-4 p-2 rounded-full hover:bg-slate-100 transition-colors">
-            <ArrowLeft className="w-5 h-5 text-slate-600" />
+          <Link to="/" className="mr-4 p-2 rounded-full hover:bg-yellow-100 transition-colors">
+            <ArrowLeft className="w-5 h-5 text-black" />
           </Link>
-          <h1 className="font-black tracking-tighter text-xl flex items-center">
-            <Sparkles className="w-5 h-5 text-fuchsia-500 mr-2" /> AI Trip Assistant
+          <h1 className="font-black tracking-tighter text-xl flex items-center text-black">
+            <Sparkles className="w-5 h-5 text-yellow-500 mr-2" /> AI Trip Assistant
           </h1>
         </div>
       </div>
@@ -172,7 +179,7 @@ export default function AITripAssistant() {
                           }
                         }}
                         placeholder="e.g. Goa, Paris, Japan..."
-                        className="w-full pl-11 pr-4 py-3 bg-slate-50 text-slate-900 border border-slate-200 rounded-xl focus:ring-4 focus:ring-fuchsia-500/20 focus:border-fuchsia-500 font-medium transition-all"
+                        className="w-full pl-11 pr-4 py-3 bg-white text-slate-900 border border-slate-200 rounded-full focus:ring-1 focus:ring-black focus:border-black font-medium transition-all shadow-sm"
                       />
                     </div>
                     <AnimatePresence>
@@ -194,11 +201,11 @@ export default function AITripAssistant() {
                                 className="flex items-center justify-between gap-3 px-4 py-3 hover:bg-fuchsia-50 cursor-pointer transition-colors text-sm border-b border-slate-100 last:border-0"
                               >
                                 <div className="flex items-center gap-3">
-                                  <MapPin className="w-4 h-4 text-fuchsia-500 shrink-0" />
+                                  <MapPin className="w-4 h-4 text-black shrink-0" />
                                   <span className="font-bold text-slate-900">{name}</span>
                                 </div>
                                 {country && (
-                                  <span className="text-xs font-semibold text-fuchsia-700 bg-fuchsia-50 border border-fuchsia-200 px-2.5 py-0.5 rounded-full shrink-0">{country}</span>
+                                  <span className="text-xs font-semibold text-yellow-800 bg-yellow-100 border border-yellow-200 px-2.5 py-0.5 rounded-full shrink-0">{country}</span>
                                 )}
                               </li>
                             );
@@ -211,7 +218,7 @@ export default function AITripAssistant() {
                     <label className="block text-sm font-bold text-slate-700 mb-2">How many days?</label>
                     <div className="relative">
                       <Calendar className="absolute left-4 top-3.5 w-5 h-5 text-slate-400" />
-                      <select value={preferences.duration} onChange={e => setPreferences({...preferences, duration: e.target.value})} className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-fuchsia-500/20 focus:border-fuchsia-500 font-medium transition-all appearance-none">
+                      <select value={preferences.duration} onChange={e => setPreferences({...preferences, duration: e.target.value})} className="w-full pl-11 pr-4 py-3 bg-white border border-slate-200 rounded-full focus:ring-1 focus:ring-black focus:border-black font-medium transition-all appearance-none shadow-sm">
                         <option value="3">3 Days (Weekend)</option>
                         <option value="5">5 Days</option>
                         <option value="7">7 Days (1 Week)</option>
@@ -224,14 +231,14 @@ export default function AITripAssistant() {
                     <label className="block text-sm font-bold text-slate-700 mb-2">What's your budget? (₹)</label>
                     <div className="relative">
                       <Wallet className="absolute left-4 top-3.5 w-5 h-5 text-slate-400" />
-                      <input type="number" required value={preferences.budget} onChange={e => setPreferences({...preferences, budget: e.target.value})} placeholder="e.g. 20000" className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-fuchsia-500/20 focus:border-fuchsia-500 font-medium transition-all" />
+                      <input type="number" required value={preferences.budget} onChange={e => setPreferences({...preferences, budget: e.target.value})} placeholder="e.g. 20000" className="w-full pl-11 pr-4 py-3 bg-white border border-slate-200 rounded-full focus:ring-1 focus:ring-black focus:border-black font-medium transition-all shadow-sm" />
                     </div>
                   </div>
                   <div>
                     <label className="block text-sm font-bold text-slate-700 mb-2">Who's traveling?</label>
                     <div className="relative">
                       <Users className="absolute left-4 top-3.5 w-5 h-5 text-slate-400" />
-                      <select value={preferences.travelers} onChange={e => setPreferences({...preferences, travelers: e.target.value})} className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-fuchsia-500/20 focus:border-fuchsia-500 font-medium transition-all appearance-none">
+                      <select value={preferences.travelers} onChange={e => setPreferences({...preferences, travelers: e.target.value})} className="w-full pl-11 pr-4 py-3 bg-white border border-slate-200 rounded-full focus:ring-1 focus:ring-black focus:border-black font-medium transition-all appearance-none shadow-sm">
                         <option value="1">Solo</option>
                         <option value="2">Couple (2)</option>
                         <option value="3">Small Group (3-4)</option>
@@ -253,7 +260,7 @@ export default function AITripAssistant() {
                       { id: 'shopping', label: '🛍️ Shopping' },
                       { id: 'nightlife', label: '🌃 Nightlife' }
                     ].map(style => (
-                      <button type="button" key={style.id} onClick={() => handleStyleToggle(style.id)} className={`px-4 py-2 rounded-full text-sm font-bold border transition-all ${preferences.style.includes(style.id) ? 'bg-fuchsia-100 border-fuchsia-500 text-fuchsia-700' : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'}`}>
+                      <button type="button" key={style.id} onClick={() => handleStyleToggle(style.id)} className={`px-4 py-2 rounded-full text-sm font-bold border transition-all ${preferences.style.includes(style.id) ? 'bg-yellow-100 border-yellow-400 text-yellow-800' : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50 shadow-sm'}`}>
                         {style.label}
                       </button>
                     ))}
@@ -261,7 +268,7 @@ export default function AITripAssistant() {
                 </div>
 
                 <div className="pt-4">
-                  <button type="submit" className="w-full md:w-auto px-8 py-4 bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white rounded-xl font-bold text-lg shadow-lg shadow-violet-500/30 hover:shadow-violet-500/50 hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center">
+                  <button type="submit" className="w-full md:w-auto px-8 py-4 bg-black text-white rounded-full font-bold text-lg shadow-md hover:bg-yellow-400 hover:text-black hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center">
                     <Sparkles className="w-5 h-5 mr-2" /> Generate My Trip
                   </button>
                 </div>
@@ -273,13 +280,13 @@ export default function AITripAssistant() {
           {step === 'loading' && (
             <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="py-32 flex flex-col items-center justify-center text-center">
               <div className="relative w-24 h-24 mb-8">
-                <div className="absolute inset-0 bg-gradient-to-r from-violet-500 to-fuchsia-500 rounded-full blur-xl opacity-40 animate-pulse"></div>
-                <Loader2 className="w-24 h-24 text-fuchsia-500 animate-spin relative z-10" />
-                <Sparkles className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 text-white z-20" />
+                <div className="absolute inset-0 bg-yellow-200 rounded-full blur-xl opacity-40 animate-pulse"></div>
+                <Loader2 className="w-24 h-24 text-black animate-spin relative z-10" />
+                <Sparkles className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 text-black z-20" />
               </div>
               <h2 className="text-2xl font-black mb-4 tracking-tighter text-slate-900">{loadingText || 'Consulting the AI...'}</h2>
               <div className="w-64 h-2 bg-slate-200 rounded-full overflow-hidden">
-                <motion.div className="h-full bg-gradient-to-r from-violet-500 to-fuchsia-500" initial={{ width: 0 }} animate={{ width: `${loadingProgress}%` }} transition={{ duration: 0.5 }}></motion.div>
+                <motion.div className="h-full bg-yellow-400" initial={{ width: 0 }} animate={{ width: `${loadingProgress}%` }} transition={{ duration: 0.5 }}></motion.div>
               </div>
             </motion.div>
           )}
@@ -292,7 +299,7 @@ export default function AITripAssistant() {
               <div className="bg-white rounded-3xl p-8 shadow-sm border border-slate-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                 <div>
                   <div className="flex items-center gap-3 mb-2">
-                    <span className="bg-fuchsia-100 text-fuchsia-700 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">{tripData.duration} Days • {tripData.travelers} Travelers</span>
+                    <span className="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">{tripData.duration} Days • {tripData.travelers} Travelers</span>
                     <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${tripData.budgetStatus === 'within' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
                       {tripData.budgetStatus === 'within' ? 'Within Budget' : 'Over Budget'}
                     </span>
@@ -303,16 +310,16 @@ export default function AITripAssistant() {
                 
                 <div className="flex flex-col gap-3 w-full md:w-auto">
                   {savedTripId ? (
-                    <Link to={`/trips/${savedTripId}/build`} className="flex items-center justify-center px-6 py-3 bg-green-500 text-white rounded-xl font-bold shadow-lg shadow-green-500/20">
+                    <Link to={`/trips/${savedTripId}/build`} className="flex items-center justify-center px-6 py-3 bg-yellow-400 text-black rounded-full font-bold shadow-md hover:bg-yellow-300">
                       <CheckCircle className="w-5 h-5 mr-2" /> View My Trip
                     </Link>
                   ) : (
-                    <button onClick={handleSaveTrip} disabled={isSaving} className="flex items-center justify-center px-6 py-3 bg-slate-900 text-white rounded-xl font-bold shadow-lg shadow-slate-900/20 hover:bg-slate-800 transition-colors">
+                    <button onClick={handleSaveTrip} disabled={isSaving} className="flex items-center justify-center px-6 py-3 bg-black text-white rounded-full font-bold shadow-md hover:bg-slate-800 transition-colors">
                       {isSaving ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : <Save className="w-5 h-5 mr-2" />}
                       Save Trip
                     </button>
                   )}
-                  <button onClick={() => setStep('input')} className="flex items-center justify-center px-6 py-3 bg-slate-100 text-slate-700 rounded-xl font-bold hover:bg-slate-200 transition-colors">
+                  <button onClick={() => setStep('input')} className="flex items-center justify-center px-6 py-3 bg-slate-100 text-slate-700 rounded-full font-bold hover:bg-slate-200 transition-colors">
                     <RefreshCw className="w-5 h-5 mr-2" /> Regenerate
                   </button>
                 </div>
@@ -324,12 +331,12 @@ export default function AITripAssistant() {
                 {/* Left: Itinerary */}
                 <div className="lg:col-span-2 space-y-6">
                   <h3 className="text-2xl font-black tracking-tighter flex items-center">
-                    <Calendar className="w-6 h-6 mr-2 text-violet-500" /> Day-wise Itinerary
+                    <Calendar className="w-6 h-6 mr-2 text-black" /> Day-wise Itinerary
                   </h3>
                   
                   {tripData.days.map((day) => (
-                    <div key={day.dayNumber} className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
-                      <h4 className="text-lg font-bold border-b border-slate-100 pb-3 mb-4 text-violet-900">Day {day.dayNumber}: {day.title}</h4>
+                    <div key={day.dayNumber} className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100">
+                      <h4 className="text-lg font-bold border-b border-slate-100 pb-3 mb-4 text-black">Day {day.dayNumber}: {day.title}</h4>
                       <div className="space-y-6">
                         {day.activities.map((act) => (
                           <div key={act.id} className="flex gap-4">
@@ -353,44 +360,44 @@ export default function AITripAssistant() {
                 <div className="space-y-6">
                   
                   {/* Optimization Tools */}
-                  <div className="bg-gradient-to-br from-violet-50 to-fuchsia-50 rounded-2xl p-6 border border-violet-100">
-                    <h3 className="text-lg font-black tracking-tighter mb-4 flex items-center text-violet-900">
-                      <Sparkles className="w-5 h-5 mr-2 text-fuchsia-500" /> Optimize Trip
+                  <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm">
+                    <h3 className="text-lg font-black tracking-tighter mb-4 flex items-center text-slate-900">
+                      <Sparkles className="w-5 h-5 mr-2 text-yellow-500" /> Optimize Trip
                     </h3>
                     <div className="grid grid-cols-2 gap-3">
-                      <button onClick={() => handleRefine('reduce-cost')} className="bg-white border border-violet-200 text-violet-700 text-sm font-bold py-2 px-3 rounded-lg flex items-center justify-center hover:bg-violet-600 hover:text-white transition-colors">
+                      <button onClick={() => handleRefine('reduce-cost')} className="bg-slate-50 border border-slate-200 text-slate-700 text-sm font-bold py-2 px-3 rounded-xl flex items-center justify-center hover:border-black transition-colors">
                         <TrendingDown className="w-4 h-4 mr-1" /> Reduce Cost
                       </button>
-                      <button onClick={() => handleRefine('relax')} className="bg-white border border-violet-200 text-violet-700 text-sm font-bold py-2 px-3 rounded-lg flex items-center justify-center hover:bg-violet-600 hover:text-white transition-colors">
+                      <button onClick={() => handleRefine('relax')} className="bg-slate-50 border border-slate-200 text-slate-700 text-sm font-bold py-2 px-3 rounded-xl flex items-center justify-center hover:border-black transition-colors">
                         <Coffee className="w-4 h-4 mr-1" /> More Relaxed
                       </button>
-                      <button onClick={() => handleRefine('add-activities')} className="bg-white border border-violet-200 text-violet-700 text-sm font-bold py-2 px-3 rounded-lg flex items-center justify-center hover:bg-violet-600 hover:text-white transition-colors">
+                      <button onClick={() => handleRefine('add-activities')} className="bg-slate-50 border border-slate-200 text-slate-700 text-sm font-bold py-2 px-3 rounded-xl flex items-center justify-center hover:border-black transition-colors">
                         <Activity className="w-4 h-4 mr-1" /> Action Packed
                       </button>
-                      <button onClick={() => handleRefine('add-food')} className="bg-white border border-violet-200 text-violet-700 text-sm font-bold py-2 px-3 rounded-lg flex items-center justify-center hover:bg-violet-600 hover:text-white transition-colors">
+                      <button onClick={() => handleRefine('add-food')} className="bg-slate-50 border border-slate-200 text-slate-700 text-sm font-bold py-2 px-3 rounded-xl flex items-center justify-center hover:border-black transition-colors">
                         <Utensils className="w-4 h-4 mr-1" /> More Food
                       </button>
                     </div>
                   </div>
 
                   {/* Recommendations */}
-                  <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
-                    <h3 className="text-lg font-black tracking-tighter mb-4 flex items-center">
-                      <Edit3 className="w-5 h-5 mr-2 text-blue-500" /> AI Insights
+                  <div className="bg-yellow-50 rounded-3xl p-6 border border-yellow-100 shadow-sm">
+                    <h3 className="text-lg font-black tracking-tighter mb-4 flex items-center text-yellow-900">
+                      <Sparkles className="w-5 h-5 mr-2 text-yellow-600" /> AI Insights
                     </h3>
                     <ul className="space-y-3">
                       {tripData.recommendations.map((rec, i) => (
-                        <li key={i} className="text-sm text-slate-600 font-medium flex items-start">
-                          <span className="text-fuchsia-500 mr-2">•</span> {rec}
+                        <li key={i} className="text-sm text-yellow-800 font-medium flex items-start">
+                          <span className="text-yellow-600 mr-2">•</span> {rec}
                         </li>
                       ))}
                     </ul>
                   </div>
 
                   {/* Budget */}
-                  <div className="bg-slate-900 rounded-2xl p-6 shadow-sm text-white">
+                  <div className="bg-black rounded-3xl p-6 shadow-sm text-white">
                     <h3 className="text-lg font-black tracking-tighter mb-4 flex items-center">
-                      <Wallet className="w-5 h-5 mr-2 text-green-400" /> Estimated Budget
+                      <Wallet className="w-5 h-5 mr-2 text-yellow-400" /> Estimated Budget
                     </h3>
                     
                     <div className="space-y-3 mb-6">
@@ -400,15 +407,15 @@ export default function AITripAssistant() {
                       <div className="flex justify-between text-sm"><span className="text-slate-400">Activities</span><span className="font-bold">₹{tripData.expenses.activities.toLocaleString()}</span></div>
                     </div>
                     
-                    <div className="border-t border-slate-700 pt-4 mb-4">
+                    <div className="border-t border-slate-800 pt-4 mb-4">
                       <div className="flex justify-between items-end">
                         <span className="text-slate-400 font-medium">Total Estimate</span>
-                        <span className="text-2xl font-black">₹{tripData.estimatedCost.toLocaleString()}</span>
+                        <span className="text-2xl font-black text-yellow-400">₹{tripData.estimatedCost.toLocaleString()}</span>
                       </div>
                     </div>
                     
                     <div className="w-full bg-slate-800 rounded-full h-2 mb-2">
-                      <div className={`h-2 rounded-full ${tripData.budgetStatus === 'within' ? 'bg-green-400' : 'bg-red-500'}`} style={{ width: `${Math.min((tripData.estimatedCost / tripData.budget) * 100, 100)}%` }}></div>
+                      <div className={`h-2 rounded-full ${tripData.budgetStatus === 'within' ? 'bg-emerald-400' : 'bg-red-500'}`} style={{ width: `${Math.min((tripData.estimatedCost / tripData.budget) * 100, 100)}%` }}></div>
                     </div>
                     <div className="text-xs font-bold text-slate-400 text-right">
                       Budget: ₹{tripData.budget.toLocaleString()}
