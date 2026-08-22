@@ -90,6 +90,30 @@ export default function Dashboard() {
         </motion.div>
       </motion.div>
 
+      {/* AI Assistant Card */}
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
+        className="mb-16 relative overflow-hidden rounded-3xl bg-gradient-to-r from-violet-900 via-fuchsia-900 to-slate-900 text-white shadow-2xl shadow-fuchsia-900/20"
+      >
+        <div className="absolute top-0 right-0 -mt-10 -mr-10 w-40 h-40 bg-fuchsia-500 rounded-full blur-3xl opacity-30"></div>
+        <div className="absolute bottom-0 left-0 -mb-10 -ml-10 w-40 h-40 bg-violet-500 rounded-full blur-3xl opacity-30"></div>
+        
+        <div className="relative p-8 md:p-10 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div>
+            <h3 className="text-3xl font-black tracking-tighter mb-2 flex items-center">
+              <Sparkles className="text-fuchsia-400 mr-3 w-8 h-8" /> 
+              AI Trip Assistant
+            </h3>
+            <p className="text-violet-100 font-medium text-lg max-w-2xl">
+              Tell us where you want to go, your budget and your travel style. We'll help build your perfect trip.
+            </p>
+          </div>
+          <Link to="/ai-trip-assistant" className="shrink-0 bg-white text-fuchsia-900 hover:bg-fuchsia-50 px-8 py-4 rounded-full font-bold text-lg shadow-xl shadow-black/10 transition-all hover:scale-105 active:scale-95 flex items-center">
+            Plan with AI <ArrowRight className="ml-2 w-5 h-5" />
+          </Link>
+        </div>
+      </motion.div>
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
         <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4 }}>
           <div className="flex justify-between items-center mb-6">
