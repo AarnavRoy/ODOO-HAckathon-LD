@@ -50,3 +50,9 @@ export const copySharedTrip = async (shareToken) => {
 export const getAdminStats = async () => {
   return await api.get('/admin/stats');
 };
+
+export const uploadTripCoverPhoto = async (tripId, file) => {
+  const formData = new FormData();
+  formData.append('file', file);
+  return await api.postFormData(`/trips/${tripId}/cover-photo`, formData);
+};

@@ -1,114 +1,67 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import AppLayout from '../components/AppLayout';
-import { getMe, updateMe, deleteMe } from '../api/auth';
-import { useNavigate } from 'react-router-dom';
+import { getMe, updateMe } from '../api/auth';
+import { motion } from 'framer-motion';
+
+const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
 export default function Profile() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
+  const [name, setName] = useState('');
   const [message, setMessage] = useState('');
-  const navigate = useNavigate();
 
   useEffect(() => {
     getMe().then(data => {
       setUser(data.user || data);
+      setName((data.user || data)?.name || '');
       setLoading(false);
     }).catch(err => {
       console.error(err);
-      if (err.status === 401 || err.status === 403) {
-        localStorage.removeItem('token');
-        window.location.href = '/login';
-      }
+      if (err.status === 401 || err.status === 403) { localStorage.removeItem('token'); window.location.href = '/login'; }
       setLoading(false);
     });
   }, []);
 
-  const handleChange = (e) => {
-    setUser({ ...user, [e.target.name]: e.target.value });
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setSaving(true);
-    setMessage('');
     try {
-      await updateMe(user);
+      await updateMe({ name });
       setMessage('Profile updated successfully');
     } catch (err) {
       setMessage('Failed to update profile');
-    } finally {
-      setSaving(false);
     }
   };
 
-  const handleDelete = async () => {
-    if (window.confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
-      await deleteMe();
-      localStorage.removeItem('token');
-      navigate('/login');
-    }
-  };
+  if (loading) return <AppLayout title="Profile"><div className="text-center py-20 text-slate-500 animate-pulse font-semibold">Loading profile...</div></AppLayout>;
 
-  if (loading) return <AppLayout title="Profile Settings"><div className="text-center py-10">Loading...</div></AppLayout>;
+  const inputClass = "w-full bg-white/5 border border-white/10 rounded-xl py-3.5 px-4 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50 transition-all text-sm";
 
   return (
-    <AppLayout title="Profile Settings">
-      <div className="max-w-2xl bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-        {message && <div className={`p-3 mb-4 rounded text-sm ${message.includes('success') ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>{message}</div>}
-        
+    <AppLayout title="Profile">
+      <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="max-w-lg bg-white/[0.03] border border-white/[0.06] p-8 rounded-2xl backdrop-blur-sm">
+        {message && (
+          <div className={`p-4 mb-6 rounded-xl text-sm font-semibold border ${message.includes('success') ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' : 'bg-red-500/10 border-red-500/20 text-red-400'}`}>
+            {message}
+          </div>
+        )}
+
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="flex items-center space-x-6 mb-6">
-            <div className="h-24 w-24 rounded-full overflow-hidden bg-gray-200">
-              {user.profilePhotoUrl ? (
-                <img src={user.profilePhotoUrl} alt="Profile" className="h-full w-full object-cover" />
-              ) : (
-                <div className="h-full w-full flex items-center justify-center text-gray-500 text-2xl font-bold">
-                  {user.name?.charAt(0)}
-                </div>
-              )}
-            </div>
-            <div className="flex-1">
-              <label className="block text-sm font-medium text-gray-700">Profile Photo URL</label>
-              <input type="url" name="profilePhotoUrl" value={user.profilePhotoUrl || ''} onChange={handleChange} 
-                     className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" />
-            </div>
-          </div>
-
           <div>
-            <label className="block text-sm font-medium text-gray-700">Full Name</label>
-            <input type="text" name="name" required value={user.name || ''} onChange={handleChange} 
-                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" />
+            <label className="block text-sm font-semibold text-slate-300 mb-2">Email</label>
+            <input type="email" disabled value={user?.email || ''} className={`${inputClass} opacity-50 cursor-not-allowed`} />
           </div>
-
           <div>
-            <label className="block text-sm font-medium text-gray-700">Email Address (Read-only)</label>
-            <input type="email" readOnly value={user.email || ''} 
-                   className="mt-1 block w-full border border-gray-300 bg-gray-50 rounded-md shadow-sm py-2 px-3 text-gray-500 sm:text-sm" />
+            <label className="block text-sm font-semibold text-slate-300 mb-2">Name</label>
+            <input type="text" value={name} onChange={e => setName(e.target.value)} className={inputClass} />
           </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Language Preference</label>
-            <select name="languagePreference" value={user.languagePreference || 'English'} onChange={handleChange}
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-              <option value="English">English</option>
-              <option value="Spanish">Spanish</option>
-              <option value="French">French</option>
-              <option value="German">German</option>
-              <option value="Japanese">Japanese</option>
-            </select>
-          </div>
-          
-          <div className="flex justify-between items-center pt-4 border-t">
-            <button type="button" onClick={handleDelete} className="text-red-600 hover:text-red-800 text-sm font-medium">
-              Delete Account
-            </button>
-            <button type="submit" disabled={saving} className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-              {saving ? 'Saving...' : 'Save Changes'}
-            </button>
-          </div>
+          <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} type="submit"
+            className="w-full py-3 rounded-xl text-sm font-bold text-[#0c0f1a] bg-amber-400 hover:bg-amber-300 shadow-lg shadow-amber-500/20 transition-all">
+            Save Changes
+          </motion.button>
         </form>
-      </div>
+      </motion.div>
     </AppLayout>
   );
 }

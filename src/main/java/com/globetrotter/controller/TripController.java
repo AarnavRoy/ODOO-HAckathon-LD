@@ -15,14 +15,28 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/trips")
 public class TripController {
+
+    private static final Set<String> ALLOWED_CONTENT_TYPES = Set.of(
+        "image/jpeg", "image/png", "image/gif", "image/webp"
+    );
+    private static final long MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+    private static final String UPLOAD_DIR = "./uploads/trip-covers";
 
     @Autowired
     private TripRepository tripRepository;
@@ -72,6 +86,69 @@ public class TripController {
         
         Trip savedTrip = tripRepository.save(trip);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedTrip);
+    }
+
+    @PostMapping("/{tripId}/cover-photo")
+    public ResponseEntity<?> uploadCoverPhoto(@PathVariable Long tripId, @RequestParam("file") MultipartFile file) {
+        User user = getCurrentUser();
+        Optional<Trip> tripOpt = tripRepository.findById(tripId);
+        if (tripOpt.isEmpty() || !tripOpt.get().getUser().getId().equals(user.getId())) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse("Trip not found"));
+        }
+
+        if (file.isEmpty()) {
+            return ResponseEntity.badRequest().body(new MessageResponse("No file provided"));
+        }
+
+        String contentType = file.getContentType();
+        if (contentType == null || !ALLOWED_CONTENT_TYPES.contains(contentType)) {
+            return ResponseEntity.badRequest().body(
+                new MessageResponse("Only image files are allowed (JPEG, PNG, GIF, WebP)")
+            );
+        }
+
+        if (file.getSize() > MAX_FILE_SIZE) {
+            return ResponseEntity.badRequest().body(
+                new MessageResponse("Image must be smaller than 5MB")
+            );
+        }
+
+        try {
+            Path uploadPath = Paths.get(UPLOAD_DIR);
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+
+            String originalFilename = file.getOriginalFilename();
+            String extension = "";
+            if (originalFilename != null && originalFilename.contains(".")) {
+                extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+            } else {
+                extension = switch (contentType) {
+                    case "image/jpeg" -> ".jpg";
+                    case "image/png" -> ".png";
+                    case "image/gif" -> ".gif";
+                    case "image/webp" -> ".webp";
+                    default -> ".jpg";
+                };
+            }
+
+            String filename = "trip_" + tripId + "_" + System.currentTimeMillis() + extension;
+            Path filePath = uploadPath.resolve(filename);
+            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+            String photoUrl = "/api/uploads/trip-covers/" + filename;
+            Trip trip = tripOpt.get();
+            trip.setCoverPhotoUrl(photoUrl);
+            tripRepository.save(trip);
+
+            return ResponseEntity.ok(Map.of("coverPhotoUrl", photoUrl));
+
+        } catch (IOException e) {
+            return ResponseEntity.internalServerError().body(
+                new MessageResponse("Failed to upload file: " + e.getMessage())
+            );
+        }
     }
 
     @GetMapping("/{tripId}")
