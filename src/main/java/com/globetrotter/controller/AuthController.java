@@ -241,37 +241,7 @@ public class AuthController {
         if (email == null || !GMAIL_PATTERN.matcher(email).matches()) {
             return false;
         }
-
-        // Verify with email verification API
-        try {
-            String encodedEmail = java.net.URLEncoder.encode(email, java.nio.charset.StandardCharsets.UTF_8);
-            URI uri = URI.create("https://api.eva.pingutil.com/email?email=" + encodedEmail);
-            HttpURLConnection conn = (HttpURLConnection) uri.toURL().openConnection();
-            conn.setRequestMethod("GET");
-            conn.setConnectTimeout(3000);
-            conn.setReadTimeout(3000);
-            conn.setRequestProperty("Accept", "application/json");
-
-            int responseCode = conn.getResponseCode();
-            if (responseCode == 200) {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                StringBuilder response = new StringBuilder();
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    response.append(line);
-                }
-                reader.close();
-                String json = response.toString();
-                // Check if disposable or invalid
-                if (json.contains("\"disposable\":true") || json.contains("\"deliverable\":false")) {
-                    return false;
-                }
-                return true;
-            }
-        } catch (Exception ignored) {
-            // If external verification service has a network timeout, validate format & Gmail domain structure
-        }
-
-        return GMAIL_PATTERN.matcher(email).matches();
+        // Disabled external API verification for testing/hackathon purposes
+        return true;
     }
 }

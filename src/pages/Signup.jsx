@@ -93,29 +93,9 @@ export default function Signup() {
       return;
     }
 
-    setEmailStatus('verifying');
-    setEmailMessage('Verifying email existence with verification service...');
-
-    emailTimerRef.current = setTimeout(async () => {
-      try {
-        const res = await verifyEmailApi(clean);
-        if (res.valid) {
-          setEmailStatus('valid');
-          setEmailMessage('Gmail address verified');
-        } else {
-          setEmailStatus('invalid');
-          setEmailMessage(res.message || 'Email verification failed');
-        }
-      } catch (err) {
-        // If API is unreachable, ensure format is valid
-        if (/^[a-zA-Z0-9._%+-]+@gmail\.com$/.test(clean)) {
-          setEmailStatus('valid');
-          setEmailMessage('Valid Gmail address format');
-        } else {
-          setEmailStatus('invalid');
-          setEmailMessage(err.message || 'Invalid email address');
-        }
-      }
+    emailTimerRef.current = setTimeout(() => {
+      setEmailStatus('valid');
+      setEmailMessage('Valid Gmail address format');
     }, 500);
 
     return () => clearTimeout(emailTimerRef.current);
