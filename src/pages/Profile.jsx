@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import AppLayout from '../components/AppLayout';
-import { getMe, updateProfile } from '../api/auth';
+import { getMe, updateMe } from '../api/auth';
 import { motion } from 'framer-motion';
 
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
@@ -27,7 +27,7 @@ export default function Profile() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await updateProfile({ name });
+      await updateMe({ name });
       setMessage('Profile updated successfully');
     } catch (err) {
       setMessage('Failed to update profile');
