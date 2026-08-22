@@ -188,11 +188,36 @@ public class AITripService {
         if (req.destination() == null || req.destination().trim().isEmpty()) {
             throw new IllegalArgumentException("Destination is required.");
         }
-        if (req.days() != null && (req.days() < 1 || req.days() > 30)) {
+        
+        int days = req.days() != null ? req.days() : 5;
+        if (days < 1 || days > 30) {
             throw new IllegalArgumentException("Days must be between 1 and 30.");
         }
+        
         if (req.budget() != null && req.budget() < 0) {
             throw new IllegalArgumentException("Budget cannot be negative.");
+        }
+
+        // Realistic budget validation
+        int travelers = req.travelers() != null && req.travelers() > 0 ? req.travelers() : 1;
+        double budget = req.budget() != null ? req.budget() : 20000.0;
+        
+        // Assume an absolute minimum of ₹1500 per person per day (hostel, basic food, local transport)
+        double minBudgetPerPersonPerDay = 1500.0;
+        
+        // Simple heuristic for international/expensive cities (can be expanded later)
+        String dest = req.destination().toLowerCase();
+        if (dest.contains("paris") || dest.contains("new york") || dest.contains("tokyo") || 
+            dest.contains("london") || dest.contains("dubai") || dest.contains("singapore")) {
+            minBudgetPerPersonPerDay = 5000.0; // Minimum for expensive international cities
+        }
+        
+        double minimumRealisticBudget = minBudgetPerPersonPerDay * days * travelers;
+        
+        if (budget < minimumRealisticBudget) {
+            throw new IllegalArgumentException(String.format(
+                "A budget of ₹%,.0f is too low for %d traveler(s) for %d days in %s. Please enter a realistic budget of at least ₹%,.0f.", 
+                budget, travelers, days, req.destination(), minimumRealisticBudget));
         }
     }
 

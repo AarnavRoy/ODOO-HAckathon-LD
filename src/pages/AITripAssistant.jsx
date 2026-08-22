@@ -85,7 +85,7 @@ export default function AITripAssistant() {
       setStep('result');
     } catch (err) {
       console.error('AI Generation Failed:', err);
-      alert('Failed to generate trip. Please try again.');
+      alert(err.message || 'Failed to generate trip. Please try again.');
       setStep('input');
     }
   };
