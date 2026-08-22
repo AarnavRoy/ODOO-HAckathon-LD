@@ -34,6 +34,24 @@ export const generateTripItinerary = async (preferences, onProgress) => {
     };
 
     const result = await api.post('/ai/generate-trip', payload);
+    
+    // Map backend DTO to the frontend UI's expected schema
+    if (result && result.budgetBreakdown) {
+      result.expenses = {
+        transport: result.budgetBreakdown.transport || 0,
+        stay: result.budgetBreakdown.accommodation || result.budgetBreakdown.stay || 0,
+        food: result.budgetBreakdown.food || 0,
+        activities: result.budgetBreakdown.activities || 0,
+        miscellaneous: result.budgetBreakdown.miscellaneous || 0
+      };
+    }
+    
+    // Ensure budgetStatus exists for UI styling
+    if (result && result.budget && result.estimatedCost) {
+      result.budgetStatus = result.estimatedCost <= result.budget ? 'within' : 'over';
+    } else if (result) {
+      result.budgetStatus = 'within';
+    }
 
     clearInterval(progressInterval);
     if (onProgress) onProgress('Finalizing your trip...', 100);
@@ -59,6 +77,24 @@ export const refineTripItinerary = async (currentTrip, action, onProgress) => {
     };
 
     const result = await api.post('/ai/refine-trip', payload);
+    
+    // Map backend DTO to the frontend UI's expected schema
+    if (result && result.budgetBreakdown) {
+      result.expenses = {
+        transport: result.budgetBreakdown.transport || 0,
+        stay: result.budgetBreakdown.accommodation || result.budgetBreakdown.stay || 0,
+        food: result.budgetBreakdown.food || 0,
+        activities: result.budgetBreakdown.activities || 0,
+        miscellaneous: result.budgetBreakdown.miscellaneous || 0
+      };
+    }
+    
+    // Ensure budgetStatus exists for UI styling
+    if (result && result.budget && result.estimatedCost) {
+      result.budgetStatus = result.estimatedCost <= result.budget ? 'within' : 'over';
+    } else if (result) {
+      result.budgetStatus = 'within';
+    }
 
     if (onProgress) onProgress('Optimization complete!', 100);
     await delay(300);
