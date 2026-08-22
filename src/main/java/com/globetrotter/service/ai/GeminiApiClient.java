@@ -16,7 +16,7 @@ public class GeminiApiClient implements AIProviderClient {
     @Value("${ai.api.key:}")
     private String apiKey;
 
-    @Value("${ai.model:gemini-1.5-flash}")
+    @Value("${ai.model:gemini-flash-latest}")
     private String model;
 
     private final RestTemplate restTemplate;
