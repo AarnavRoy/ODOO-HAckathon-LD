@@ -14,27 +14,46 @@ export default function AppLayout({ children, title }) {
     navigate('/login');
   };
 
-  const navLinks = [
-    { to: '/', label: 'Home', icon: Home, match: (p) => p === '/' },
-    { to: '/trips', label: 'My Trips', icon: Map, match: (p) => p.startsWith('/trips') && !p.includes('/new') },
-    { to: '/trips/new', label: 'Plan Trip', icon: Plus, match: (p) => p === '/trips/new' },
-    { to: '/ai-planner', label: 'AI Planner', icon: Sparkles, match: (p) => p === '/ai-planner' },
-    { to: '/profile', label: 'Profile', icon: User, match: (p) => p === '/profile' },
-  ];
-
-  if (user?.role === 'ROLE_ADMIN') {
-    navLinks.push({ to: '/admin', label: 'Admin', icon: ShieldCheck, match: (p) => p.startsWith('/admin') });
+  const isAdminRoute = location.pathname.startsWith('/admin');
+  
+  let navLinks = [];
+  if (isAdminRoute && user?.role === 'ROLE_ADMIN') {
+    navLinks = [
+      { to: '/admin', label: 'Admin Portal', icon: ShieldCheck, match: (p) => p.startsWith('/admin') }
+    ];
+  } else {
+    navLinks = [
+      { to: '/', label: 'Home', icon: Home, match: (p) => p === '/' },
+      { to: '/trips', label: 'My Trips', icon: Map, match: (p) => p.startsWith('/trips') && !p.includes('/new') },
+      { to: '/trips/new', label: 'Plan Trip', icon: Plus, match: (p) => p === '/trips/new' },
+      { to: '/ai-planner', label: 'AI Planner', icon: Sparkles, match: (p) => p === '/ai-planner' },
+      { to: '/profile', label: 'Profile', icon: User, match: (p) => p === '/profile' },
+    ];
   }
+  
+  const layoutClasses = isAdminRoute 
+    ? "min-h-[100dvh] bg-slate-950 flex flex-col font-sans text-white" 
+    : "min-h-[100dvh] bg-gradient-to-br from-[#FEFCE8] to-[#f8f9fa] flex flex-col font-sans text-slate-900";
+
+  const headerClasses = isAdminRoute
+    ? "flex flex-wrap justify-between items-center bg-slate-900/70 backdrop-blur-md border border-white/10 p-3 rounded-3xl shadow-sm gap-3"
+    : "flex flex-wrap justify-between items-center bg-white/70 backdrop-blur-md border border-slate-200/60 p-3 rounded-3xl shadow-sm gap-3";
+
+  const logoClasses = isAdminRoute
+    ? "flex-shrink-0 flex items-center text-2xl font-extrabold tracking-tight text-white hover:scale-105 transition-transform"
+    : "flex-shrink-0 flex items-center text-2xl font-extrabold tracking-tight text-slate-900 hover:scale-105 transition-transform";
+
+  const globeIconClasses = isAdminRoute ? "w-7 h-7 mr-2 text-white" : "w-7 h-7 mr-2 text-black";
 
   return (
-    <div className="min-h-[100dvh] bg-gradient-to-br from-[#FEFCE8] to-[#f8f9fa] flex flex-col font-sans text-slate-900">
+    <div className={layoutClasses}>
       {/* Navbar */}
       <header className="sticky top-4 z-50 px-4 sm:px-6 lg:px-8 mt-4">
         <div className="max-w-7xl mx-auto">
-          <div className="flex flex-wrap justify-between items-center bg-white/70 backdrop-blur-md border border-slate-200/60 p-3 rounded-3xl shadow-sm gap-3">
+          <div className={headerClasses}>
             {/* Logo */}
-            <Link to="/" className="flex-shrink-0 flex items-center text-2xl font-extrabold tracking-tight text-slate-900 hover:scale-105 transition-transform">
-              <Globe className="w-7 h-7 mr-2 text-black" />
+            <Link to="/" className={logoClasses}>
+              <Globe className={globeIconClasses} />
               GlobeTrotter<span className="text-yellow-400">.</span>
             </Link>
             
@@ -61,7 +80,7 @@ export default function AppLayout({ children, title }) {
             {/* Logout */}
             <button 
               onClick={handleLogout} 
-              className="text-slate-600 hover:text-red-500 flex items-center text-xs sm:text-sm font-semibold transition-colors active:scale-95 hover:bg-black/5 px-4 py-2 rounded-full cursor-pointer"
+              className={`flex items-center text-xs sm:text-sm font-semibold transition-colors active:scale-95 px-4 py-2 rounded-full cursor-pointer ${isAdminRoute ? 'text-slate-300 hover:text-red-400 hover:bg-white/5' : 'text-slate-600 hover:text-red-500 hover:bg-black/5'}`}
             >
               <LogOut className="w-4 h-4 mr-1.5" /> Logout
             </button>
