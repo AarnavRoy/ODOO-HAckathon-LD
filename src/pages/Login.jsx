@@ -224,9 +224,14 @@ export default function Login() {
             </motion.button>
           </form>
           
-          <p className="mt-8 text-center text-sm font-medium text-slate-500">
-            Don't have an account? <Link to="/signup" className="font-bold text-black hover:text-yellow-600">Create one</Link>
-          </p>
+          <div className="mt-8 text-center space-y-3">
+            <p className="text-sm font-medium text-slate-500">
+              Don't have an account? <Link to="/signup" className="font-bold text-black hover:text-yellow-600">Create one</Link>
+            </p>
+            <p className="text-xs font-medium text-slate-400">
+              Are you an administrator? <Link to="/admin/login" className="font-bold text-slate-600 hover:text-black">Admin Login</Link>
+            </p>
+          </div>
         </div>
       </motion.div>
       
