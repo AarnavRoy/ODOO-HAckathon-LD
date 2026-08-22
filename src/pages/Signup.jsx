@@ -15,6 +15,19 @@ export default function Signup() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+
+    // Email Validation (Restrict to specific providers)
+    if (!/^[^\s@]+@(gmail\.com|yahoo\.com|outlook\.com|hotmail\.com)$/i.test(email)) {
+      setError('Please enter a valid email address from a supported provider (e.g. @gmail.com, @yahoo.com)');
+      return;
+    }
+
+    // Password Validation: letters, numbers, special characters
+    if (!/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])/.test(password)) {
+      setError('Password must contain at least one letter, one number, and one special character.');
+      return;
+    }
+
     setLoading(true);
     try {
       const { token } = await signup({ name, email, password });
