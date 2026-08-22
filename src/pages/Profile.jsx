@@ -107,20 +107,20 @@ export default function Profile() {
     );
   }
 
-  const inputClass = "w-full bg-white/[0.04] border border-white/[0.12] rounded-xl py-3 px-4 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500/40 focus:border-amber-500/60 transition-all text-sm";
+  const inputClass = "w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-slate-900 font-medium placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-black focus:border-black transition-all text-sm";
 
   return (
     <AppLayout title="Profile Settings">
       <motion.div 
         initial={{ opacity: 0, y: 16 }} 
         animate={{ opacity: 1, y: 0 }} 
-        className="max-w-2xl bg-white/[0.03] border border-white/[0.08] p-8 rounded-3xl backdrop-blur-md shadow-2xl"
+        className="max-w-2xl bg-white border border-slate-100 p-8 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
       >
         {/* Header summary */}
-        <div className="flex flex-col sm:flex-row items-center gap-6 mb-8 pb-8 border-b border-white/[0.08]">
+        <div className="flex flex-col sm:flex-row items-center gap-6 mb-8 pb-8 border-b border-slate-100">
           {/* Avatar with Upload */}
           <div className="relative group">
-            <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-amber-400/50 bg-slate-800 flex items-center justify-center text-white text-3xl font-bold shadow-lg">
+            <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-slate-200 bg-slate-100 flex items-center justify-center text-slate-800 text-3xl font-bold shadow-sm">
               {user?.profilePhotoUrl ? (
                 <img src={user.profilePhotoUrl} alt={user.name} className="w-full h-full object-cover" />
               ) : (
@@ -131,13 +131,13 @@ export default function Profile() {
               type="button"
               onClick={() => fileInputRef.current?.click()}
               disabled={uploadingPhoto}
-              className="absolute inset-0 bg-black/60 rounded-full flex flex-col items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer text-xs font-semibold"
+              className="absolute inset-0 bg-black/60 rounded-full flex flex-col items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer text-xs font-bold"
             >
               {uploadingPhoto ? (
                 <Loader2 className="w-5 h-5 animate-spin" />
               ) : (
                 <>
-                  <Camera className="w-5 h-5 mb-0.5 text-amber-400" />
+                  <Camera className="w-5 h-5 mb-0.5 text-yellow-400" />
                   <span>Change</span>
                 </>
               )}
@@ -152,12 +152,12 @@ export default function Profile() {
           </div>
 
           <div className="text-center sm:text-left">
-            <h2 className="text-2xl font-black text-white tracking-tight flex items-center justify-center sm:justify-start gap-2">
-              {user?.name} <Sparkles className="w-5 h-5 text-amber-400" />
+            <h2 className="text-2xl font-black text-slate-900 tracking-tight flex items-center justify-center sm:justify-start gap-2">
+              {user?.name} <Sparkles className="w-5 h-5 text-yellow-500" />
             </h2>
-            <p className="text-xs font-semibold text-slate-400 mt-0.5">@{user?.username || 'user'}</p>
-            <p className="text-xs text-slate-500 mt-1 flex items-center justify-center sm:justify-start gap-1">
-              <Mail className="w-3.5 h-3.5" /> {user?.email}
+            <p className="text-xs font-bold text-slate-500 mt-0.5">@{user?.username || 'user'}</p>
+            <p className="text-xs font-medium text-slate-500 mt-1 flex items-center justify-center sm:justify-start gap-1.5">
+              <Mail className="w-3.5 h-3.5 text-slate-400" /> {user?.email}
             </p>
           </div>
         </div>
@@ -167,10 +167,10 @@ export default function Profile() {
           <motion.div 
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className={`p-4 mb-6 rounded-2xl text-sm font-semibold border flex items-center gap-2.5 ${
+            className={`p-4 mb-6 rounded-2xl text-sm font-bold border flex items-center gap-2.5 ${
               isSuccess 
-                ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' 
-                : 'bg-rose-500/10 border-rose-500/20 text-rose-400'
+                ? 'bg-emerald-50 border-emerald-200 text-emerald-700' 
+                : 'bg-rose-50 border-rose-200 text-rose-700'
             }`}
           >
             {isSuccess ? <CheckCircle2 className="w-5 h-5 shrink-0" /> : <AlertCircle className="w-5 h-5 shrink-0 text-rose-400" />}
@@ -181,8 +181,8 @@ export default function Profile() {
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Email (Read only) */}
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-              <Mail className="w-3.5 h-3.5 text-slate-400" /> Email Address
+            <label className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+              <Mail className="w-3.5 h-3.5" /> Email Address
             </label>
             <input 
               type="email" 
@@ -194,8 +194,8 @@ export default function Profile() {
 
           {/* Full Name */}
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
-              <User className="w-3.5 h-3.5 text-amber-400" /> Full Name *
+            <label className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+              <User className="w-3.5 h-3.5 text-yellow-500" /> Full Name *
             </label>
             <input 
               type="text" 
@@ -210,10 +210,10 @@ export default function Profile() {
           {/* Cascading Location Selector (Country -> State -> City) */}
           <div className="pt-2">
             <div className="mb-3">
-              <h3 className="text-sm font-black uppercase tracking-wider text-white">
+              <h3 className="text-sm font-black uppercase tracking-wider text-slate-900">
                 Location Information
               </h3>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-slate-500">
                 Select your verified location using the dependent Country, State, and City selectors.
               </p>
             </div>
@@ -232,7 +232,7 @@ export default function Profile() {
             whileTap={{ scale: 0.99 }} 
             type="submit"
             disabled={saving}
-            className="w-full py-3.5 rounded-xl text-sm font-bold text-[#0c0f1a] bg-amber-400 hover:bg-amber-300 shadow-lg shadow-amber-500/25 transition-all cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2"
+            className="w-full py-3.5 rounded-full text-sm font-bold text-white bg-black hover:bg-yellow-400 hover:text-black shadow-md transition-all cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2"
           >
             {saving ? (
               <>

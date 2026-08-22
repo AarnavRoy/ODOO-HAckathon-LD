@@ -120,7 +120,7 @@ export default function ItineraryView() {
         setAiPlan(planData);
       } catch (err) {
         console.error(err);
-      } fontFinally: {
+      } finally {
         setLoading(false);
       }
     };
@@ -152,11 +152,11 @@ export default function ItineraryView() {
 
   const getCategoryIcon = (category) => {
     switch (category?.toUpperCase()) {
-      case 'FOOD': return <Utensils className="w-4 h-4 text-orange-400" />;
-      case 'CULTURE': return <Compass className="w-4 h-4 text-violet-400" />;
-      case 'RELAXATION': return <Moon className="w-4 h-4 text-cyan-400" />;
-      case 'SIGHTSEEING': return <Camera className="w-4 h-4 text-rose-400" />;
-      default: return <Sparkles className="w-4 h-4 text-amber-400" />;
+      case 'FOOD': return <Utensils className="w-3.5 h-3.5 text-amber-700" />;
+      case 'CULTURE': return <Compass className="w-3.5 h-3.5 text-blue-700" />;
+      case 'RELAXATION': return <Moon className="w-3.5 h-3.5 text-purple-700" />;
+      case 'SIGHTSEEING': return <Camera className="w-3.5 h-3.5 text-rose-700" />;
+      default: return <Sparkles className="w-3.5 h-3.5 text-yellow-700" />;
     }
   };
 
@@ -164,7 +164,7 @@ export default function ItineraryView() {
     return (
       <AppLayout title="Trip Itinerary">
         <div className="text-center py-20 text-slate-500 animate-pulse font-semibold">
-          Loading AI Day-wise Plan...
+          Loading Day-wise Plan...
         </div>
       </AppLayout>
     );
@@ -176,16 +176,16 @@ export default function ItineraryView() {
 
   return (
     <AppLayout title={trip?.name || 'Trip Details'}>
-      {/* Back Button & Header */}
+      {/* Back Button & Action Controls */}
       <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-        <Link to="/trips" className="inline-flex items-center text-slate-400 hover:text-white text-sm font-semibold transition-colors">
+        <Link to="/trips" className="inline-flex items-center text-slate-600 hover:text-black text-sm font-bold transition-colors">
           <ArrowLeft className="w-4 h-4 mr-2" /> Back to My Trips
         </Link>
 
         <div className="flex items-center space-x-3">
           <Link 
             to={`/trips/${tripId}/build`}
-            className="inline-flex items-center bg-amber-400 hover:bg-amber-300 text-[#0c0f1a] px-5 py-2.5 rounded-xl font-extrabold text-sm shadow-lg shadow-amber-500/20 transition-all hover:scale-105 active:scale-95"
+            className="inline-flex items-center bg-black hover:bg-yellow-400 hover:text-black text-white px-6 py-3 rounded-full font-bold text-sm shadow-md transition-all hover:scale-105 active:scale-95"
           >
             <Edit3 className="w-4 h-4 mr-2" /> Edit Trip & Activities
           </Link>
@@ -193,43 +193,42 @@ export default function ItineraryView() {
       </div>
 
       {/* Hero Header Card */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-slate-900 via-purple-950 to-slate-900 border border-white/10 p-8 md:p-10 mb-8 shadow-2xl">
-        <div className="absolute top-0 right-0 -mt-10 -mr-10 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl"></div>
+      <div className="relative overflow-hidden rounded-3xl bg-white border border-slate-100 p-8 md:p-10 mb-8 shadow-sm">
         <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
           <div>
             <div className="flex flex-wrap items-center gap-3 mb-3">
-              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-extrabold bg-amber-400/20 text-amber-300 border border-amber-400/30">
-                <Sparkles className="w-3.5 h-3.5 mr-1.5" /> AI Generated Plan
+              <span className="inline-flex items-center px-3.5 py-1 rounded-full text-xs font-bold bg-yellow-100 text-yellow-900 border border-yellow-300">
+                <Sparkles className="w-3.5 h-3.5 mr-1.5 text-yellow-700" /> Plan Overview
               </span>
-              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-extrabold bg-cyan-400/20 text-cyan-300 border border-cyan-400/30">
-                <Calendar className="w-3.5 h-3.5 mr-1.5" /> {trip?.startDate || '2026-08-22'} → {trip?.endDate || '2026-08-27'}
+              <span className="inline-flex items-center px-3.5 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-700 border border-slate-200">
+                <Calendar className="w-3.5 h-3.5 mr-1.5 text-slate-500" /> {trip?.startDate || '2026-08-22'} → {trip?.endDate || '2026-08-27'}
               </span>
               {aiPlan?.days?.length > 0 && (
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-extrabold bg-purple-400/20 text-purple-300 border border-purple-400/30">
+                <span className="inline-flex items-center px-3.5 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-700 border border-slate-200">
                   {aiPlan.days.length} Days Plan
                 </span>
               )}
             </div>
-            <h1 className="text-3xl md:text-5xl font-black text-white tracking-tight drop-shadow-md mb-2">
+            <h1 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tight mb-2">
               {trip?.name || aiPlan?.tripName || 'Goa Explorer'}
             </h1>
-            <p className="text-slate-400 font-medium flex items-center text-base">
-              <MapPin className="w-4 h-4 mr-1.5 text-rose-400 shrink-0" />
+            <p className="text-slate-600 font-medium flex items-center text-base">
+              <MapPin className="w-4 h-4 mr-1.5 text-slate-900 shrink-0" />
               {trip?.destination || aiPlan?.destination || 'Goa'} 
               {trip?.description && <span className="ml-3 text-slate-500">• {trip.description}</span>}
             </p>
           </div>
 
           {/* Budget Metric Box */}
-          <div className="bg-white/5 backdrop-blur-md border border-white/10 p-5 rounded-2xl shrink-0 w-full md:w-auto">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-400 block mb-1">
+          <div className="bg-[#FEFCE8] border border-yellow-200 p-6 rounded-3xl shrink-0 w-full md:w-auto text-slate-900">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-500 block mb-1">
               Estimated Budget
             </span>
-            <div className="text-3xl font-extrabold text-amber-400">
+            <div className="text-3xl font-black text-slate-900">
               ₹{aiPlan?.estimatedCost?.toLocaleString('en-IN') || trip?.budgetLimit?.toLocaleString('en-IN') || '20,000'}
             </div>
-            <div className="text-xs text-slate-400 mt-1 flex items-center">
-              <Wallet className="w-3.5 h-3.5 mr-1 text-emerald-400" />
+            <div className="text-xs text-slate-600 mt-1.5 flex items-center font-medium">
+              <Wallet className="w-3.5 h-3.5 mr-1 text-slate-900" />
               Budget Limit: ₹{trip?.budgetLimit?.toLocaleString('en-IN') || aiPlan?.budget?.toLocaleString('en-IN') || '20,000'}
             </div>
           </div>
@@ -243,10 +242,10 @@ export default function ItineraryView() {
         <div className="flex items-center space-x-2 overflow-x-auto pb-2 md:pb-0 max-w-full">
           <button
             onClick={() => setSelectedDay('all')}
-            className={`px-4 py-2 rounded-xl text-xs font-extrabold transition-all shrink-0 ${
+            className={`px-5 py-2.5 rounded-full text-xs font-bold transition-all shrink-0 ${
               selectedDay === 'all'
-                ? 'bg-amber-400 text-[#0c0f1a] shadow-lg shadow-amber-500/20'
-                : 'bg-white/5 text-slate-400 hover:text-white hover:bg-white/10'
+                ? 'bg-black text-white shadow-md'
+                : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50'
             }`}
           >
             All Days ({aiPlan?.days?.length || 0})
@@ -255,10 +254,10 @@ export default function ItineraryView() {
             <button
               key={d.dayNumber}
               onClick={() => setSelectedDay(String(d.dayNumber))}
-              className={`px-4 py-2 rounded-xl text-xs font-extrabold transition-all shrink-0 ${
+              className={`px-5 py-2.5 rounded-full text-xs font-bold transition-all shrink-0 ${
                 selectedDay === String(d.dayNumber)
-                  ? 'bg-amber-400 text-[#0c0f1a] shadow-lg shadow-amber-500/20'
-                  : 'bg-white/5 text-slate-400 hover:text-white hover:bg-white/10'
+                  ? 'bg-black text-white shadow-md'
+                  : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50'
               }`}
             >
               Day {d.dayNumber}
@@ -267,19 +266,19 @@ export default function ItineraryView() {
         </div>
 
         {/* View Mode Toggle */}
-        <div className="flex items-center bg-white/5 p-1 rounded-xl border border-white/10 shrink-0">
+        <div className="flex items-center bg-white p-1.5 rounded-full border border-slate-200 shadow-sm shrink-0">
           <button
             onClick={() => setViewMode('timeline')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-extrabold transition-colors ${
-              viewMode === 'timeline' ? 'bg-amber-400 text-[#0c0f1a]' : 'text-slate-400 hover:text-white'
+            className={`px-4 py-2 rounded-full text-xs font-bold transition-colors ${
+              viewMode === 'timeline' ? 'bg-yellow-400 text-black shadow-sm' : 'text-slate-600 hover:text-black'
             }`}
           >
             Day Timeline
           </button>
           <button
             onClick={() => setViewMode('budget')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-extrabold transition-colors ${
-              viewMode === 'budget' ? 'bg-amber-400 text-[#0c0f1a]' : 'text-slate-400 hover:text-white'
+            className={`px-4 py-2 rounded-full text-xs font-bold transition-colors ${
+              viewMode === 'budget' ? 'bg-yellow-400 text-black shadow-sm' : 'text-slate-600 hover:text-black'
             }`}
           >
             Budget & Insights
@@ -295,56 +294,56 @@ export default function ItineraryView() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               key={day.dayNumber}
-              className="bg-white/[0.03] border border-white/[0.06] rounded-3xl p-6 md:p-8"
+              className="bg-white border border-slate-100 rounded-3xl p-6 md:p-8 shadow-sm"
             >
               {/* Day Header */}
-              <div className="flex justify-between items-center border-b border-white/10 pb-4 mb-6">
+              <div className="flex justify-between items-center border-b border-slate-100 pb-4 mb-6">
                 <div>
-                  <span className="text-xs font-extrabold uppercase tracking-wider text-amber-400 block mb-1">
+                  <span className="text-xs font-bold uppercase tracking-wider text-yellow-700 block mb-1">
                     Day {day.dayNumber}
                   </span>
-                  <h3 className="text-xl md:text-2xl font-extrabold text-white">
+                  <h3 className="text-xl md:text-2xl font-black text-slate-900">
                     {day.title}
                   </h3>
                 </div>
-                <span className="bg-white/5 text-slate-400 text-xs font-bold px-3 py-1.5 rounded-lg border border-white/5">
+                <span className="bg-slate-100 text-slate-700 text-xs font-bold px-3.5 py-1.5 rounded-full border border-slate-200">
                   {day.activities?.length || 0} Activities
                 </span>
               </div>
 
               {/* Time-slotted Activities Timeline */}
-              <div className="relative pl-6 md:pl-8 space-y-6 before:absolute before:left-2.5 md:before:left-3.5 before:top-3 before:bottom-3 before:w-0.5 before:bg-white/10">
+              <div className="relative pl-6 md:pl-8 space-y-6 before:absolute before:left-2.5 md:before:left-3.5 before:top-3 before:bottom-3 before:w-0.5 before:bg-slate-200">
                 {day.activities?.map((act) => (
                   <div key={act.id} className="relative group">
                     {/* Timeline Node */}
-                    <div className="absolute -left-6 md:-left-8 top-1.5 w-5 h-5 rounded-full bg-[#0c0f1a] border-2 border-amber-400 flex items-center justify-center group-hover:scale-125 transition-transform">
-                      <div className="w-1.5 h-1.5 bg-amber-400 rounded-full"></div>
+                    <div className="absolute -left-6 md:-left-8 top-1.5 w-5 h-5 rounded-full bg-white border-2 border-black flex items-center justify-center group-hover:scale-125 transition-transform">
+                      <div className="w-1.5 h-1.5 bg-yellow-400 rounded-full"></div>
                     </div>
 
                     {/* Activity Card */}
-                    <div className="bg-white/[0.02] border border-white/[0.06] hover:border-amber-500/30 rounded-2xl p-5 transition-all">
+                    <div className="bg-[#FEFCE8]/50 border border-yellow-100 hover:border-yellow-300 rounded-2xl p-5 transition-all">
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
                         <div className="flex items-center space-x-3">
-                          <span className="text-xs font-bold text-amber-400 bg-amber-400/10 px-2.5 py-1 rounded-md flex items-center">
+                          <span className="text-xs font-bold text-slate-900 bg-yellow-200/80 px-3 py-1 rounded-full flex items-center">
                             <Clock className="w-3.5 h-3.5 mr-1" /> {act.time}
                           </span>
-                          <span className="text-xs font-extrabold uppercase tracking-wider text-slate-400 flex items-center bg-white/5 px-2.5 py-1 rounded-md border border-white/5">
+                          <span className="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center bg-white px-3 py-1 rounded-full border border-slate-200 shadow-sm">
                             {getCategoryIcon(act.category)}
                             <span className="ml-1.5">{act.category}</span>
                           </span>
                         </div>
                         {act.cost > 0 && (
-                          <span className="text-sm font-extrabold text-emerald-400">
+                          <span className="text-sm font-black text-slate-900 bg-white px-3 py-1 rounded-full border border-slate-200 shadow-sm">
                             ₹{act.cost.toLocaleString('en-IN')}
                           </span>
                         )}
                       </div>
 
-                      <h4 className="text-lg font-extrabold text-white mb-1 group-hover:text-amber-400 transition-colors">
+                      <h4 className="text-lg font-bold text-slate-900 mb-1">
                         {act.name}
                       </h4>
                       {act.description && (
-                        <p className="text-sm text-slate-400 font-medium leading-relaxed">
+                        <p className="text-sm text-slate-600 font-medium leading-relaxed">
                           {act.description}
                         </p>
                       )}
@@ -361,23 +360,23 @@ export default function ItineraryView() {
       {viewMode === 'budget' && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Budget Breakdown */}
-          <div className="bg-white/[0.03] border border-white/[0.06] rounded-3xl p-8">
-            <h3 className="text-xl font-extrabold text-white mb-6 flex items-center">
-              <Wallet className="w-5 h-5 text-emerald-400 mr-2" /> Expense Breakdown
+          <div className="bg-white border border-slate-100 rounded-3xl p-8 shadow-sm">
+            <h3 className="text-xl font-black text-slate-900 mb-6 flex items-center">
+              <Wallet className="w-5 h-5 text-slate-900 mr-2" /> Expense Breakdown
             </h3>
             <div className="space-y-4">
               {[
-                { label: 'Accommodation / Stay', cost: aiPlan?.expenses?.stay || 8000, color: 'bg-purple-500' },
-                { label: 'Transport & Transfers', cost: aiPlan?.expenses?.transport || 4000, color: 'bg-cyan-500' },
-                { label: 'Food & Dining', cost: aiPlan?.expenses?.food || 4500, color: 'bg-orange-500' },
-                { label: 'Activities & Sightseeing', cost: aiPlan?.expenses?.activities || 3500, color: 'bg-rose-500' }
+                { label: 'Accommodation / Stay', cost: aiPlan?.expenses?.stay || 8000, color: 'bg-yellow-400' },
+                { label: 'Transport & Transfers', cost: aiPlan?.expenses?.transport || 4000, color: 'bg-slate-900' },
+                { label: 'Food & Dining', cost: aiPlan?.expenses?.food || 4500, color: 'bg-amber-500' },
+                { label: 'Activities & Sightseeing', cost: aiPlan?.expenses?.activities || 3500, color: 'bg-yellow-600' }
               ].map((exp, i) => (
-                <div key={i} className="bg-white/5 p-4 rounded-xl border border-white/5">
+                <div key={i} className="bg-[#FEFCE8]/40 p-4 rounded-2xl border border-yellow-100">
                   <div className="flex justify-between items-center text-sm mb-2">
-                    <span className="text-slate-300 font-bold">{exp.label}</span>
-                    <span className="text-white font-extrabold">₹{exp.cost.toLocaleString('en-IN')}</span>
+                    <span className="text-slate-700 font-bold">{exp.label}</span>
+                    <span className="text-slate-900 font-black">₹{exp.cost.toLocaleString('en-IN')}</span>
                   </div>
-                  <div className="w-full bg-white/10 rounded-full h-2">
+                  <div className="w-full bg-slate-200 rounded-full h-2">
                     <div 
                       className={`h-2 rounded-full ${exp.color}`} 
                       style={{ width: `${Math.min((exp.cost / (aiPlan?.estimatedCost || 20000)) * 100, 100)}%` }}
@@ -389,15 +388,15 @@ export default function ItineraryView() {
           </div>
 
           {/* AI Insights & Recommendations */}
-          <div className="bg-white/[0.03] border border-white/[0.06] rounded-3xl p-8">
-            <h3 className="text-xl font-extrabold text-white mb-6 flex items-center">
-              <Sparkles className="w-5 h-5 text-amber-400 mr-2" /> AI Smart Recommendations
+          <div className="bg-white border border-slate-100 rounded-3xl p-8 shadow-sm">
+            <h3 className="text-xl font-black text-slate-900 mb-6 flex items-center">
+              <Sparkles className="w-5 h-5 text-yellow-500 mr-2" /> Smart Recommendations
             </h3>
             <div className="space-y-4">
               {aiPlan?.recommendations?.map((rec, i) => (
-                <div key={i} className="flex items-start p-4 rounded-2xl bg-white/5 border border-white/5">
-                  <CheckCircle className="w-5 h-5 text-amber-400 mr-3 shrink-0 mt-0.5" />
-                  <p className="text-sm font-medium text-slate-300 leading-relaxed">{rec}</p>
+                <div key={i} className="flex items-start p-4 rounded-2xl bg-yellow-50/80 border border-yellow-200">
+                  <CheckCircle className="w-5 h-5 text-yellow-600 mr-3 shrink-0 mt-0.5" />
+                  <p className="text-sm font-medium text-slate-800 leading-relaxed">{rec}</p>
                 </div>
               ))}
             </div>

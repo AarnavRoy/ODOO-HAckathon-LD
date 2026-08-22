@@ -181,22 +181,21 @@ export default function Signup() {
   };
 
   return (
-    <div className="min-h-[100dvh] bg-slate-50 flex flex-col md:flex-row-reverse overflow-hidden font-sans">
+    <div className="min-h-[100dvh] bg-[#FEFCE8] flex flex-col md:flex-row-reverse overflow-hidden font-sans">
       {/* Right side: Form */}
       <motion.div 
         initial={{ x: '100%' }} animate={{ x: 0 }} transition={{ type: "spring", stiffness: 70, damping: 20 }}
-        className="w-full md:w-1/2 flex items-center justify-center p-6 lg:p-16 bg-white z-10 shadow-[-20px_0_40px_rgba(0,0,0,0.05)] relative overflow-y-auto max-h-screen"
+        className="w-full md:w-1/2 flex items-center justify-center p-6 lg:p-16 bg-transparent z-10 relative overflow-y-auto max-h-screen"
       >
-        <div className="absolute top-0 right-0 w-full h-2 bg-gradient-to-l from-orange-500 via-fuchsia-500 to-violet-600"></div>
         
-        <div className="w-full max-w-md py-6">
+        <div className="w-full max-w-md p-10 bg-white rounded-[2.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100">
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }} className="flex items-center text-slate-900 mb-6 font-black text-3xl tracking-tighter">
-            <Plane className="w-8 h-8 mr-3 text-orange-500" /> GlobeTrotter
+            <Plane className="w-8 h-8 mr-3 text-black" /> GlobeTrotter
           </motion.div>
           
           <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
             <h2 className="text-3xl md:text-4xl font-black tracking-tighter text-slate-900 mb-2 flex items-center">
-              Join the journey <Sparkles className="w-6 h-6 ml-2 text-fuchsia-500" />
+              Join the journey <Sparkles className="w-6 h-6 ml-2 text-yellow-500" />
             </h2>
             <p className="text-slate-500 mb-6 font-medium text-sm">Create an account to start planning your next adventure.</p>
           </motion.div>
@@ -217,12 +216,12 @@ export default function Signup() {
                 required 
                 value={name} 
                 onChange={e => setName(e.target.value)} 
-                className={`w-full border-2 rounded-xl py-2.5 px-3.5 focus:outline-none focus:ring-4 transition-all font-medium text-sm ${
+                className={`w-full border rounded-full py-2.5 px-4 focus:outline-none focus:ring-1 transition-all font-medium text-sm ${
                   nameHasNumbers 
-                    ? 'border-red-300 bg-red-50/50 focus:ring-red-500/20 focus:border-red-500' 
+                    ? 'border-red-300 bg-red-50 focus:ring-red-500 focus:border-red-500' 
                     : isNameValid 
-                    ? 'border-emerald-300 bg-emerald-50/20 focus:ring-emerald-500/20 focus:border-emerald-500'
-                    : 'border-slate-200 bg-slate-50 focus:ring-orange-500/20 focus:border-orange-500 focus:bg-white'
+                    ? 'border-emerald-300 bg-emerald-50 focus:ring-emerald-500 focus:border-emerald-500'
+                    : 'border-slate-200 bg-slate-50 focus:ring-black focus:border-black focus:bg-white'
                 }`}
                 placeholder="e.g. Alexander Walker" 
               />
@@ -258,12 +257,12 @@ export default function Signup() {
                 required 
                 value={username} 
                 onChange={e => setUsername(e.target.value.toLowerCase().replace(/\s+/g, ''))} 
-                className={`w-full border-2 rounded-xl py-2.5 px-3.5 focus:outline-none focus:ring-4 transition-all font-medium text-sm ${
+                className={`w-full border rounded-full py-2.5 px-4 focus:outline-none focus:ring-1 transition-all font-medium text-sm ${
                   usernameStatus === 'taken' || usernameStatus === 'invalid'
-                    ? 'border-red-300 bg-red-50/50 focus:ring-red-500/20 focus:border-red-500'
+                    ? 'border-red-300 bg-red-50 focus:ring-red-500 focus:border-red-500'
                     : usernameStatus === 'available'
-                    ? 'border-emerald-300 bg-emerald-50/20 focus:ring-emerald-500/20 focus:border-emerald-500'
-                    : 'border-slate-200 bg-slate-50 focus:ring-orange-500/20 focus:border-orange-500 focus:bg-white'
+                    ? 'border-emerald-300 bg-emerald-50 focus:ring-emerald-500 focus:border-emerald-500'
+                    : 'border-slate-200 bg-slate-50 focus:ring-black focus:border-black focus:bg-white'
                 }`}
                 placeholder="e.g. alexander99" 
               />
@@ -297,12 +296,12 @@ export default function Signup() {
                 required 
                 value={email} 
                 onChange={e => setEmail(e.target.value)} 
-                className={`w-full border-2 rounded-xl py-2.5 px-3.5 focus:outline-none focus:ring-4 transition-all font-medium text-sm ${
+                className={`w-full border rounded-full py-2.5 px-4 focus:outline-none focus:ring-1 transition-all font-medium text-sm ${
                   emailStatus === 'invalid'
-                    ? 'border-red-300 bg-red-50/50 focus:ring-red-500/20 focus:border-red-500'
+                    ? 'border-red-300 bg-red-50 focus:ring-red-500 focus:border-red-500'
                     : emailStatus === 'valid'
-                    ? 'border-emerald-300 bg-emerald-50/20 focus:ring-emerald-500/20 focus:border-emerald-500'
-                    : 'border-slate-200 bg-slate-50 focus:ring-orange-500/20 focus:border-orange-500 focus:bg-white'
+                    ? 'border-emerald-300 bg-emerald-50 focus:ring-emerald-500 focus:border-emerald-500'
+                    : 'border-slate-200 bg-slate-50 focus:ring-black focus:border-black focus:bg-white'
                 }`}
                 placeholder="yourname@gmail.com" 
               />
@@ -320,7 +319,7 @@ export default function Signup() {
                   required 
                   value={password} 
                   onChange={e => setPassword(e.target.value)} 
-                  className="w-full border-2 border-slate-200 bg-slate-50 rounded-xl py-2.5 pl-3.5 pr-10 focus:outline-none focus:ring-4 focus:ring-orange-500/20 focus:border-orange-500 focus:bg-white transition-all font-medium text-sm" 
+                  className="w-full border border-slate-200 bg-slate-50 rounded-full py-2.5 pl-4 pr-10 focus:outline-none focus:ring-1 focus:ring-black focus:border-black focus:bg-white transition-all font-medium text-sm" 
                   placeholder="••••••••"
                 />
                 <button
@@ -370,12 +369,12 @@ export default function Signup() {
                   required 
                   value={confirmPassword} 
                   onChange={e => setConfirmPassword(e.target.value)} 
-                  className={`w-full border-2 rounded-xl py-2.5 pl-3.5 pr-10 focus:outline-none focus:ring-4 transition-all font-medium text-sm ${
+                  className={`w-full border rounded-full py-2.5 pl-4 pr-10 focus:outline-none focus:ring-1 transition-all font-medium text-sm ${
                     confirmPassword.length > 0 && !isConfirmPasswordMatch
-                      ? 'border-red-300 bg-red-50/50 focus:ring-red-500/20 focus:border-red-500'
+                      ? 'border-red-300 bg-red-50 focus:ring-red-500 focus:border-red-500'
                       : confirmPassword.length > 0 && isConfirmPasswordMatch
-                      ? 'border-emerald-300 bg-emerald-50/20 focus:ring-emerald-500/20 focus:border-emerald-500'
-                      : 'border-slate-200 bg-slate-50 focus:ring-orange-500/20 focus:border-orange-500 focus:bg-white'
+                      ? 'border-emerald-300 bg-emerald-50 focus:ring-emerald-500 focus:border-emerald-500'
+                      : 'border-slate-200 bg-slate-50 focus:ring-black focus:border-black focus:bg-white'
                   }`}
                   placeholder="••••••••"
                 />
@@ -394,7 +393,7 @@ export default function Signup() {
               whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}
               type="submit" 
               disabled={loading || (confirmPassword.length > 0 && !isConfirmPasswordMatch) || (emailStatus === 'invalid')}
-              className="w-full flex justify-center py-3.5 px-4 mt-2 rounded-xl shadow-lg shadow-orange-500/25 text-sm font-bold text-white bg-gradient-to-r from-orange-500 to-fuchsia-600 hover:from-orange-400 hover:to-fuchsia-500 focus:outline-none focus:ring-4 focus:ring-orange-500/30 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
+              className="w-full flex justify-center py-3.5 px-4 mt-2 rounded-full shadow-md text-sm font-bold text-white bg-black hover:bg-yellow-400 hover:text-black focus:outline-none transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
             >
               {loading ? (
                 <span className="flex items-center gap-2">
@@ -405,7 +404,7 @@ export default function Signup() {
           </form>
           
           <p className="mt-6 text-center text-sm font-medium text-slate-500">
-            Already have an account? <Link to="/login" className="font-bold text-orange-500 hover:text-orange-600">Sign in</Link>
+            Already have an account? <Link to="/login" className="font-bold text-black hover:text-yellow-600">Sign in</Link>
           </p>
         </div>
       </motion.div>
@@ -419,10 +418,10 @@ export default function Signup() {
           initial={{ scale: 1.1 }} animate={{ scale: 1 }} transition={{ duration: 10, ease: "easeOut" }}
           src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80" alt="Adventure travel" className="absolute inset-0 w-full h-full object-cover opacity-70 mix-blend-overlay" 
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-orange-900/90 via-slate-900/40 to-transparent flex items-end p-16">
+        <div className="absolute inset-0 bg-black/40 flex items-end p-16">
           <motion.blockquote initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }} className="text-white">
             <p className="text-3xl font-black tracking-tighter mb-4 leading-tight">"Not all those who wander are lost."</p>
-            <footer className="text-orange-200 font-medium">— J.R.R. Tolkien</footer>
+            <footer className="text-yellow-400 font-bold">— J.R.R. Tolkien</footer>
           </motion.blockquote>
         </div>
       </motion.div>

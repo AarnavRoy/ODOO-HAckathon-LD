@@ -2,13 +2,23 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080
 
 export async function request(path, options = {}) {
   const token = localStorage.getItem('token');
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+  
+  // Public auth/public endpoints do not require token header
+  const isPublicAuthRoute = normalizedPath.startsWith('/auth/signup') ||
+                            normalizedPath.startsWith('/auth/login') ||
+                            normalizedPath.startsWith('/auth/check-username') ||
+                            normalizedPath.startsWith('/auth/verify-email') ||
+                            normalizedPath.startsWith('/auth/forgot-password') ||
+                            (normalizedPath.startsWith('/public') && !normalizedPath.endsWith('/copy'));
+
   const headers = {
     'Content-Type': 'application/json',
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    ...(!isPublicAuthRoute && token ? { Authorization: `Bearer ${token}` } : {}),
     ...(options.headers || {})
   };
 
-  const url = `${API_BASE_URL}${path.startsWith('/') ? path : `/${path}`}`;
+  const url = `${API_BASE_URL}${normalizedPath}`;
   const response = await fetch(url, {
     ...options,
     headers
@@ -23,6 +33,9 @@ export async function request(path, options = {}) {
   }
 
   if (!response.ok) {
+    if ((response.status === 401 || response.status === 403) && isPublicAuthRoute) {
+      localStorage.removeItem('token');
+    }
     const errorMessage = (data && data.message) || (typeof data === 'string' && data) || `HTTP error! Status: ${response.status}`;
     const error = new Error(errorMessage);
     error.status = response.status;
@@ -40,7 +53,8 @@ export const api = {
   delete: (path, options) => request(path, { ...options, method: 'DELETE' }),
   postFormData: (path, formData, options) => {
     const token = localStorage.getItem('token');
-    const url = `${API_BASE_URL}${path.startsWith('/') ? path : `/${path}`}`;
+    const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+    const url = `${API_BASE_URL}${normalizedPath}`;
     return fetch(url, {
       method: 'POST',
       headers: {

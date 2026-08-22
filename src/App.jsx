@@ -35,7 +35,7 @@ function App() {
         <Route path="/trips/new" element={<ProtectedRoute><CreateTrip /></ProtectedRoute>} />
         <Route path="/trips/:tripId/build" element={<ProtectedRoute><ItineraryBuilder /></ProtectedRoute>} />
         <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-        <Route path="/ai-trip-assistant" element={<ProtectedRoute><AITripAssistant /></ProtectedRoute>} />
+        <Route path="/ai-planner" element={<ProtectedRoute><AITripAssistant /></ProtectedRoute>} />
         
         {/* F2 Routes */}
         <Route path="/trips/:tripId" element={<ProtectedRoute><ItineraryView /></ProtectedRoute>} />

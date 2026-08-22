@@ -27,7 +27,7 @@ export default function AppLayout({ children, title }) {
             {/* Logo */}
             <Link to="/" className="flex-shrink-0 flex items-center text-2xl font-extrabold tracking-tight text-slate-900 hover:scale-105 transition-transform">
               <Globe className="w-7 h-7 mr-2 text-black" />
-              Wandrly<span className="text-yellow-400">.</span>
+              GlobeTrotter<span className="text-yellow-400">.</span>
             </Link>
             
             {/* Pill Navigation */}
