@@ -173,6 +173,7 @@ export default function Login() {
                 type="text" 
                 required 
                 value={username} 
+                onChange={e => setUsername(e.target.value)} 
                 className="w-full border border-slate-200 bg-slate-50 rounded-full py-3 px-5 focus:outline-none focus:ring-1 focus:ring-black focus:border-black focus:bg-white transition-all font-medium sm:text-sm" 
                 placeholder="Enter your username or email" 
               />
