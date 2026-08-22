@@ -15,7 +15,7 @@ export async function request(path, options = {}) {
   const isAuthRoute = path.startsWith('/auth') || path.startsWith('auth');
   const headers = {
     'Content-Type': 'application/json',
-    ...(token && !isAuthRoute ? { Authorization: `Bearer ${token}` } : {}),
+    ...(token && !isPublicAuthRoute ? { Authorization: `Bearer ${token}` } : {}),
     ...(options.headers || {})
   };
 
