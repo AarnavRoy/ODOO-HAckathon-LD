@@ -3,7 +3,7 @@ import { patchStop } from "../api/stops";
 import { ChevronDown, ChevronUp, Hotel, Save, Loader2, Clock, Ticket } from "lucide-react";
 
 /**
- * AccommodationForm — collapsible hotel/stay form per stop.
+ * AccommodationForm â€” collapsible hotel/stay form per stop.
  * Props: stop, onUpdate
  */
 export default function AccommodationForm({ stop, onUpdate }) {
