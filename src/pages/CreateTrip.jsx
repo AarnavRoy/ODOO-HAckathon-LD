@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AppLayout from '../components/AppLayout';
 import { createTrip } from '../api/trips';
@@ -10,9 +10,35 @@ export default function CreateTrip() {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
+  const fileInputRef = useRef(null);
   const navigate = useNavigate();
 
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
+
+  const handleFileSelect = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (!ALLOWED_TYPES.includes(file.type)) {
+      setError('Only image files are allowed (JPEG, PNG, GIF, WebP)');
+      e.target.value = '';
+      return;
+    }
+
+    if (file.size > MAX_FILE_SIZE) {
+      setError('Image must be smaller than 5MB');
+      e.target.value = '';
+      return;
+    }
+
+    setSelectedFile(file);
+    setError('');
+
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    setPreviewUrl(URL.createObjectURL(file));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();

@@ -1,7 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import AppLayout from '../components/AppLayout';
 import { getMe, updateProfile } from '../api/auth';
 import { motion } from 'framer-motion';
+
+const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
 export default function Profile() {
   const [user, setUser] = useState(null);
