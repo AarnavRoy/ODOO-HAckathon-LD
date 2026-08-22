@@ -12,17 +12,11 @@ export default function TripBudget() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getTripBudget(tripId).then(data => {
-      setBudget(data);
-      setLoading(false);
-    }).catch(err => {
-      console.error(err);
-      setLoading(false);
-    });
+    getTripBudget(tripId).then(data => { setBudget(data); setLoading(false); }).catch(() => setLoading(false));
   }, [tripId]);
 
-  if (loading) return <AppLayout title="Trip Budget"><div className="text-center py-20 font-semibold text-slate-500 animate-pulse">Calculating budget...</div></AppLayout>;
-  if (!budget) return <AppLayout title="Trip Budget"><div className="text-center py-20 font-semibold text-slate-500">Failed to load budget data.</div></AppLayout>;
+  if (loading) return <AppLayout title="Budget"><div className="text-center py-20 text-slate-500 animate-pulse font-semibold">Calculating...</div></AppLayout>;
+  if (!budget) return <AppLayout title="Budget"><div className="text-center py-20 text-slate-500">Failed to load.</div></AppLayout>;
 
   const chartData = [
     { name: 'Transport', value: budget.byCategory.transport },
@@ -31,85 +25,71 @@ export default function TripBudget() {
     { name: 'Meals', value: budget.byCategory.meals }
   ].filter(d => d.value > 0);
 
-  // Vibrant, high-contrast colors for the chart
-  const COLORS = ['#8b5cf6', '#d946ef', '#f97316', '#14b8a6'];
+  const COLORS = ['#06b6d4', '#f43f5e', '#f59e0b', '#10b981'];
 
   return (
     <AppLayout title="Budget Overview">
-      <div className="flex justify-between items-center mb-8">
-        <Link to={`/trips/${tripId}`} className="text-violet-600 hover:text-violet-700 font-bold flex items-center transition-colors">
+      <div className="mb-8">
+        <Link to={`/trips/${tripId}`} className="text-amber-400 hover:text-amber-300 font-bold flex items-center text-sm transition-colors">
           <ArrowLeft className="w-4 h-4 mr-1.5" /> Back to Itinerary
         </Link>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12 relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-violet-100 via-fuchsia-50 to-orange-50 rounded-3xl -z-10 transform -skew-y-1"></div>
-        
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ type: "spring", stiffness: 100 }} className="bg-white/80 backdrop-blur-xl p-8 rounded-3xl shadow-sm border border-white/50 flex flex-col justify-center items-center">
-          <div className="flex items-center text-orange-600 mb-4">
-            <div className="p-3 bg-orange-100 rounded-2xl mr-3"><IndianRupee className="w-6 h-6" /></div>
-            <h2 className="text-sm font-bold uppercase tracking-wider text-slate-600">Total Estimated Cost</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="bg-white/[0.03] border border-white/[0.06] p-8 rounded-2xl flex flex-col justify-center items-center">
+          <div className="flex items-center mb-4">
+            <div className="p-3 bg-amber-500/10 rounded-xl mr-3"><IndianRupee className="w-6 h-6 text-amber-400" /></div>
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Total Estimated Cost</span>
           </div>
-          <div className="text-6xl font-black tracking-tighter bg-gradient-to-br from-slate-900 to-slate-600 bg-clip-text text-transparent">
-            ₹{budget.total?.toLocaleString('en-IN') || 0}
-          </div>
+          <div className="text-5xl font-extrabold tracking-tight text-white">₹{budget.total?.toLocaleString('en-IN') || 0}</div>
         </motion.div>
 
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ type: "spring", stiffness: 100, delay: 0.1 }} className="bg-white/80 backdrop-blur-xl p-6 rounded-3xl shadow-sm border border-white/50 h-72 flex justify-center items-center">
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="bg-white/[0.03] border border-white/[0.06] p-6 rounded-2xl h-72 flex justify-center items-center">
           {chartData.length > 0 ? (
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
-                <Pie data={chartData} cx="50%" cy="50%" innerRadius={70} outerRadius={100} paddingAngle={6} dataKey="value" stroke="none">
-                  {chartData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
+                <Pie data={chartData} cx="50%" cy="50%" innerRadius={65} outerRadius={95} paddingAngle={5} dataKey="value" stroke="none">
+                  {chartData.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
                 </Pie>
-                <Tooltip formatter={(value) => `₹${value.toLocaleString('en-IN')}`} contentStyle={{ borderRadius: '1rem', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }} />
-                <Legend iconType="circle" wrapperStyle={{ fontWeight: 'bold', color: '#475569' }} />
+                <Tooltip formatter={(v) => `₹${v.toLocaleString('en-IN')}`} contentStyle={{ background: '#1e293b', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '0.75rem', color: '#f1f5f9' }} />
+                <Legend iconType="circle" wrapperStyle={{ color: '#94a3b8', fontWeight: 600, fontSize: '0.8rem' }} />
               </PieChart>
             </ResponsiveContainer>
           ) : (
-            <div className="text-slate-400 font-medium">No budget data available</div>
+            <div className="text-slate-600 font-medium">No budget data</div>
           )}
         </motion.div>
       </div>
 
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-        <h2 className="text-2xl font-black tracking-tighter text-slate-900 mb-6 flex items-center">
-          <TrendingUp className="w-6 h-6 mr-3 text-fuchsia-500" /> Daily Breakdown
+      <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+        <h2 className="text-xl font-extrabold tracking-tight text-white mb-5 flex items-center">
+          <TrendingUp className="w-5 h-5 mr-2 text-cyan-400" /> Daily Breakdown
         </h2>
-        
-        <div className="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
+        <div className="bg-white/[0.03] border border-white/[0.06] rounded-2xl overflow-hidden">
           <table className="w-full text-left">
-            <thead className="bg-slate-50 border-b border-slate-100">
+            <thead className="border-b border-white/5">
               <tr>
-                <th className="px-6 py-4 font-bold text-slate-700 uppercase tracking-wider text-xs">Date</th>
-                <th className="px-6 py-4 font-bold text-slate-700 uppercase tracking-wider text-xs">Cost</th>
-                <th className="px-6 py-4 font-bold text-slate-700 uppercase tracking-wider text-xs">Status</th>
+                <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Date</th>
+                <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Cost</th>
+                <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Status</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-50">
-              {budget.byDay?.map((day, i) => (
-                <tr key={day.date} className={`transition-colors ${day.overBudget ? 'bg-red-50/50 hover:bg-red-50' : 'hover:bg-slate-50'}`}>
-                  <td className="px-6 py-4 font-semibold text-slate-700">{new Date(day.date).toLocaleDateString('en-IN')}</td>
-                  <td className="px-6 py-4 font-black text-slate-900">₹{day.cost?.toLocaleString('en-IN') || 0}</td>
+            <tbody className="divide-y divide-white/5">
+              {budget.byDay?.map(day => (
+                <tr key={day.date} className={`${day.overBudget ? 'bg-red-500/5' : ''} hover:bg-white/[0.02] transition-colors`}>
+                  <td className="px-6 py-4 font-semibold text-slate-300">{new Date(day.date).toLocaleDateString('en-IN')}</td>
+                  <td className="px-6 py-4 font-bold text-white">₹{day.cost?.toLocaleString('en-IN') || 0}</td>
                   <td className="px-6 py-4">
                     {day.overBudget ? (
-                      <span className="inline-flex items-center text-xs bg-red-100 text-red-700 px-3 py-1.5 rounded-full font-bold">
-                        <AlertTriangle className="w-3 h-3 mr-1" /> Over Budget
-                      </span>
+                      <span className="inline-flex items-center text-xs bg-red-500/10 text-red-400 px-3 py-1.5 rounded-full font-bold"><AlertTriangle className="w-3 h-3 mr-1" /> Over Budget</span>
                     ) : (
-                      <span className="inline-flex items-center text-xs bg-emerald-100 text-emerald-700 px-3 py-1.5 rounded-full font-bold">
-                        On Track
-                      </span>
+                      <span className="text-xs bg-emerald-500/10 text-emerald-400 px-3 py-1.5 rounded-full font-bold">On Track</span>
                     )}
                   </td>
                 </tr>
               ))}
               {(!budget.byDay || budget.byDay.length === 0) && (
-                <tr>
-                  <td colSpan="3" className="px-6 py-8 text-center text-slate-400 font-medium">No daily data available.</td>
-                </tr>
+                <tr><td colSpan="3" className="px-6 py-8 text-center text-slate-600 font-medium">No daily data.</td></tr>
               )}
             </tbody>
           </table>
