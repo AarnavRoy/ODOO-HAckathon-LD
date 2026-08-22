@@ -15,6 +15,7 @@ import TripBudget from './pages/TripBudget';
 import TripCalendar from './pages/TripCalendar';
 import SharedView from './pages/SharedView';
 import AdminDashboard from './pages/AdminDashboard';
+import AITripAssistant from './pages/AITripAssistant';
 
 const ProtectedRoute = ({ children }) => {
   const isAuthenticated = localStorage.getItem('token');
@@ -34,6 +35,7 @@ function App() {
         <Route path="/trips/new" element={<ProtectedRoute><CreateTrip /></ProtectedRoute>} />
         <Route path="/trips/:tripId/build" element={<ProtectedRoute><ItineraryBuilder /></ProtectedRoute>} />
         <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+        <Route path="/ai-trip-assistant" element={<ProtectedRoute><AITripAssistant /></ProtectedRoute>} />
         
         {/* F2 Routes */}
         <Route path="/trips/:tripId" element={<ProtectedRoute><ItineraryView /></ProtectedRoute>} />
