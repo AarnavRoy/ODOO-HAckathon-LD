@@ -27,6 +27,13 @@ export default function MyTrips() {
     getTrips().then(data => {
       setTrips(data);
       setLoading(false);
+    }).catch(err => {
+      console.error(err);
+      if (err.status === 401 || err.status === 403) {
+        localStorage.removeItem('token');
+        window.location.href = '/login';
+      }
+      setLoading(false);
     });
   };
 
