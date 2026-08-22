@@ -75,20 +75,32 @@ public class TripDataService {
 
                 if (isActiveOnDate || !stopActivitiesOnDate.isEmpty()) {
                     List<ItineraryActivityDto> activityDtos = stopActivitiesOnDate.stream()
-                            .map(ta -> new ItineraryActivityDto(
-                                    ta.getId(),
-                                    stop.getId(),
-                                    ta.getActivity().getId(),
-                                    ta.getActivity().getName(),
-                                    ta.getActivity().getCategory(),
-                                    ta.getDayDate(),
-                                    ta.getStartTime(),
-                                    ta.getCost() != null ? ta.getCost() : 0.0,
-                                    ta.getActivity().getDurationMinutes(),
-                                    ta.getActivity().getDescription(),
-                                    ta.getActivity().getImageUrl(),
-                                    ta.getNotes()
-                            ))
+                            .map(ta -> {
+                                ActivitySummaryDto actSummary = new ActivitySummaryDto(
+                                        ta.getActivity().getId(),
+                                        ta.getActivity().getName(),
+                                        ta.getActivity().getCategory(),
+                                        ta.getActivity().getCost(),
+                                        ta.getActivity().getDurationMinutes(),
+                                        ta.getActivity().getDescription(),
+                                        ta.getActivity().getImageUrl()
+                                );
+                                return new ItineraryActivityDto(
+                                        ta.getId(),
+                                        stop.getId(),
+                                        ta.getActivity().getId(),
+                                        ta.getActivity().getName(),
+                                        ta.getActivity().getCategory(),
+                                        ta.getDayDate(),
+                                        ta.getStartTime(),
+                                        ta.getCost() != null ? ta.getCost() : 0.0,
+                                        ta.getActivity().getDurationMinutes(),
+                                        ta.getActivity().getDescription(),
+                                        ta.getActivity().getImageUrl(),
+                                        ta.getNotes(),
+                                        actSummary
+                                );
+                            })
                             .collect(Collectors.toList());
 
                     dayStops.add(new StopItineraryDto(stop.getCity(), activityDtos));
@@ -254,6 +266,7 @@ public class TripDataService {
             return new StopDetailDto(
                     stop.getId(),
                     trip.getId(),
+                    stop.getCity() != null ? stop.getCity().getId() : null,
                     stop.getCity(),
                     stop.getStartDate(),
                     stop.getEndDate(),

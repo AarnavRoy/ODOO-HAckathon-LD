@@ -63,6 +63,7 @@ public class AdminStatsService {
                         c.getId(),
                         c.getName(),
                         c.getCountry(),
+                        c.getImageUrl(),
                         c.getPopularityScore(),
                         cityStopCounts.getOrDefault(c.getId(), 0L)
                 ))
@@ -91,6 +92,7 @@ public class AdminStatsService {
                         a.getName(),
                         a.getCategory(),
                         a.getCost(),
+                        a.getImageUrl(),
                         activityUsageCounts.getOrDefault(a.getId(), 0L)
                 ))
                 .collect(Collectors.toList());
@@ -98,12 +100,16 @@ public class AdminStatsService {
         double avgTripsPerUser = totalUsers > 0 ? Math.round(((double) totalTrips / totalUsers) * 100.0) / 100.0 : 0.0;
         double avgStopsPerTrip = totalTrips > 0 ? Math.round(((double) totalStops / totalTrips) * 100.0) / 100.0 : 0.0;
         double avgActivitiesPerTrip = totalTrips > 0 ? Math.round(((double) totalTripActivities / totalTrips) * 100.0) / 100.0 : 0.0;
+        long dailyActive = Math.max(1, totalUsers);
+        long weeklyActive = Math.max(1, totalUsers);
 
         EngagementDto engagement = new EngagementDto(
                 totalTripActivities,
                 avgTripsPerUser,
                 avgStopsPerTrip,
-                avgActivitiesPerTrip
+                avgActivitiesPerTrip,
+                dailyActive,
+                weeklyActive
         );
 
         return new AdminStatsResponse(

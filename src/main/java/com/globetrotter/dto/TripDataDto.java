@@ -48,6 +48,16 @@ public class TripDataDto {
             List<ItineraryActivityDto> activities
     ) {}
 
+    public record ActivitySummaryDto(
+            Long id,
+            String name,
+            Activity.ActivityCategory category,
+            Double cost,
+            Integer durationMinutes,
+            String description,
+            String imageUrl
+    ) {}
+
     public record ItineraryActivityDto(
             Long id,
             Long stopId,
@@ -60,7 +70,8 @@ public class TripDataDto {
             Integer durationMinutes,
             String description,
             String imageUrl,
-            String notes
+            String notes,
+            ActivitySummaryDto activity
     ) {}
 
     public record BudgetResponse(
@@ -106,6 +117,7 @@ public class TripDataDto {
     public record StopDetailDto(
             Long id,
             Long tripId,
+            Long cityId,
             City city,
             LocalDate startDate,
             LocalDate endDate,
@@ -127,6 +139,7 @@ public class TripDataDto {
             Long id,
             String name,
             String country,
+            String imageUrl,
             Double popularityScore,
             Long stopCount
     ) {}
@@ -136,6 +149,7 @@ public class TripDataDto {
             String name,
             Activity.ActivityCategory category,
             Double cost,
+            String imageUrl,
             Long usageCount
     ) {}
 
@@ -143,7 +157,9 @@ public class TripDataDto {
             Long totalTripActivities,
             Double avgTripsPerUser,
             Double avgStopsPerTrip,
-            Double avgActivitiesPerTrip
+            Double avgActivitiesPerTrip,
+            Long dailyActive,
+            Long weeklyActive
     ) {}
 
     public record MessageResponse(

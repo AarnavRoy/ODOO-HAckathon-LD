@@ -23,8 +23,11 @@ export default function ItineraryBuilder() {
       getTrip(tripId),
       getCities()
     ]);
-    // Sort stops by orderIndex
-    tripData.stops.sort((a, b) => a.orderIndex - b.orderIndex);
+    if (tripData && tripData.stops) {
+      tripData.stops.sort((a, b) => (a.orderIndex ?? 0) - (b.orderIndex ?? 0));
+    } else if (tripData) {
+      tripData.stops = [];
+    }
     setTrip(tripData);
     setCities(citiesData);
     setLoading(false);

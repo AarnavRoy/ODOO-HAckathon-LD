@@ -1,36 +1,25 @@
-import { mockActivities, mockTripActivities } from './mockData';
-
-const delay = (ms = 300) => new Promise(resolve => setTimeout(resolve, ms));
+import api from './client';
 
 export const getCityActivities = async (cityId, { category = '', maxCost = '', maxDuration = '' } = {}) => {
-  await delay();
-  return mockActivities.filter(a => {
-    if (a.cityId !== Number(cityId)) return false;
-    if (category && a.category !== category) return false;
-    if (maxCost && a.cost > Number(maxCost)) return false;
-    if (maxDuration && a.durationMinutes > Number(maxDuration)) return false;
-    return true;
-  });
+  const params = new URLSearchParams();
+  if (category) params.append('category', category);
+  if (maxCost) params.append('maxCost', maxCost);
+  if (maxDuration) params.append('maxDuration', maxDuration);
+
+  const query = params.toString();
+  return await api.get(`/cities/${cityId}/activities${query ? `?${query}` : ''}`);
 };
 
 export const addActivityToStop = async (stopId, { activityId, dayDate, startTime, cost, notes }) => {
-  await delay();
-  const newTripActivity = {
-    id: mockTripActivities.length + 1,
-    stopId: Number(stopId),
+  return await api.post(`/stops/${stopId}/activities`, {
     activityId,
     dayDate,
     startTime,
-    cost,
+    cost: cost ? Number(cost) : 0,
     notes
-  };
-  mockTripActivities.push(newTripActivity);
-  return newTripActivity;
+  });
 };
 
 export const removeActivityFromStop = async (id) => {
-  await delay();
-  const index = mockTripActivities.findIndex(ta => ta.id === Number(id));
-  if (index !== -1) mockTripActivities.splice(index, 1);
-  return { message: 'Deleted' };
+  return await api.delete(`/trip-activities/${id}`);
 };

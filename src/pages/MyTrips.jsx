@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import AppLayout from '../components/AppLayout';
 import { getTrips, deleteTrip } from '../api/trips';
-import { Calendar, MapPin, Trash2, Edit2, Eye, Plus } from 'lucide-react';
+import { Calendar, MapPin, Trash2, Edit2, Eye, Plus, Plane } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const containerVariants = {
@@ -81,7 +81,7 @@ export default function MyTrips() {
                 </div>
                 <div className="flex items-center text-slate-500 text-sm font-medium mb-6">
                   <MapPin className="w-4 h-4 mr-2 text-orange-500" />
-                  {trip.stopCount} destinations
+                  {trip.stopCount ?? trip.stops?.length ?? 0} destinations
                 </div>
                 <div className="mt-auto flex justify-between items-center pt-5 border-t border-slate-100">
                   <div className="flex space-x-2">

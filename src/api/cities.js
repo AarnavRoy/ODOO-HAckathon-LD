@@ -1,13 +1,11 @@
-import { mockCities } from './mockData';
-
-const delay = (ms = 300) => new Promise(resolve => setTimeout(resolve, ms));
+import api from './client';
 
 export const getCities = async ({ search = '', country = '', region = '' } = {}) => {
-  await delay();
-  return mockCities.filter(city => {
-    const matchSearch = city.name.toLowerCase().includes(search.toLowerCase());
-    const matchCountry = country ? city.country === country : true;
-    const matchRegion = region ? city.region === region : true;
-    return matchSearch && matchCountry && matchRegion;
-  });
+  const params = new URLSearchParams();
+  if (search) params.append('search', search);
+  if (country) params.append('country', country);
+  if (region) params.append('region', region);
+
+  const query = params.toString();
+  return await api.get(`/cities${query ? `?${query}` : ''}`);
 };
