@@ -54,7 +54,8 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/signup", "/api/auth/login", "/api/auth/forgot-password").permitAll()
+                .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/api/locations/**").permitAll()
                 .requestMatchers("/api/uploads/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/public/trips/*/copy").authenticated()
                 .requestMatchers("/api/public/**").permitAll()

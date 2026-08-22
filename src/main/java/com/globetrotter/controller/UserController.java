@@ -3,6 +3,8 @@ package com.globetrotter.controller;
 import com.globetrotter.model.User;
 import com.globetrotter.repository.UserRepository;
 import com.globetrotter.security.CustomUserDetails;
+import com.globetrotter.service.LocationService;
+import com.globetrotter.service.LocationService.LocationValidationResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -31,7 +33,18 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
-    public record UpdateUserRequest(String name, String profilePhotoUrl, String languagePreference) {}
+    @Autowired
+    private LocationService locationService;
+
+    public record UpdateUserRequest(
+        String name,
+        String profilePhotoUrl,
+        String languagePreference,
+        String country,
+        String state,
+        String city
+    ) {}
+    
     public record MessageResponse(String message) {}
 
     private User getCurrentUser() {
@@ -110,7 +123,21 @@ public class UserController {
     @PutMapping("/me")
     public ResponseEntity<?> updateMe(@RequestBody UpdateUserRequest request) {
         User user = getCurrentUser();
-        if (request.name() != null) user.setName(request.name());
+
+        // 1. Validate location hierarchy if any location field is provided
+        if (request.country() != null || request.state() != null || request.city() != null) {
+            LocationValidationResult valResult = locationService.validateLocation(
+                request.country(), request.state(), request.city()
+            );
+            if (!valResult.valid()) {
+                return ResponseEntity.badRequest().body(new MessageResponse("Error: " + valResult.message()));
+            }
+            user.setCountry(request.country());
+            user.setState(request.state());
+            user.setCity(request.city());
+        }
+
+        if (request.name() != null) user.setName(request.name().trim());
         if (request.profilePhotoUrl() != null) user.setProfilePhotoUrl(request.profilePhotoUrl());
         if (request.languagePreference() != null) user.setLanguagePreference(request.languagePreference());
         

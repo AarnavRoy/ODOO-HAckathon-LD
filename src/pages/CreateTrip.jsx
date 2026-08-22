@@ -1,24 +1,52 @@
-﻿import { useState, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useMemo, useEffect } from "react";
+import { useNavigate, useSearchParams, useLocation } from "react-router-dom";
 import AppLayout from "../components/AppLayout";
 import PlacesAutocomplete from "../components/PlacesAutocomplete";
 import { createTrip } from "../api/trips";
-import { CalendarDays, DollarSign, FileText, Image, MapPin, AlertCircle } from "lucide-react";
+import { CalendarDays, DollarSign, FileText, Image, MapPin, AlertCircle, Sparkles } from "lucide-react";
 
 export default function CreateTrip() {
+  const [searchParams] = useSearchParams();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // Get pre-filled destination info from URL params or navigation state
+  const paramDestination = searchParams.get("destination") || location.state?.destination || "";
+  const paramCountry = searchParams.get("country") || location.state?.country || "";
+  const paramCover = searchParams.get("coverPhotoUrl") || searchParams.get("cover") || location.state?.imageUrl || "";
+
   const [formData, setFormData] = useState({
-    name: "",
+    name: paramDestination ? `Trip to ${paramDestination}` : "",
     startDate: "",
     endDate: "",
-    description: "",
-    coverPhotoUrl: "",
+    description: paramDestination ? `Exploring the best of ${paramDestination}${paramCountry ? `, ${paramCountry}` : ""}!` : "",
+    coverPhotoUrl: paramCover,
     budgetLimit: "",
   });
-  const [destinationQuery, setDestinationQuery] = useState("");
-  const [selectedPlace, setSelectedPlace] = useState(null);
+  
+  const [destinationQuery, setDestinationQuery] = useState(
+    paramDestination ? `${paramDestination}${paramCountry ? `, ${paramCountry}` : ""}` : ""
+  );
+  
+  const [selectedPlace, setSelectedPlace] = useState(
+    paramDestination ? { name: paramDestination, country: paramCountry } : null
+  );
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (paramDestination && !formData.name) {
+      setFormData((f) => ({
+        ...f,
+        name: `Trip to ${paramDestination}`,
+        coverPhotoUrl: f.coverPhotoUrl || paramCover,
+        description: f.description || `Exploring the best of ${paramDestination}${paramCountry ? `, ${paramCountry}` : ""}!`,
+      }));
+      setDestinationQuery(`${paramDestination}${paramCountry ? `, ${paramCountry}` : ""}`);
+      setSelectedPlace({ name: paramDestination, country: paramCountry });
+    }
+  }, [paramDestination, paramCountry, paramCover]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -62,6 +90,32 @@ export default function CreateTrip() {
           <h1 className="text-3xl font-black tracking-tight text-slate-900">Plan a New Trip ✈️</h1>
           <p className="text-slate-500 mt-1 font-medium">Fill in the details below to start building your itinerary.</p>
         </div>
+
+        {/* Pre-filled Destination Alert */}
+        {paramDestination && (
+          <div className="mb-6 p-4 rounded-2xl bg-gradient-to-r from-rose-500/10 via-amber-500/10 to-violet-500/10 border border-rose-200 text-slate-800 flex items-center justify-between gap-3 shadow-sm">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-rose-500 text-white rounded-xl">
+                <Sparkles className="w-5 h-5" />
+              </div>
+              <div>
+                <p className="text-sm font-bold text-slate-900">
+                  Pre-filled with {paramDestination} {paramCountry ? `(${paramCountry})` : ""}
+                </p>
+                <p className="text-xs text-slate-500 font-medium">
+                  Destination name and cover photo have been pre-selected for you.
+                </p>
+              </div>
+            </div>
+            {paramCover && (
+              <img 
+                src={paramCover} 
+                alt={paramDestination} 
+                className="w-12 h-12 rounded-xl object-cover border border-rose-200 shrink-0 shadow-sm"
+              />
+            )}
+          </div>
+        )}
 
         <div className="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
           {/* Gradient accent top bar */}
@@ -111,7 +165,7 @@ export default function CreateTrip() {
               {selectedPlace && (
                 <div className="mt-2 flex items-center gap-2 bg-violet-50 border border-violet-100 text-violet-700 px-3 py-2 rounded-lg text-xs font-semibold">
                   <MapPin className="w-3.5 h-3.5 shrink-0" />
-                  <span>{selectedPlace.name}, {selectedPlace.country}</span>
+                  <span>{selectedPlace.name}{selectedPlace.country ? `, ${selectedPlace.country}` : ""}</span>
                   {selectedPlace.lat && (
                     <span className="ml-auto text-violet-400 font-normal">
                       {selectedPlace.lat.toFixed(2)}°, {selectedPlace.lng.toFixed(2)}°
@@ -158,6 +212,7 @@ export default function CreateTrip() {
                 🗓️ {tripDuration} day{tripDuration !== 1 ? "s" : ""}
               </p>
             )}
+
             {dateError && (
               <p className="text-xs font-semibold text-red-500 -mt-3">⚠️ End date must be after start date</p>
             )}
@@ -195,7 +250,7 @@ export default function CreateTrip() {
                   src={formData.coverPhotoUrl}
                   alt="Cover preview"
                   onError={(e) => e.currentTarget.classList.add("hidden")}
-                  className="mt-2 h-32 w-full object-cover rounded-xl border border-slate-200"
+                  className="mt-2 h-36 w-full object-cover rounded-xl border border-slate-200 shadow-sm"
                 />
               )}
             </div>
@@ -225,14 +280,14 @@ export default function CreateTrip() {
               <button
                 type="button"
                 onClick={() => navigate("/trips")}
-                className="py-2.5 px-6 border-2 border-slate-200 rounded-xl text-sm font-bold text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-100 active:scale-95 transition-all"
+                className="py-2.5 px-6 border-2 border-slate-200 rounded-xl text-sm font-bold text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-100 active:scale-95 transition-all cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={loading || !!dateError}
-                className="inline-flex items-center gap-2 py-2.5 px-8 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 shadow-lg shadow-violet-500/30 focus:outline-none focus:ring-4 focus:ring-violet-500/30 active:scale-95 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+                className="inline-flex items-center gap-2 py-2.5 px-8 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 shadow-lg shadow-violet-500/30 focus:outline-none focus:ring-4 focus:ring-violet-500/30 active:scale-95 transition-all disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
               >
                 {loading ? (
                   <>
