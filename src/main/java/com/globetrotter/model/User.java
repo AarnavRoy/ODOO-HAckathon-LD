@@ -34,7 +34,10 @@ public class User {
 
     // Role and Moderation
     private String role = "ROLE_USER";
-    private boolean isBanned = false;
+    
+    @Column(columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private Boolean isBanned = false;
+    
     private LocalDateTime lastLoginAt;
     
     @Column(updatable = false)
@@ -51,6 +54,9 @@ public class User {
         }
         if (role == null) {
             role = "ROLE_USER";
+        }
+        if (isBanned == null) {
+            isBanned = false;
         }
     }
 
@@ -77,8 +83,10 @@ public class User {
     public void setCity(String city) { this.city = city; }
     public String getRole() { return role; }
     public void setRole(String role) { this.role = role; }
-    public boolean isBanned() { return isBanned; }
-    public void setBanned(boolean banned) { isBanned = banned; }
+    public Boolean getIsBanned() { return isBanned != null && isBanned; }
+    public boolean isBanned() { return isBanned != null && isBanned; }
+    public void setBanned(Boolean banned) { isBanned = banned != null && banned; }
+    public void setIsBanned(Boolean banned) { isBanned = banned != null && banned; }
     public LocalDateTime getLastLoginAt() { return lastLoginAt; }
     public void setLastLoginAt(LocalDateTime lastLoginAt) { this.lastLoginAt = lastLoginAt; }
     public LocalDateTime getCreatedAt() { return createdAt; }
