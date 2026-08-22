@@ -225,9 +225,7 @@ export default function Login() {
           </form>
           
           <div className="mt-8 text-center space-y-3">
-            <p className="text-sm font-medium text-slate-400">
-              Don't have an account? <Link to="/signup" className="font-bold text-amber-400 hover:text-amber-400">Create one</Link>
-            </p>
+            <p className="text-sm font-medium text-slate-400">Don't have an account? <Link to="/signup" className="font-bold text-amber-400 hover:text-amber-400">Create one</Link></p><p className="text-xs font-medium text-slate-400 mt-3">Are you an administrator? <Link to="/admin/login" className="font-bold text-slate-300 hover:text-amber-400">Admin Login</Link></p>
             
           </div>
         </div>
@@ -431,6 +429,7 @@ export default function Login() {
     </div>
   );
 }
+
 
 
 
