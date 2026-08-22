@@ -21,7 +21,11 @@ export default function Signup() {
       localStorage.setItem('token', token);
       navigate('/');
     } catch (err) {
-      setError('Registration failed');
+      if (err.message === 'Failed to fetch' || err.message.includes('NetworkError')) {
+        setError('Cannot connect to server. Is the backend running?');
+      } else {
+        setError(err.message || 'Registration failed');
+      }
     } finally {
       setLoading(false);
     }
