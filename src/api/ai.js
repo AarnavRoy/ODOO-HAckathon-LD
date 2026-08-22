@@ -53,6 +53,18 @@ export const generateTripItinerary = async (preferences, onProgress) => {
       result.budgetStatus = 'within';
     }
 
+    // Map activity fields (the frontend expects `cost` and `time`)
+    if (result && result.days) {
+      result.days = result.days.map(day => ({
+        ...day,
+        activities: (day.activities || []).map(act => ({
+          ...act,
+          cost: act.estimatedCost || act.cost || 0,
+          time: act.startTime || act.time || "10:00"
+        }))
+      }));
+    }
+
     clearInterval(progressInterval);
     if (onProgress) onProgress('Finalizing your trip...', 100);
     await delay(300);
@@ -94,6 +106,18 @@ export const refineTripItinerary = async (currentTrip, action, onProgress) => {
       result.budgetStatus = result.estimatedCost <= result.budget ? 'within' : 'over';
     } else if (result) {
       result.budgetStatus = 'within';
+    }
+
+    // Map activity fields (the frontend expects `cost` and `time`)
+    if (result && result.days) {
+      result.days = result.days.map(day => ({
+        ...day,
+        activities: (day.activities || []).map(act => ({
+          ...act,
+          cost: act.estimatedCost || act.cost || 0,
+          time: act.startTime || act.time || "10:00"
+        }))
+      }));
     }
 
     if (onProgress) onProgress('Optimization complete!', 100);
