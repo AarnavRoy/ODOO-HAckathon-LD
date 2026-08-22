@@ -128,7 +128,7 @@
             </goals>
             <phase>generate-resources</phase>
             <configuration>
-                <nodeVersion>v20.0.0</nodeVersion>
+                <nodeVersion>v20.19.0</nodeVersion>
             </configuration>
         </execution>
         <execution>
