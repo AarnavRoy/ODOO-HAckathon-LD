@@ -55,6 +55,7 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/signup", "/api/auth/login", "/api/auth/forgot-password").permitAll()
+                .requestMatchers("/api/uploads/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/public/trips/*/copy").authenticated()
                 .requestMatchers("/api/public/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/cities", "/api/cities/**").permitAll()

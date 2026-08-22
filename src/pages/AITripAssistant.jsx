@@ -1,9 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, MapPin, Calendar, Users, Wallet, CheckCircle, RefreshCw, Save, ArrowLeft, Loader2, TrendingDown, Coffee, Activity, Utensils, Edit3 } from 'lucide-react';
 import { generateTripItinerary, refineTripItinerary } from '../api/ai';
-import { createTrip } from '../api/trips'; // We will use the mock createTrip
+import { createTrip } from '../api/trips';
+import { searchDestinations } from '../data/destinations';
+
 
 export default function AITripAssistant() {
   const navigate = useNavigate();
@@ -19,8 +21,38 @@ export default function AITripAssistant() {
     pace: 'balanced',
     additional: ''
   });
-  
-  // Loading State
+
+  // Destination autocomplete
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [filteredDestinations, setFilteredDestinations] = useState([]);
+  const destRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (destRef.current && !destRef.current.contains(e.target)) {
+        setShowSuggestions(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleDestinationChange = (value) => {
+    setPreferences({ ...preferences, destination: value });
+    if (value.trim().length > 0) {
+      const matches = searchDestinations(value);
+      setFilteredDestinations(matches);
+      setShowSuggestions(matches.length > 0);
+    } else {
+      setShowSuggestions(false);
+    }
+  };
+
+  const handleSelectDestination = (dest) => {
+    setPreferences({ ...preferences, destination: dest });
+    setShowSuggestions(false);
+  };
+
   const [loadingText, setLoadingText] = useState('');
   const [loadingProgress, setLoadingProgress] = useState(0);
   
@@ -97,25 +129,6 @@ export default function AITripAssistant() {
     }
   };
 
-  // Autocomplete data
-  const popularDestinations = [
-    "Paris, France", "London, UK", "New York City, USA", "Tokyo, Japan",
-    "Goa, India", "Bali, Indonesia", "Rome, Italy", "Barcelona, Spain",
-    "Amsterdam, Netherlands", "Dubai, UAE", "Singapore", "Bangkok, Thailand",
-    "Istanbul, Turkey", "Kyoto, Japan", "Sydney, Australia", "Cape Town, South Africa",
-    "Rio de Janeiro, Brazil", "Agra, India", "Jaipur, India", "Mumbai, India", 
-    "Delhi, India", "Kerala, India", "Athens, Greece", "Santorini, Greece", 
-    "Prague, Czechia", "Vienna, Austria", "Berlin, Germany", "Zurich, Switzerland", 
-    "Vancouver, Canada", "Toronto, Canada", "Los Angeles, USA", "Las Vegas, USA", 
-    "Miami, USA", "San Francisco, USA", "Seoul, South Korea", "Hanoi, Vietnam", 
-    "Phuket, Thailand", "Maldives", "Seychelles", "Mauritius"
-  ];
-  
-  const [showDestinations, setShowDestinations] = useState(false);
-  const filteredDestinations = popularDestinations.filter(d => 
-    d.toLowerCase().includes(preferences.destination.toLowerCase())
-  );
-
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-900 pb-20">
       {/* Header */}
@@ -141,41 +154,50 @@ export default function AITripAssistant() {
               
               <form onSubmit={handleGenerate} className="space-y-8">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="relative">
+                  <div ref={destRef} className="relative">
                     <label className="block text-sm font-bold text-slate-700 mb-2">Where do you want to go?</label>
                     <div className="relative">
-                      <MapPin className="absolute left-4 top-3.5 w-5 h-5 text-slate-400" />
-                      <input 
-                        type="text" 
-                        required 
-                        value={preferences.destination} 
-                        onChange={e => {
-                          setPreferences({...preferences, destination: e.target.value});
-                          setShowDestinations(true);
-                        }} 
-                        onFocus={() => setShowDestinations(true)}
-                        onBlur={() => setTimeout(() => setShowDestinations(false), 200)}
-                        placeholder="e.g. Goa, Paris, Japan" 
-                        className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-fuchsia-500/20 focus:border-fuchsia-500 font-medium transition-all" 
+                      <MapPin className="absolute left-4 top-3.5 w-5 h-5 text-slate-400 z-10" />
+                      <input
+                        type="text"
+                        required
+                        autoComplete="off"
+                        value={preferences.destination}
+                        onChange={e => handleDestinationChange(e.target.value)}
+                        onFocus={() => {
+                          if (preferences.destination.trim().length > 0 && filteredDestinations.length > 0) {
+                            setShowSuggestions(true);
+                          }
+                        }}
+                        placeholder="e.g. Goa, Paris, Japan..."
+                        className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-fuchsia-500/20 focus:border-fuchsia-500 font-medium transition-all"
                       />
                     </div>
-                    {showDestinations && preferences.destination && filteredDestinations.length > 0 && (
-                      <div className="absolute z-10 w-full mt-1 bg-white border border-slate-200 rounded-xl shadow-lg max-h-60 overflow-y-auto">
-                        {filteredDestinations.map(dest => (
-                          <div 
-                            key={dest} 
-                            onClick={() => {
-                              setPreferences({...preferences, destination: dest});
-                              setShowDestinations(false);
-                            }}
-                            className="px-4 py-3 cursor-pointer hover:bg-fuchsia-50 hover:text-fuchsia-700 font-medium text-slate-700 transition-colors border-b border-slate-50 last:border-0"
-                          >
-                            <MapPin className="inline w-4 h-4 mr-2 text-slate-400" />
-                            {dest}
-                          </div>
-                        ))}
-                      </div>
-                    )}
+                    <AnimatePresence>
+                      {showSuggestions && (
+                        <motion.ul
+                          initial={{ opacity: 0, y: -8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -8 }}
+                          transition={{ duration: 0.15 }}
+                          className="absolute z-50 left-0 right-0 mt-2 bg-white border border-slate-200 rounded-xl shadow-xl overflow-hidden"
+                        >
+                          {filteredDestinations.map((dest, i) => (
+                            <li
+                              key={i}
+                              onMouseDown={() => handleSelectDestination(dest.name)}
+                              className="flex items-center justify-between gap-3 px-4 py-3 hover:bg-fuchsia-50 cursor-pointer transition-colors text-sm border-b border-slate-50 last:border-0"
+                            >
+                              <div className="flex items-center gap-3">
+                                <MapPin className="w-4 h-4 text-fuchsia-400 shrink-0" />
+                                <span className="font-medium text-slate-800">{dest.name}</span>
+                              </div>
+                              <span className="text-xs font-semibold text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full shrink-0">{dest.country}</span>
+                            </li>
+                          ))}
+                        </motion.ul>
+                      )}
+                    </AnimatePresence>
                   </div>
                   <div>
                     <label className="block text-sm font-bold text-slate-700 mb-2">How many days?</label>
