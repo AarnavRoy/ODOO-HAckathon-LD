@@ -18,6 +18,11 @@ public class Trip {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @com.fasterxml.jackson.annotation.JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "start_city_id")
+    private City startCity;
+
     private String name;
     private LocalDate startDate;
     private LocalDate endDate;
@@ -59,6 +64,8 @@ public class Trip {
     public void setId(Long id) { this.id = id; }
     public User getUser() { return user; }
     public void setUser(User user) { this.user = user; }
+    public City getStartCity() { return startCity; }
+    public void setStartCity(City startCity) { this.startCity = startCity; }
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
     public LocalDate getStartDate() { return startDate; }

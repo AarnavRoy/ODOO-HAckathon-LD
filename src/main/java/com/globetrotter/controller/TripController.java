@@ -1,13 +1,18 @@
 package com.globetrotter.controller;
 
+import com.globetrotter.model.TripActivity;
+import com.globetrotter.model.Activity;
 import com.globetrotter.model.City;
 import com.globetrotter.model.Stop;
 import com.globetrotter.model.Trip;
 import com.globetrotter.model.User;
+import com.globetrotter.repository.ActivityRepository;
 import com.globetrotter.repository.CityRepository;
 import com.globetrotter.repository.StopRepository;
+import com.globetrotter.repository.TripActivityRepository;
 import com.globetrotter.repository.TripRepository;
 import com.globetrotter.repository.UserRepository;
+import com.globetrotter.service.CityActivityService;
 import com.globetrotter.security.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -50,7 +55,16 @@ public class TripController {
     @Autowired
     private CityRepository cityRepository;
 
-    public record TripRequest(String name, LocalDate startDate, LocalDate endDate, String description, String coverPhotoUrl, Double budgetLimit) {}
+    @Autowired
+    private ActivityRepository activityRepository;
+
+    @Autowired
+    private TripActivityRepository tripActivityRepository;
+
+    @Autowired
+    private CityActivityService cityActivityService;
+
+    public record TripRequest(String name, LocalDate startDate, LocalDate endDate, String description, String coverPhotoUrl, Double budgetLimit, Long startCityId) {}
     public record StopRequest(Long cityId, LocalDate startDate, LocalDate endDate, Double transportCost, Double accommodationCost,
                               String transportMode, String departureTerminal, String arrivalTerminal,
                               String departureTime, String arrivalTime, String bookingReference, Double distanceKm,
@@ -58,6 +72,10 @@ public class TripController {
                               String accommodationBookingRef, String accommodationNotes, String notes) {}
     public record ReorderRequest(List<Long> stopIds) {}
     public record MessageResponse(String message) {}
+    
+    public record AIActivityRequest(String name, String description, String category, Double cost, String time) {}
+    public record AIDayRequest(Integer dayNumber, String title, List<AIActivityRequest> activities) {}
+    public record AIImportRequest(String tripName, String startCityName, String destinationName, Integer duration, Double budget, LocalDate startDate, List<AIDayRequest> days) {}
 
     private User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -73,7 +91,7 @@ public class TripController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createTrip(@RequestBody TripRequest request) {
+    public ResponseEntity<Trip> createTrip(@RequestBody TripRequest request) {
         User user = getCurrentUser();
         Trip trip = new Trip();
         trip.setUser(user);
@@ -84,7 +102,94 @@ public class TripController {
         trip.setCoverPhotoUrl(request.coverPhotoUrl());
         trip.setBudgetLimit(request.budgetLimit());
         
+        if (request.startCityId() != null) {
+            cityRepository.findById(request.startCityId()).ifPresent(trip::setStartCity);
+        }
+
         Trip savedTrip = tripRepository.save(trip);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedTrip);
+    }
+
+    @PostMapping("/ai-import")
+    public ResponseEntity<Trip> importAITrip(@RequestBody AIImportRequest request) {
+        User user = getCurrentUser();
+        
+        // 1. Upsert Start City
+        City startCity = null;
+        if (request.startCityName() != null && !request.startCityName().trim().isEmpty()) {
+            startCity = cityActivityService.upsertCity(request.startCityName(), "Unknown", null, null);
+        }
+        
+        // 2. Upsert Destination City
+        City destCity = cityActivityService.upsertCity(request.destinationName(), "Unknown", null, null);
+        
+        // 3. Create Trip
+        Trip trip = new Trip();
+        trip.setUser(user);
+        trip.setName(request.tripName());
+        trip.setStartDate(request.startDate());
+        LocalDate endDate = request.startDate().plusDays(request.duration() - 1);
+        trip.setEndDate(endDate);
+        trip.setBudgetLimit(request.budget());
+        trip.setDescription("AI Generated Trip to " + request.destinationName());
+        trip.setCoverPhotoUrl("https://images.unsplash.com/photo-1469854523086-cc02fe5d8800");
+        if (startCity != null) {
+            trip.setStartCity(startCity);
+        }
+        Trip savedTrip = tripRepository.save(trip);
+        
+        // 4. Create Stop (spanning entire duration)
+        Stop stop = new Stop();
+        stop.setTrip(savedTrip);
+        stop.setCity(destCity);
+        stop.setStartDate(request.startDate());
+        stop.setEndDate(endDate);
+        stop.setOrderIndex(0);
+        Stop savedStop = stopRepository.save(stop);
+        
+        // 5. Create Activities
+        if (request.days() != null) {
+            for (AIDayRequest day : request.days()) {
+                LocalDate dayDate = request.startDate().plusDays(day.dayNumber() - 1);
+                
+                if (day.activities() != null) {
+                    for (AIActivityRequest actReq : day.activities()) {
+                        // Create global activity
+                        Activity activity = new Activity();
+                        activity.setCity(destCity);
+                        activity.setName(actReq.name());
+                        activity.setDescription(actReq.description());
+                        activity.setCost(actReq.cost());
+                        
+                        Activity.ActivityCategory cat = Activity.ActivityCategory.OTHER;
+                        try {
+                            if (actReq.category() != null) {
+                                cat = Activity.ActivityCategory.valueOf(actReq.category().toUpperCase());
+                            }
+                        } catch (Exception ignored) {}
+                        activity.setCategory(cat);
+                        
+                        Activity savedActivity = activityRepository.save(activity);
+                        
+                        // Create TripActivity linkage
+                        TripActivity tripActivity = new TripActivity();
+                        tripActivity.setStop(savedStop);
+                        tripActivity.setActivity(savedActivity);
+                        tripActivity.setDayDate(dayDate);
+                        tripActivity.setCost(actReq.cost());
+                        
+                        try {
+                            if (actReq.time() != null) {
+                                tripActivity.setStartTime(java.time.LocalTime.parse(actReq.time()));
+                            }
+                        } catch (Exception ignored) {}
+                        
+                        tripActivityRepository.save(tripActivity);
+                    }
+                }
+            }
+        }
+        
         return ResponseEntity.status(HttpStatus.CREATED).body(savedTrip);
     }
 

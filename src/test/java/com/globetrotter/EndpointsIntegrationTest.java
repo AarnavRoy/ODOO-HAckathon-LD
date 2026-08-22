@@ -68,7 +68,7 @@ public class EndpointsIntegrationTest {
         userRepository.deleteAll();
 
         // 1. Create User 1
-        SignupRequest signup1 = new SignupRequest("Alice Explorer", "alice@example.com", "password123");
+        SignupRequest signup1 = new SignupRequest("Alice Explorer", "alice_exp", "alice@gmail.com", "Password123!");
         MvcResult res1 = mockMvc.perform(post("/api/auth/signup")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(signup1)))
@@ -76,10 +76,10 @@ public class EndpointsIntegrationTest {
                 .andReturn();
         AuthResponse auth1 = objectMapper.readValue(res1.getResponse().getContentAsString(), AuthResponse.class);
         user1Token = auth1.token();
-        user1 = userRepository.findByEmail("alice@example.com").orElseThrow();
+        user1 = userRepository.findByEmail("alice@gmail.com").orElseThrow();
 
         // 2. Create User 2
-        SignupRequest signup2 = new SignupRequest("Bob Traveler", "bob@example.com", "password123");
+        SignupRequest signup2 = new SignupRequest("Bob Traveler", "bob_trav", "bob@gmail.com", "Password123!");
         MvcResult res2 = mockMvc.perform(post("/api/auth/signup")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(signup2)))
@@ -87,7 +87,7 @@ public class EndpointsIntegrationTest {
                 .andReturn();
         AuthResponse auth2 = objectMapper.readValue(res2.getResponse().getContentAsString(), AuthResponse.class);
         user2Token = auth2.token();
-        user2 = userRepository.findByEmail("bob@example.com").orElseThrow();
+        user2 = userRepository.findByEmail("bob@gmail.com").orElseThrow();
 
         // 3. Find cities
         paris = cityRepository.findAll().stream().filter(c -> "Paris".equalsIgnoreCase(c.getName())).findFirst().orElseThrow();

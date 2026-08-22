@@ -1,7 +1,7 @@
 import api from './client';
 
-export const signup = async ({ name, email, password }) => {
-  const data = await api.post('/auth/signup', { name, email, password });
+export const signup = async ({ name, username, email, password }) => {
+  const data = await api.post('/auth/signup', { name, username, email, password });
   if (data.token) {
     localStorage.setItem('token', data.token);
     if (data.user) {
@@ -11,8 +11,8 @@ export const signup = async ({ name, email, password }) => {
   return data;
 };
 
-export const login = async ({ email, password }) => {
-  const data = await api.post('/auth/login', { email, password });
+export const login = async ({ username, password }) => {
+  const data = await api.post('/auth/login', { username, password });
   if (data.token) {
     localStorage.setItem('token', data.token);
     if (data.user) {
@@ -22,8 +22,24 @@ export const login = async ({ email, password }) => {
   return data;
 };
 
-export const forgotPassword = async ({ email }) => {
-  return await api.post('/auth/forgot-password', { email });
+export const checkUsernameAvailability = async (username) => {
+  return await api.get(`/auth/check-username?username=${encodeURIComponent(username)}`);
+};
+
+export const verifyEmailApi = async (email) => {
+  return await api.post('/auth/verify-email', { email });
+};
+
+export const verifyForgotPassword = async ({ email, name }) => {
+  return await api.post('/auth/forgot-password/verify', { email, name });
+};
+
+export const resetPasswordWithName = async ({ email, name, newPassword }) => {
+  return await api.post('/auth/forgot-password/reset', { email, name, newPassword });
+};
+
+export const forgotPassword = async ({ email, name }) => {
+  return await verifyForgotPassword({ email, name });
 };
 
 export const getMe = async () => {
@@ -31,8 +47,8 @@ export const getMe = async () => {
   return { user };
 };
 
-export const updateMe = async ({ name, profilePhotoUrl, languagePreference }) => {
-  const user = await api.put('/users/me', { name, profilePhotoUrl, languagePreference });
+export const updateMe = async ({ name, profilePhotoUrl, languagePreference, country, state, city }) => {
+  const user = await api.put('/users/me', { name, profilePhotoUrl, languagePreference, country, state, city });
   if (user) {
     localStorage.setItem('user', JSON.stringify(user));
   }
