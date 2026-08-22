@@ -18,28 +18,31 @@ export default function AppLayout({ children, title }) {
   ];
 
   return (
-    <div className="min-h-[100dvh] bg-[#0c0f1a] flex flex-col font-sans">
+    <div className="min-h-[100dvh] bg-gradient-to-br from-[#FEFCE8] to-[#f8f9fa] flex flex-col font-sans text-slate-900">
       {/* Navbar */}
-      <header className="bg-[#0c0f1a]/90 border-b border-white/5 sticky top-0 z-50 backdrop-blur-2xl">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
-            <div className="flex items-center">
-              <Link to="/" className="flex-shrink-0 flex items-center text-2xl font-extrabold tracking-tight text-white hover:scale-105 transition-transform">
-                <Globe className="w-7 h-7 mr-2 text-amber-400" />
-                GlobeTrotter
-              </Link>
-              <nav className="ml-10 hidden md:flex space-x-1 items-center">
-                {navLinks.map(link => {
-                  const active = link.match(location.pathname);
-                  return (
-                    <Link key={link.to} to={link.to} className={`px-4 py-2 rounded-lg text-sm font-semibold flex items-center transition-all duration-200 ${active ? 'bg-amber-500/15 text-amber-400' : 'text-slate-400 hover:text-white hover:bg-white/5'}`}>
-                      <link.icon className="w-4 h-4 mr-2" /> {link.label}
-                    </Link>
-                  );
-                })}
-              </nav>
-            </div>
-            <button onClick={handleLogout} className="text-slate-500 hover:text-red-400 flex items-center text-sm font-semibold transition-colors active:scale-95 hover:bg-white/5 px-4 py-2 rounded-lg">
+      <header className="sticky top-4 z-50 px-4 sm:px-6 lg:px-8 mt-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex justify-between items-center bg-transparent">
+            {/* Logo */}
+            <Link to="/" className="flex-shrink-0 flex items-center text-2xl font-extrabold tracking-tight text-slate-900 hover:scale-105 transition-transform">
+              <Globe className="w-7 h-7 mr-2 text-black" />
+              Wandrly<span className="text-yellow-400">.</span>
+            </Link>
+            
+            {/* Pill Navigation */}
+            <nav className="hidden md:flex space-x-1 items-center bg-black rounded-full px-2 py-2 shadow-xl shadow-black/10">
+              {navLinks.map(link => {
+                const active = link.match(location.pathname);
+                return (
+                  <Link key={link.to} to={link.to} className={`px-5 py-2 rounded-full text-sm font-semibold flex items-center transition-all duration-200 ${active ? 'bg-yellow-400 text-black' : 'text-slate-300 hover:text-white hover:bg-white/10'}`}>
+                    {link.label}
+                  </Link>
+                );
+              })}
+            </nav>
+
+            {/* Logout */}
+            <button onClick={handleLogout} className="text-slate-600 hover:text-red-500 flex items-center text-sm font-semibold transition-colors active:scale-95 hover:bg-black/5 px-4 py-2 rounded-full">
               <LogOut className="w-4 h-4 mr-1.5" /> Logout
             </button>
           </div>
@@ -61,7 +64,7 @@ export default function AppLayout({ children, title }) {
               initial={{ opacity: 0, x: -16 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.08, duration: 0.35 }}
-              className="text-4xl md:text-5xl font-extrabold tracking-tight text-white mb-8"
+              className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 mb-8"
             >
               {title}
             </motion.h1>

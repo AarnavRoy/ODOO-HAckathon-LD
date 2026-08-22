@@ -149,26 +149,26 @@ export default function ItineraryBuilder() {
       {/* Sub-header */}
       <div className="flex flex-wrap justify-between items-start gap-4 mb-8">
         <div>
-          <h1 className="text-2xl font-black tracking-tight text-slate-900">{trip.name}</h1>
-          <p className="text-sm text-slate-500 font-medium mt-0.5">
+          <h1 className="text-3xl font-black tracking-tight text-slate-900">{trip.name}</h1>
+          <p className="text-sm text-slate-500 font-medium mt-1">
             {trip.startDate} → {trip.endDate}
             {trip.startDate && trip.endDate && (
-              <span className="ml-2 bg-violet-100 text-violet-700 px-2 py-0.5 rounded-full text-xs font-bold">
+              <span className="ml-3 bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-xs font-bold border border-yellow-200 shadow-sm">
                 {daysBetween(trip.startDate, trip.endDate)} days
               </span>
             )}
           </p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-3">
           <Link
             to={`/trips/${trip.id}/budget`}
-            className="bg-white border-2 border-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-bold hover:bg-slate-50 transition-all"
+            className="bg-white border border-slate-200 text-slate-700 px-6 py-2.5 rounded-full text-sm font-bold shadow-sm hover:shadow-md hover:border-slate-300 hover:bg-slate-50 transition-all"
           >
             💰 Budget
           </Link>
           <Link
             to={`/trips/${trip.id}`}
-            className="bg-white border-2 border-slate-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-bold hover:bg-slate-50 transition-all"
+            className="bg-black text-white hover:bg-yellow-400 hover:text-black px-6 py-2.5 rounded-full text-sm font-bold shadow-md hover:shadow-lg transition-all"
           >
             Preview Itinerary
           </Link>
@@ -178,9 +178,9 @@ export default function ItineraryBuilder() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Left: Stops list with transport legs between them */}
         <div className="lg:col-span-2 space-y-0">
-          <h3 className="text-base font-bold text-slate-800 flex items-center gap-2 mb-4">
-            <MapPin className="w-4 h-4 text-violet-500" /> Your Stops
-            <span className="ml-auto text-xs font-medium text-slate-400">{trip.stops.length} stop{trip.stops.length !== 1 ? "s" : ""}</span>
+          <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2 mb-4">
+            <MapPin className="w-5 h-5 text-black" /> Your Stops
+            <span className="ml-auto text-xs font-bold text-slate-500 bg-slate-100 px-3 py-1 rounded-full border border-slate-200">{trip.stops.length} stop{trip.stops.length !== 1 ? "s" : ""}</span>
           </h3>
 
           {/* Starting Point Banner */}
@@ -230,20 +230,20 @@ export default function ItineraryBuilder() {
                 )}
 
                 {/* Stop Card */}
-                <div className="bg-white border border-slate-100 rounded-2xl p-4 shadow-sm flex items-start gap-3 group my-1">
+                <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-md flex items-start gap-4 group my-2 transition-shadow">
                   {/* Reorder controls */}
-                  <div className="flex flex-col items-center space-y-0.5 text-slate-300 pt-1">
-                    <button onClick={() => handleMoveStop(index, -1)} disabled={index === 0} className="hover:text-violet-500 disabled:opacity-20 transition-colors p-1 rounded">
-                      <ChevronUp className="w-4 h-4" />
+                  <div className="flex flex-col items-center space-y-1 text-slate-300 pt-2">
+                    <button onClick={() => handleMoveStop(index, -1)} disabled={index === 0} className="hover:text-black disabled:opacity-20 transition-colors p-1 rounded-full hover:bg-slate-50">
+                      <ChevronUp className="w-5 h-5" />
                     </button>
-                    <GripVertical className="w-4 h-4 cursor-move" />
-                    <button onClick={() => handleMoveStop(index, 1)} disabled={index === trip.stops.length - 1} className="hover:text-violet-500 disabled:opacity-20 transition-colors p-1 rounded">
-                      <ChevronDown className="w-4 h-4" />
+                    <GripVertical className="w-5 h-5 cursor-move" />
+                    <button onClick={() => handleMoveStop(index, 1)} disabled={index === trip.stops.length - 1} className="hover:text-black disabled:opacity-20 transition-colors p-1 rounded-full hover:bg-slate-50">
+                      <ChevronDown className="w-5 h-5" />
                     </button>
                   </div>
 
                   {/* Stop number badge */}
-                  <div className="w-7 h-7 rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-600 text-white text-xs font-black flex items-center justify-center shrink-0 mt-0.5">
+                  <div className="w-8 h-8 rounded-full bg-black text-white text-sm font-black flex items-center justify-center shrink-0 mt-1 shadow-sm">
                     {index + 1}
                   </div>
 
@@ -258,9 +258,9 @@ export default function ItineraryBuilder() {
                           <span className="flex items-center gap-1">
                             <CalendarDays className="w-3 h-3" /> {stop.startDate} → {stop.endDate}
                           </span>
-                          <span className="bg-slate-100 px-2 py-0.5 rounded-full">{nights} day{nights !== 1 ? "s" : ""}</span>
+                          <span className="bg-slate-100 border border-slate-200 px-3 py-1 rounded-full text-slate-700">{nights} day{nights !== 1 ? "s" : ""}</span>
                           {tz && (
-                            <span className="bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full flex items-center gap-1">
+                            <span className="bg-yellow-50 text-yellow-800 border border-yellow-200 px-3 py-1 rounded-full flex items-center gap-1">
                               <Globe className="w-3 h-3" />{tz}
                             </span>
                           )}
@@ -285,18 +285,18 @@ export default function ItineraryBuilder() {
                     <AccommodationForm stop={stop} onUpdate={loadData} />
 
                     {/* Day Notes */}
-                    <div className="mt-2 border border-slate-100 rounded-xl p-3">
-                      <div className="flex items-center justify-between mb-1.5">
-                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1">
-                          <StickyNote className="w-3 h-3" /> Notes
+                    <div className="mt-4 border border-slate-100 rounded-2xl p-4 bg-slate-50/50">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
+                          <StickyNote className="w-3.5 h-3.5" /> Notes
                         </span>
                         {currentNotes !== (stop.notes || "") && (
                           <button
                             onClick={() => handleSaveNotes(stop.id)}
                             disabled={savingNotes[stop.id]}
-                            className="text-[10px] font-bold text-violet-600 hover:text-violet-700 flex items-center gap-0.5"
+                            className="text-xs font-bold text-black hover:text-yellow-600 flex items-center gap-1 bg-yellow-400 px-3 py-1 rounded-full shadow-sm"
                           >
-                            {savingNotes[stop.id] ? <Loader2 className="w-3 h-3 animate-spin" /> : <Save className="w-3 h-3" />}
+                            {savingNotes[stop.id] ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
                             Save
                           </button>
                         )}
@@ -306,15 +306,15 @@ export default function ItineraryBuilder() {
                         onChange={(e) => setEditingNotes((p) => ({ ...p, [notesKey]: e.target.value }))}
                         rows={2}
                         placeholder="Day plans, reminders, tips..."
-                        className="w-full border border-slate-100 rounded-lg py-1.5 px-2 text-xs font-medium bg-slate-50/50 focus:outline-none focus:ring-2 focus:ring-violet-500/10 focus:bg-white resize-none transition-all"
+                        className="w-full border border-slate-200 rounded-xl py-2 px-3 text-sm font-medium bg-white focus:outline-none focus:ring-2 focus:ring-black focus:border-black resize-none transition-all shadow-sm"
                       />
                     </div>
 
                     {/* Activities mini section */}
-                    <div className="mt-2 bg-slate-50 p-3 rounded-xl border border-slate-100">
-                      <div className="flex justify-between items-center mb-1.5">
-                        <span className="text-xs font-bold text-slate-600">Activities</span>
-                        <Link to={`/trips/${tripId}/activities?cityId=${stop.cityId || stop.city?.id}`} className="text-xs font-bold text-violet-600 hover:text-violet-700">+ Add</Link>
+                    <div className="mt-3 bg-white p-4 rounded-2xl border border-slate-100 shadow-[0_4px_20px_rgb(0,0,0,0.02)]">
+                      <div className="flex justify-between items-center mb-2.5">
+                        <span className="text-sm font-bold text-slate-900">Activities</span>
+                        <Link to={`/trips/${tripId}/activities?cityId=${stop.cityId || stop.city?.id}`} className="text-xs font-bold text-white bg-black hover:bg-yellow-400 hover:text-black px-3 py-1.5 rounded-full transition-all">+ Add</Link>
                       </div>
                       {!stop.tripActivities?.length ? (
                         <p className="text-xs text-slate-400 italic">No activities planned yet.</p>
@@ -337,10 +337,10 @@ export default function ItineraryBuilder() {
         </div>
 
         {/* Right: Add stop panel */}
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 h-fit sticky top-6 overflow-hidden">
-          <div className="h-1 bg-gradient-to-r from-violet-600 to-fuchsia-500" />
-          <div className="p-6">
-            <h3 className="text-base font-bold text-slate-800 mb-4">Add a Stop</h3>
+        <div className="bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 h-fit sticky top-24 overflow-hidden">
+          <div className="h-2 bg-yellow-400" />
+          <div className="p-8">
+            <h3 className="text-xl font-bold text-slate-900 mb-6">Add a Stop</h3>
 
             {addError && (
               <div className="flex items-start gap-2 bg-red-50 text-red-600 p-3 mb-4 rounded-xl text-xs font-semibold border border-red-100">
@@ -358,8 +358,8 @@ export default function ItineraryBuilder() {
                   placeholder="Search any city worldwide..."
                 />
                 {selectedPlace && (
-                  <div className="mt-1.5 flex items-center gap-1.5 text-xs text-violet-700 font-semibold bg-violet-50 px-2.5 py-1.5 rounded-lg border border-violet-100">
-                    <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
+                  <div className="mt-2 flex items-center gap-2 text-sm text-slate-900 font-bold bg-yellow-50 px-3 py-2 rounded-xl border border-yellow-200">
+                    <CheckCircle2 className="w-4 h-4 shrink-0 text-yellow-600" />
                     {selectedPlace.name}, {selectedPlace.country}
                   </div>
                 )}
@@ -373,7 +373,7 @@ export default function ItineraryBuilder() {
                   min={tripStart || undefined}
                   max={tripEnd || undefined}
                   onChange={(e) => setNewStartDate(e.target.value)}
-                  className="w-full border-2 border-slate-200 bg-slate-50 rounded-xl py-2 px-3 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500 focus:bg-white transition-all"
+                  className="w-full border border-slate-200 bg-slate-50 rounded-full py-3 px-4 text-sm font-medium focus:outline-none focus:border-black focus:ring-1 focus:ring-black focus:bg-white transition-all"
                 />
               </div>
 
@@ -385,7 +385,7 @@ export default function ItineraryBuilder() {
                   min={newStartDate || tripStart || undefined}
                   max={tripEnd || undefined}
                   onChange={(e) => setNewEndDate(e.target.value)}
-                  className="w-full border-2 border-slate-200 bg-slate-50 rounded-xl py-2 px-3 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500 focus:bg-white transition-all"
+                  className="w-full border border-slate-200 bg-slate-50 rounded-full py-3 px-4 text-sm font-medium focus:outline-none focus:border-black focus:ring-1 focus:ring-black focus:bg-white transition-all"
                 />
               </div>
 
@@ -404,10 +404,10 @@ export default function ItineraryBuilder() {
               <button
                 type="submit"
                 disabled={addLoading || !!stopDateError || !selectedPlace}
-                className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 shadow-md shadow-violet-500/20 focus:outline-none focus:ring-4 focus:ring-violet-500/30 active:scale-95 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+                className="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-full text-sm font-bold text-white bg-black hover:bg-yellow-400 hover:text-black shadow-md focus:outline-none active:scale-95 transition-all disabled:opacity-60 disabled:cursor-not-allowed mt-2"
               >
                 {addLoading ? (
-                  <><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />Adding...</>
+                  <><span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />Adding...</>
                 ) : (
                   <><Plus className="w-4 h-4" />Add Stop</>
                 )}

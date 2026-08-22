@@ -115,15 +115,15 @@ export default function Dashboard() {
       {/* Welcome Banner */}
       <motion.div variants={fadeUp} initial="hidden" animate="show" className="mb-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-3xl font-extrabold tracking-tight text-white flex items-center gap-2">
+          <h2 className="text-4xl font-black tracking-tight text-slate-900 flex items-center gap-2">
             Welcome back, {user?.name?.split(' ')[0] || 'Traveler'}! 
             <span className="inline-block animate-bounce">👋</span>
           </h2>
-          <p className="text-slate-400 mt-1 text-sm font-medium">Ready to design your next journey across the world?</p>
+          <p className="text-slate-500 mt-1 text-base font-medium">Ready to design your next journey across the world?</p>
         </div>
         <Link 
           to="/trips/new" 
-          className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-400 to-amber-500 text-slate-900 font-bold px-6 py-3 rounded-2xl shadow-lg shadow-amber-500/20 hover:scale-105 active:scale-95 transition-all text-sm self-start md:self-auto"
+          className="inline-flex items-center gap-2 bg-black text-white hover:bg-yellow-400 hover:text-black font-bold px-8 py-3.5 rounded-full shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all text-sm self-start md:self-auto"
         >
           <Sparkles className="w-4 h-4" /> Plan a New Trip
         </Link>
@@ -141,22 +141,22 @@ export default function Dashboard() {
               onClick={() => setActiveTab(tab.id)}
               whileHover={{ y: -4 }}
               whileTap={{ scale: 0.98 }}
-              className={`p-6 rounded-3xl border transition-all text-left relative overflow-hidden backdrop-blur-md cursor-pointer ${
+              className={`p-6 rounded-3xl border transition-all text-left relative overflow-hidden cursor-pointer ${
                 isActive 
-                  ? tab.activeRing 
-                  : 'bg-white/[0.03] border-white/[0.06] hover:border-white/20 hover:bg-white/[0.05]'
+                  ? 'bg-white border-black shadow-md shadow-black/5 scale-[1.02]' 
+                  : 'bg-white/60 border-slate-200 hover:bg-white hover:border-slate-300 hover:shadow-sm'
               }`}
             >
               <div className="flex items-center justify-between mb-4">
-                <div className={`p-3.5 rounded-2xl ${tab.bg} ${tab.color} border border-white/5`}>
+                <div className={`p-3.5 rounded-full ${tab.bg} ${tab.color}`}>
                   <Icon className="w-6 h-6" />
                 </div>
-                <span className={`text-xs font-bold px-3 py-1 rounded-full ${tab.badge} transition-all`}>
+                <span className={`text-xs font-bold px-3 py-1 rounded-full ${isActive ? 'bg-black text-white' : 'bg-slate-100 text-slate-500'} transition-all`}>
                   {isActive ? 'Active View' : 'Tap to View'}
                 </span>
               </div>
-              <h4 className="text-slate-400 text-xs font-bold uppercase tracking-wider">{tab.label}</h4>
-              <p className="text-2xl font-black text-white mt-1">{tab.value}</p>
+              <h4 className="text-slate-500 text-xs font-bold uppercase tracking-wider">{tab.label}</h4>
+              <p className="text-3xl font-black text-slate-900 mt-1">{tab.value}</p>
             </motion.button>
           );
         })}
@@ -166,27 +166,27 @@ export default function Dashboard() {
       <motion.div variants={fadeUp} initial="hidden" animate="show" className="mb-12">
         <div className="flex justify-between items-end mb-6">
           <div>
-            <h3 className="text-2xl font-extrabold tracking-tight text-white flex items-center gap-2">
-              <Map className="w-6 h-6 text-amber-400" /> Explore 30 Iconic Landmarks
+            <h3 className="text-2xl font-extrabold tracking-tight text-slate-900 flex items-center gap-2">
+              <Map className="w-6 h-6 text-black" /> Explore Iconic Landmarks
             </h3>
-            <p className="text-slate-400 text-sm mt-1">Scroll through famous wonders of the world or view them all</p>
+            <p className="text-slate-500 text-sm mt-1">Scroll through famous wonders of the world or view them all</p>
           </div>
           <div className="flex items-center gap-2">
             <button 
               onClick={() => scrollCarousel('left')}
-              className="p-2 rounded-xl bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-all hover:scale-105"
+              className="p-2.5 rounded-full bg-white border border-slate-200 text-slate-900 hover:bg-slate-50 transition-all hover:-translate-y-0.5 shadow-sm"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
             <button 
               onClick={() => scrollCarousel('right')}
-              className="p-2 rounded-xl bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-all hover:scale-105"
+              className="p-2.5 rounded-full bg-white border border-slate-200 text-slate-900 hover:bg-slate-50 transition-all hover:-translate-y-0.5 shadow-sm"
             >
               <ChevronRight className="w-5 h-5" />
             </button>
             <button
               onClick={() => setViewAllLandmarks(!viewAllLandmarks)}
-              className="ml-2 bg-amber-400/10 hover:bg-amber-400/20 text-amber-400 border border-amber-400/30 px-4 py-2 rounded-xl text-sm font-bold transition-all hover:scale-105"
+              className="ml-2 bg-black hover:bg-yellow-400 text-white hover:text-black px-6 py-2.5 rounded-full text-sm font-bold transition-all shadow-md"
             >
               {viewAllLandmarks ? 'Show Carousel' : 'View All'}
             </button>
@@ -236,17 +236,17 @@ export default function Dashboard() {
       </motion.div>
 
       {/* AI Assistant Banner */}
-      <motion.div variants={fadeUp} initial="hidden" animate="show" className="mb-10 p-6 rounded-3xl bg-gradient-to-r from-violet-600/20 via-purple-600/20 to-pink-600/20 border border-violet-500/30 backdrop-blur-md flex flex-col sm:flex-row items-center justify-between gap-4">
+      <motion.div variants={fadeUp} initial="hidden" animate="show" className="mb-12 p-6 rounded-3xl bg-white border border-slate-100 shadow-md flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-4">
-          <div className="p-3 bg-violet-500 text-white rounded-2xl shadow-lg shadow-violet-500/30">
+          <div className="p-4 bg-yellow-400 text-black rounded-full shadow-inner">
             <Navigation className="w-6 h-6" />
           </div>
           <div>
-            <h4 className="text-lg font-bold text-white">Ask GlobeTrotter AI</h4>
-            <p className="text-sm text-slate-300">Generate personalized multi-city itineraries, smart budget splits, and packing checklists.</p>
+            <h4 className="text-xl font-bold text-slate-900">Ask GlobeTrotter AI</h4>
+            <p className="text-sm text-slate-500 font-medium mt-1">Generate personalized multi-city itineraries, smart budget splits, and packing checklists.</p>
           </div>
         </div>
-        <Link to="/ai-planner" className="bg-white text-slate-900 font-bold px-5 py-2.5 rounded-xl text-sm hover:bg-slate-100 transition-all shrink-0">
+        <Link to="/ai-planner" className="bg-black text-white hover:bg-yellow-400 hover:text-black font-bold px-6 py-3 rounded-full text-sm transition-all shrink-0 shadow-lg">
           Try AI Planner ✨
         </Link>
       </motion.div>
@@ -260,59 +260,61 @@ export default function Dashboard() {
             animate={{ opacity: 1, y: 0 }} 
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.25 }}
-            className="bg-white/[0.02] border border-white/[0.08] rounded-3xl p-6 md:p-8 backdrop-blur-sm"
+            className="w-full"
           >
             <div className="flex justify-between items-center mb-6">
               <div>
-                <h3 className="text-2xl font-extrabold tracking-tight text-white flex items-center gap-2">
-                  <Plane className="w-6 h-6 text-cyan-400" /> Your Recent Trips
+                <h3 className="text-2xl font-extrabold tracking-tight text-slate-900 flex items-center gap-2">
+                   Your Recent Trips
                 </h3>
-                <p className="text-sm text-slate-400 mt-1">Manage and view your ongoing and upcoming trip itineraries</p>
+                <p className="text-sm text-slate-500 mt-1">Manage and view your ongoing and upcoming trip itineraries</p>
               </div>
-              <Link to="/trips" className="text-cyan-400 hover:text-cyan-300 text-sm font-bold transition-colors flex items-center gap-1">
+              <Link to="/trips" className="text-black hover:text-yellow-600 text-sm font-bold transition-colors flex items-center gap-1 bg-white px-4 py-2 rounded-full border border-slate-200 shadow-sm hover:shadow-md">
                 View All Trips <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {data?.recentTrips?.map((trip, i) => (
                 <motion.div
                   initial={{ opacity: 0, y: 8 }} 
                   animate={{ opacity: 1, y: 0 }} 
                   transition={{ delay: i * 0.05 }}
                   key={trip.id}
-                  className="p-5 rounded-2xl bg-white/[0.03] border border-white/[0.08] hover:border-cyan-500/40 transition-all group flex justify-between items-center"
+                  className="p-6 rounded-3xl bg-white border border-slate-100 hover:border-yellow-400 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all group flex flex-col justify-between"
                 >
-                  <div>
-                    <h4 className="font-bold text-lg text-white group-hover:text-cyan-400 transition-colors flex items-center gap-2">
+                  <div className="mb-6">
+                    <h4 className="font-bold text-xl text-slate-900 transition-colors line-clamp-2 leading-tight">
                       {trip.name}
                     </h4>
-                    <p className="text-sm text-slate-400 mt-1 flex items-center gap-1.5 font-medium">
-                      📅 {trip.startDate} → {trip.endDate}
+                    <p className="text-sm text-slate-500 mt-2 flex items-center gap-1.5 font-medium">
+                      📅 {trip.startDate} <ArrowRight className="w-3 h-3" /> {trip.endDate}
                     </p>
                     {trip.budgetLimit && (
-                      <span className="inline-block text-xs font-semibold text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-md mt-2 border border-emerald-500/20">
-                        Budget: ₹{trip.budgetLimit.toLocaleString('en-IN')}
-                      </span>
+                      <div className="mt-3 inline-flex">
+                        <span className="text-xs font-bold text-slate-700 bg-slate-100 px-3 py-1 rounded-full">
+                          Budget: ₹{trip.budgetLimit.toLocaleString('en-IN')}
+                        </span>
+                      </div>
                     )}
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center justify-end">
                     <Link 
                       to={`/trips/${trip.id}/build`} 
-                      className="bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 px-4 py-2 rounded-xl text-sm font-bold transition-all hover:scale-105 active:scale-95"
+                      className="bg-black hover:bg-yellow-400 text-white hover:text-black px-6 py-2.5 rounded-full text-sm font-bold transition-all shadow-md"
                     >
-                      Edit
+                      Edit Trip
                     </Link>
                   </div>
                 </motion.div>
               ))}
 
               {(!data?.recentTrips || data?.recentTrips?.length === 0) && (
-                <div className="col-span-full text-center py-12 text-slate-400">
-                  <Plane className="w-12 h-12 text-slate-600 mx-auto mb-3" />
-                  <p className="text-lg font-semibold text-white">No trips planned yet</p>
-                  <p className="text-sm text-slate-400 mt-1 mb-4">Start creating your first adventure itinerary today.</p>
-                  <Link to="/trips/new" className="inline-flex items-center gap-2 bg-amber-400 text-slate-900 font-bold px-5 py-2.5 rounded-xl text-sm hover:bg-amber-300 transition-all">
+                <div className="col-span-full text-center py-16 bg-white rounded-3xl border border-dashed border-slate-300">
+                  <Plane className="w-12 h-12 text-slate-300 mx-auto mb-4" />
+                  <p className="text-xl font-bold text-slate-900">No trips planned yet</p>
+                  <p className="text-sm text-slate-500 mt-1 mb-6">Start creating your first adventure itinerary today.</p>
+                  <Link to="/trips/new" className="inline-flex items-center gap-2 bg-black text-white px-6 py-3 rounded-full font-bold text-sm hover:bg-yellow-400 hover:text-black transition-all shadow-lg">
                     Create a Trip <ArrowRight className="w-4 h-4" />
                   </Link>
                 </div>
@@ -328,14 +330,14 @@ export default function Dashboard() {
             animate={{ opacity: 1, y: 0 }} 
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.25 }}
-            className="bg-white/[0.02] border border-white/[0.08] rounded-3xl p-6 md:p-8 backdrop-blur-sm"
+            className="w-full"
           >
             <div className="flex justify-between items-center mb-6">
               <div>
-                <h3 className="text-2xl font-extrabold tracking-tight text-white flex items-center gap-2">
-                  <MapPin className="w-6 h-6 text-rose-400" /> Recommended Destinations
+                <h3 className="text-2xl font-extrabold tracking-tight text-slate-900 flex items-center gap-2">
+                   Recommended Destinations
                 </h3>
-                <p className="text-sm text-slate-400 mt-1">Discover popular world-class cities and attractions for your bucket list</p>
+                <p className="text-sm text-slate-500 mt-1">Discover popular world-class cities and attractions for your bucket list</p>
               </div>
             </div>
 
@@ -386,108 +388,106 @@ export default function Dashboard() {
               ))}
 
               {(!data?.recommendedCities || data?.recommendedCities?.length === 0) && (
-                <div className="col-span-full text-center py-12 text-slate-400">
-                  <MapPin className="w-12 h-12 text-slate-600 mx-auto mb-3" />
-                  <p className="text-lg font-semibold text-white">No destinations found</p>
+                <div className="col-span-full text-center py-16 bg-white rounded-3xl border border-dashed border-slate-300">
+                  <MapPin className="w-12 h-12 text-slate-300 mx-auto mb-4" />
+                  <p className="text-xl font-bold text-slate-900">No destinations found</p>
                 </div>
               )}
             </div>
           </motion.div>
         )}
 
-        {activeTab === 'budget' && (
           <motion.div 
             key="budget-tab"
             initial={{ opacity: 0, y: 15 }} 
             animate={{ opacity: 1, y: 0 }} 
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.25 }}
-            className="bg-white/[0.02] border border-white/[0.08] rounded-3xl p-6 md:p-8 backdrop-blur-sm"
+            className="w-full"
           >
             <div className="flex justify-between items-center mb-6">
               <div>
-                <h3 className="text-2xl font-extrabold tracking-tight text-white flex items-center gap-2">
-                  <IndianRupee className="w-6 h-6 text-amber-400" /> Travel Budget Breakdown
+                <h3 className="text-2xl font-extrabold tracking-tight text-slate-900 flex items-center gap-2">
+                   Travel Budget Breakdown
                 </h3>
-                <p className="text-sm text-slate-400 mt-1">Keep track of your spending, planned allocations, and savings</p>
+                <p className="text-sm text-slate-500 mt-1">Keep track of your spending, planned allocations, and savings</p>
               </div>
             </div>
 
             {/* Metric KPI Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
-              <div className="p-6 rounded-2xl bg-white/[0.04] border border-white/[0.08]">
-                <div className="flex items-center gap-2 text-slate-400 text-xs font-bold uppercase tracking-wider mb-2">
-                  <Wallet className="w-4 h-4 text-cyan-400" /> Total Budget
+              <div className="p-8 rounded-3xl bg-white border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+                <div className="flex items-center gap-2 text-slate-500 text-xs font-bold uppercase tracking-wider mb-3">
+                  <Wallet className="w-5 h-5 text-black" /> Total Budget
                 </div>
-                <p className="text-3xl font-extrabold text-white">₹{totalBudget.toLocaleString('en-IN')}</p>
+                <p className="text-4xl font-extrabold text-slate-900">₹{totalBudget.toLocaleString('en-IN')}</p>
               </div>
 
-              <div className="p-6 rounded-2xl bg-white/[0.04] border border-white/[0.08]">
-                <div className="flex items-center gap-2 text-slate-400 text-xs font-bold uppercase tracking-wider mb-2">
-                  <TrendingUp className="w-4 h-4 text-amber-400" /> Total Spent
+              <div className="p-8 rounded-3xl bg-white border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+                <div className="flex items-center gap-2 text-slate-500 text-xs font-bold uppercase tracking-wider mb-3">
+                  <TrendingUp className="w-5 h-5 text-black" /> Total Spent
                 </div>
-                <p className="text-3xl font-extrabold text-amber-400">₹{totalSpent.toLocaleString('en-IN')}</p>
+                <p className="text-4xl font-extrabold text-slate-900">₹{totalSpent.toLocaleString('en-IN')}</p>
               </div>
 
-              <div className="p-6 rounded-2xl bg-white/[0.04] border border-white/[0.08]">
-                <div className="flex items-center gap-2 text-slate-400 text-xs font-bold uppercase tracking-wider mb-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400" /> Remaining Balance
+              <div className="p-8 rounded-3xl bg-white border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+                <div className="flex items-center gap-2 text-slate-500 text-xs font-bold uppercase tracking-wider mb-3">
+                  <CheckCircle2 className="w-5 h-5 text-black" /> Remaining Balance
                 </div>
-                <p className="text-3xl font-extrabold text-emerald-400">₹{remainingBudget.toLocaleString('en-IN')}</p>
+                <p className="text-4xl font-extrabold text-emerald-600">₹{remainingBudget.toLocaleString('en-IN')}</p>
               </div>
             </div>
 
             {/* Per-Trip Budget Progress Bars */}
             <div>
-              <h4 className="text-lg font-bold text-white mb-4">Trip-by-Trip Spending</h4>
-              <div className="space-y-4">
+              <h4 className="text-xl font-bold text-slate-900 mb-6">Trip-by-Trip Spending</h4>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {data?.recentTrips?.map((trip) => {
                   const spent = trip.totalSpent || 0;
                   const limit = trip.budgetLimit || 0;
                   const pct = limit > 0 ? Math.min(Math.round((spent / limit) * 100), 100) : 0;
                   const isOver = spent > limit && limit > 0;
                   return (
-                    <div key={trip.id} className="p-5 rounded-2xl bg-white/[0.03] border border-white/[0.08]">
-                      <div className="flex justify-between items-center mb-2.5">
+                    <div key={trip.id} className="p-6 rounded-3xl bg-white shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
+                      <div className="flex justify-between items-center mb-4">
                         <div>
-                          <span className="font-bold text-white text-base">{trip.name}</span>
-                          <span className="text-xs text-slate-400 ml-3">{trip.startDate}</span>
+                          <span className="font-bold text-slate-900 text-lg">{trip.name}</span>
+                          <span className="text-xs text-slate-500 font-medium block mt-1">{trip.startDate}</span>
                         </div>
-                        <div className="text-right">
-                          <span className={`text-sm font-bold ${isOver ? 'text-rose-400' : 'text-amber-400'}`}>
+                        <div className="text-right bg-slate-50 px-4 py-2 rounded-2xl">
+                          <span className={`text-base font-black ${isOver ? 'text-red-500' : 'text-slate-900'}`}>
                             ₹{spent.toLocaleString('en-IN')}
                           </span>
-                          <span className="text-xs text-slate-500 font-semibold"> / ₹{limit.toLocaleString('en-IN')}</span>
+                          <span className="text-xs text-slate-500 font-bold block"> / ₹{limit.toLocaleString('en-IN')}</span>
                         </div>
                       </div>
                       
-                      <div className="w-full bg-white/10 rounded-full h-3 overflow-hidden">
+                      <div className="w-full bg-slate-100 rounded-full h-4 overflow-hidden shadow-inner">
                         <div 
                           className={`h-full rounded-full transition-all duration-700 ${
                             isOver 
-                              ? 'bg-rose-500 shadow-[0_0_12px_rgba(244,63,94,0.5)]' 
+                              ? 'bg-red-500' 
                               : pct > 80 
-                              ? 'bg-amber-400 shadow-[0_0_12px_rgba(251,191,36,0.5)]' 
-                              : 'bg-cyan-400 shadow-[0_0_12px_rgba(6,182,212,0.5)]'
+                              ? 'bg-yellow-400' 
+                              : 'bg-black'
                           }`}
                           style={{ width: `${limit > 0 ? pct : 0}%` }}
                         ></div>
                       </div>
-                      <div className="flex justify-between items-center mt-2 text-xs text-slate-400">
-                        <span>{pct}% of budget utilized</span>
-                        {isOver && <span className="text-rose-400 font-semibold">Exceeded by ₹{(spent - limit).toLocaleString('en-IN')}</span>}
+                      <div className="flex justify-between items-center mt-3 text-xs font-bold text-slate-500">
+                        <span>{pct}% utilized</span>
+                        {isOver && <span className="text-red-500 bg-red-50 px-2 py-1 rounded-md">Exceeded by ₹{(spent - limit).toLocaleString('en-IN')}</span>}
                       </div>
                     </div>
                   );
                 })}
 
                 {(!data?.recentTrips || data?.recentTrips?.length === 0) && (
-                  <p className="text-slate-400 py-4 text-center">No trip budget records available.</p>
+                  <p className="text-slate-500 py-6 text-center w-full">No trip budget records available.</p>
                 )}
               </div>
             </div>
           </motion.div>
-        )}
       </AnimatePresence>
     </AppLayout>
   );
