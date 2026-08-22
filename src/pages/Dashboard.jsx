@@ -27,7 +27,14 @@ export default function Dashboard() {
   useEffect(() => {
     Promise.all([getDashboard(), getMe()]).then(([dashData, userData]) => {
       setData(dashData);
-      setUser(userData.user);
+      setUser(userData.user || userData); // handle if backend returns user differently
+      setLoading(false);
+    }).catch(err => {
+      console.error(err);
+      if (err.status === 401 || err.status === 403) {
+        localStorage.removeItem('token');
+        window.location.href = '/login';
+      }
       setLoading(false);
     });
   }, []);
