@@ -1,19 +1,52 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import AppLayout from '../components/AppLayout';
 import { getDashboard } from '../api/trips';
 import { getMe } from '../api/auth';
-import { Plane, MapPin, IndianRupee, ArrowRight, Sparkles, TrendingUp, Wallet, CheckCircle2 } from 'lucide-react';
+import { 
+  Plane, MapPin, IndianRupee, ArrowRight, Sparkles, TrendingUp, 
+  Wallet, CheckCircle2, Map, Navigation, ChevronLeft, ChevronRight 
+} from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const stagger = { hidden: { opacity: 0 }, show: { opacity: 1, transition: { staggerChildren: 0.1 } } };
 const fadeUp = { hidden: { opacity: 0, y: 16 }, show: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 120, damping: 20 } } };
+
+// Mock data for 30 Iconic Landmarks
+const landmarks = [
+  { id: 1, name: "Taj Mahal", location: "Agra, India", img: "https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&w=800&q=80" },
+  { id: 2, name: "Grand Canyon", location: "Arizona, USA", img: "https://images.unsplash.com/photo-1474044159687-1ee9f3a51722?auto=format&fit=crop&w=800&q=80" },
+  { id: 3, name: "Eiffel Tower", location: "Paris, France", img: "https://images.unsplash.com/photo-1511739001486-6bfe10ce785f?auto=format&fit=crop&w=800&q=80" },
+  { id: 4, name: "Mount Fuji", location: "Honshu, Japan", img: "https://images.unsplash.com/photo-1490806843957-31f4c9a91c65?auto=format&fit=crop&w=800&q=80" },
+  { id: 5, name: "Colosseum", location: "Rome, Italy", img: "https://images.unsplash.com/photo-1552832230-c0197dd311b5?auto=format&fit=crop&w=800&q=80" },
+  { id: 6, name: "Banff National Park", location: "Alberta, Canada", img: "https://images.unsplash.com/photo-1549880181-56a44cf4a9a5?auto=format&fit=crop&w=800&q=80" },
+  { id: 7, name: "Machu Picchu", location: "Cusco Region, Peru", img: "https://images.unsplash.com/photo-1587595431973-160d0d94add1?auto=format&fit=crop&w=800&q=80" },
+  { id: 8, name: "Great Wall", location: "Beijing, China", img: "https://images.unsplash.com/photo-1508804185872-d7bad10d0371?auto=format&fit=crop&w=800&q=80" },
+  { id: 9, name: "Santorini", location: "Cyclades, Greece", img: "https://images.unsplash.com/photo-1570077188670-e3a8d69ac542?auto=format&fit=crop&w=800&q=80" },
+  { id: 10, name: "Petra", location: "Ma'an, Jordan", img: "https://images.unsplash.com/photo-1579606037160-c3d386d495b4?auto=format&fit=crop&w=800&q=80" },
+  { id: 11, name: "Angkor Wat", location: "Siem Reap, Cambodia", img: "https://images.unsplash.com/photo-1563212869-7c189b2760bf?auto=format&fit=crop&w=800&q=80" },
+  { id: 12, name: "Pyramids of Giza", location: "Cairo, Egypt", img: "https://images.unsplash.com/photo-1503177119275-0aa32b3a9368?auto=format&fit=crop&w=800&q=80" },
+  { id: 13, name: "Bora Bora", location: "Society Islands, French Polynesia", img: "https://images.unsplash.com/photo-1533230615438-e4b2d182283f?auto=format&fit=crop&w=800&q=80" },
+  { id: 14, name: "Sydney Opera House", location: "Sydney, Australia", img: "https://images.unsplash.com/photo-1523428096881-5bd79d043006?auto=format&fit=crop&w=800&q=80" },
+  { id: 15, name: "Sagrada Familia", location: "Barcelona, Spain", img: "https://images.unsplash.com/photo-1567117540939-514df5a92d6e?auto=format&fit=crop&w=800&q=80" },
+  { id: 16, name: "Hawa Mahal", location: "Jaipur, India", img: "https://images.unsplash.com/photo-1599661559684-25bef6cbfb60?auto=format&fit=crop&w=800&q=80" },
+  { id: 17, name: "Niagara Falls", location: "Ontario/New York", img: "https://images.unsplash.com/photo-1489447068241-b3490214e879?auto=format&fit=crop&w=800&q=80" },
+  { id: 18, name: "Mount Everest", location: "Himalayas, Nepal", img: "https://images.unsplash.com/photo-1522163182402-834f871fd851?auto=format&fit=crop&w=800&q=80" },
+  { id: 19, name: "Big Ben", location: "London, UK", img: "https://images.unsplash.com/photo-1529655683823-dc58689f4175?auto=format&fit=crop&w=800&q=80" },
+  { id: 20, name: "Burj Khalifa", location: "Dubai, UAE", img: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=800&q=80" },
+  { id: 21, name: "Table Mountain", location: "Cape Town, SA", img: "https://images.unsplash.com/photo-1580060839134-75a5edca2e99?auto=format&fit=crop&w=800&q=80" },
+  { id: 22, name: "Golden Gate Bridge", location: "San Francisco, USA", img: "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?auto=format&fit=crop&w=800&q=80" },
+  { id: 23, name: "Venice Canals", location: "Venice, Italy", img: "https://images.unsplash.com/photo-1514890547357-a9ee288728e0?auto=format&fit=crop&w=800&q=80" },
+  { id: 24, name: "Yellowstone", location: "Wyoming, USA", img: "https://images.unsplash.com/photo-1503925785028-1b2ea13eb385?auto=format&fit=crop&w=800&q=80" }
+];
 
 export default function Dashboard() {
   const [data, setData] = useState(null);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('recent'); // 'recent' | 'destinations' | 'budget'
+  const [viewAllLandmarks, setViewAllLandmarks] = useState(false);
+  const carouselRef = useRef(null);
 
   useEffect(() => {
     Promise.all([getDashboard(), getMe()]).then(([d, u]) => {
@@ -29,6 +62,13 @@ export default function Dashboard() {
       setLoading(false);
     });
   }, []);
+
+  const scrollCarousel = (direction) => {
+    if (carouselRef.current) {
+      const scrollAmount = direction === 'left' ? -350 : 350;
+      carouselRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+  };
 
   if (loading) return <AppLayout><div className="text-center py-20 text-slate-500 animate-pulse font-semibold">Loading dashboard...</div></AppLayout>;
 
@@ -65,92 +105,153 @@ export default function Dashboard() {
     },
   ];
 
-  const totalBudget = data?.budgetHighlights?.totalBudget || 0;
+  // Calculate budget statistics
+  const totalBudget = data?.recentTrips?.reduce((acc, t) => acc + (t.budgetLimit || 0), 0) || 0;
   const totalSpent = data?.budgetHighlights?.totalSpent || 0;
   const remainingBudget = Math.max(0, totalBudget - totalSpent);
 
   return (
-    <AppLayout>
-      {/* Hero greeting */}
-      <div className="mb-10 flex flex-col md:flex-row md:justify-between md:items-end gap-6">
-        <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5 }}>
-          <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-white flex items-center">
-            Welcome back, {user?.name} <Sparkles className="w-8 h-8 ml-3 text-amber-400" />
+    <AppLayout title="Dashboard">
+      {/* Welcome Banner */}
+      <motion.div variants={fadeUp} initial="hidden" animate="show" className="mb-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h2 className="text-3xl font-extrabold tracking-tight text-white flex items-center gap-2">
+            Welcome back, {user?.name?.split(' ')[0] || 'Traveler'}! 
+            <span className="inline-block animate-bounce">👋</span>
           </h2>
-          <p className="mt-3 text-lg text-slate-400">Your next adventure is just a tap away. Select a tab below to explore.</p>
-        </motion.div>
-        <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2 }}>
-          <Link to="/trips/new" className="inline-flex items-center justify-center bg-amber-400 text-[#0c0f1a] px-6 py-3 rounded-xl text-sm font-bold shadow-lg shadow-amber-500/20 hover:bg-amber-300 hover:scale-105 active:scale-95 transition-all">
-            Plan New Trip <ArrowRight className="w-5 h-5 ml-2" />
-          </Link>
-        </motion.div>
-      </div>
+          <p className="text-slate-400 mt-1 text-sm font-medium">Ready to design your next journey across the world?</p>
+        </div>
+        <Link 
+          to="/trips/new" 
+          className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-400 to-amber-500 text-slate-900 font-bold px-6 py-3 rounded-2xl shadow-lg shadow-amber-500/20 hover:scale-105 active:scale-95 transition-all text-sm self-start md:self-auto"
+        >
+          <Sparkles className="w-4 h-4" /> Plan a New Trip
+        </Link>
+      </motion.div>
 
-      {/* Interactive Tappable Stats / Tab Cards */}
-      <motion.div variants={stagger} initial="hidden" animate="show" className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+      {/* Interactive Tabs Top Grid */}
+      <motion.div variants={stagger} initial="hidden" animate="show" className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         {tabs.map((tab) => {
-          const isActive = activeTab === tab.id;
           const Icon = tab.icon;
+          const isActive = activeTab === tab.id;
           return (
             <motion.button
               key={tab.id}
               variants={fadeUp}
               onClick={() => setActiveTab(tab.id)}
-              className={`text-left rounded-2xl p-6 transition-all duration-300 relative border cursor-pointer group ${
+              whileHover={{ y: -4 }}
+              whileTap={{ scale: 0.98 }}
+              className={`p-6 rounded-3xl border transition-all text-left relative overflow-hidden backdrop-blur-md cursor-pointer ${
                 isActive 
-                  ? `${tab.activeRing} scale-[1.02]` 
-                  : 'bg-white/[0.03] border-white/[0.06] hover:border-white/20 hover:bg-white/[0.06]'
+                  ? tab.activeRing 
+                  : 'bg-white/[0.03] border-white/[0.06] hover:border-white/20 hover:bg-white/[0.05]'
               }`}
             >
-              {/* Active Tab Pill Indicator */}
-              {isActive && (
-                <div className="absolute top-4 right-4 flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold tracking-wider uppercase bg-white/10 text-white backdrop-blur-md border border-white/10">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Active View
+              <div className="flex items-center justify-between mb-4">
+                <div className={`p-3.5 rounded-2xl ${tab.bg} ${tab.color} border border-white/5`}>
+                  <Icon className="w-6 h-6" />
                 </div>
-              )}
-
-              <div className="flex items-center mb-3">
-                <div className={`p-2.5 rounded-xl mr-3 ${tab.bg}`}>
-                  <Icon className={`w-5 h-5 ${tab.color}`} />
-                </div>
-                <span className={`text-xs font-bold uppercase tracking-wider ${isActive ? 'text-white' : 'text-slate-500 group-hover:text-slate-400'}`}>
-                  {tab.label}
+                <span className={`text-xs font-bold px-3 py-1 rounded-full ${tab.badge} transition-all`}>
+                  {isActive ? 'Active View' : 'Tap to View'}
                 </span>
               </div>
-              <p className="text-4xl font-extrabold tracking-tight text-white">{tab.value}</p>
-              <p className="text-xs text-slate-400 mt-2 flex items-center gap-1 font-medium">
-                Tap to switch view <ArrowRight className="w-3 h-3 opacity-60 group-hover:translate-x-1 transition-transform" />
-              </p>
+              <h4 className="text-slate-400 text-xs font-bold uppercase tracking-wider">{tab.label}</h4>
+              <p className="text-2xl font-black text-white mt-1">{tab.value}</p>
             </motion.button>
           );
         })}
       </motion.div>
 
-      {/* AI Assistant Card Banner */}
-      <motion.div 
-        initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-        className="mb-10 relative overflow-hidden rounded-3xl bg-gradient-to-r from-amber-600 via-orange-600 to-rose-600 text-white shadow-2xl shadow-orange-900/20"
-      >
-        <div className="absolute top-0 right-0 -mt-10 -mr-10 w-40 h-40 bg-amber-400 rounded-full blur-3xl opacity-30"></div>
-        <div className="absolute bottom-0 left-0 -mb-10 -ml-10 w-40 h-40 bg-rose-400 rounded-full blur-3xl opacity-30"></div>
-        
-        <div className="relative p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6">
+      {/* 30 Iconic Landmarks Section */}
+      <motion.div variants={fadeUp} initial="hidden" animate="show" className="mb-12">
+        <div className="flex justify-between items-end mb-6">
           <div>
-            <h3 className="text-2xl md:text-3xl font-extrabold tracking-tight mb-1.5 flex items-center">
-              <Sparkles className="text-amber-300 mr-2.5 w-7 h-7" /> 
-              AI Trip Assistant
+            <h3 className="text-2xl font-extrabold tracking-tight text-white flex items-center gap-2">
+              <Map className="w-6 h-6 text-amber-400" /> Explore 30 Iconic Landmarks
             </h3>
-            <p className="text-orange-100 font-medium text-sm md:text-base max-w-2xl">
-              Tell us where you want to go, your budget, and travel style. We'll generate an instant tailored itinerary for you.
-            </p>
+            <p className="text-slate-400 text-sm mt-1">Scroll through famous wonders of the world or view them all</p>
           </div>
-          <Link to="/ai-trip-assistant" className="shrink-0 bg-[#0c0f1a] text-amber-400 hover:bg-slate-900 px-6 py-3.5 rounded-xl font-bold text-sm md:text-base shadow-xl shadow-black/30 transition-all hover:scale-105 active:scale-95 flex items-center">
-            Plan with AI <ArrowRight className="ml-2 w-5 h-5" />
-          </Link>
+          <div className="flex items-center gap-2">
+            <button 
+              onClick={() => scrollCarousel('left')}
+              className="p-2 rounded-xl bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-all hover:scale-105"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+            <button 
+              onClick={() => scrollCarousel('right')}
+              className="p-2 rounded-xl bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-all hover:scale-105"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
+            <button
+              onClick={() => setViewAllLandmarks(!viewAllLandmarks)}
+              className="ml-2 bg-amber-400/10 hover:bg-amber-400/20 text-amber-400 border border-amber-400/30 px-4 py-2 rounded-xl text-sm font-bold transition-all hover:scale-105"
+            >
+              {viewAllLandmarks ? 'Show Carousel' : 'View All'}
+            </button>
+          </div>
         </div>
+
+        {viewAllLandmarks ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {landmarks.map((l) => (
+              <Link 
+                to={`/trips/new?destination=${encodeURIComponent(l.name)}&country=${encodeURIComponent(l.location)}&coverPhotoUrl=${encodeURIComponent(l.img)}`}
+                key={l.id} 
+                className="group relative rounded-2xl overflow-hidden aspect-[4/3] border border-white/10 hover:border-amber-400/50 shadow-lg transition-all"
+              >
+                <img src={l.img} alt={l.name} className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent p-4 flex flex-col justify-end">
+                  <h4 className="text-white font-bold text-base">{l.name}</h4>
+                  <p className="text-xs text-amber-400/90 font-medium">{l.location}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        ) : (
+          <div 
+            ref={carouselRef}
+            className="flex gap-6 overflow-x-auto pb-4 pt-1 snap-x no-scrollbar scroll-smooth"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          >
+            {landmarks.map((l) => (
+              <Link
+                to={`/trips/new?destination=${encodeURIComponent(l.name)}&country=${encodeURIComponent(l.location)}&coverPhotoUrl=${encodeURIComponent(l.img)}`}
+                key={l.id}
+                className="flex-shrink-0 w-72 h-48 relative rounded-2xl overflow-hidden group cursor-pointer border border-white/10 hover:border-amber-400/50 snap-start shadow-lg transition-all"
+              >
+                <img src={l.img} alt={l.name} className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent p-4 flex flex-col justify-end">
+                  <h4 className="text-white font-bold text-base leading-tight group-hover:text-amber-400 transition-colors">{l.name}</h4>
+                  <div className="flex items-center justify-between mt-1">
+                    <span className="text-xs text-slate-300 font-medium">{l.location}</span>
+                    <span className="text-[10px] text-amber-400 bg-amber-400/20 px-2 py-0.5 rounded-full font-bold">Plan ➔</span>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
       </motion.div>
 
-      {/* Dynamic Tab Content Area */}
+      {/* AI Assistant Banner */}
+      <motion.div variants={fadeUp} initial="hidden" animate="show" className="mb-10 p-6 rounded-3xl bg-gradient-to-r from-violet-600/20 via-purple-600/20 to-pink-600/20 border border-violet-500/30 backdrop-blur-md flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="flex items-center gap-4">
+          <div className="p-3 bg-violet-500 text-white rounded-2xl shadow-lg shadow-violet-500/30">
+            <Navigation className="w-6 h-6" />
+          </div>
+          <div>
+            <h4 className="text-lg font-bold text-white">Ask GlobeTrotter AI</h4>
+            <p className="text-sm text-slate-300">Generate personalized multi-city itineraries, smart budget splits, and packing checklists.</p>
+          </div>
+        </div>
+        <Link to="/ai-planner" className="bg-white text-slate-900 font-bold px-5 py-2.5 rounded-xl text-sm hover:bg-slate-100 transition-all shrink-0">
+          Try AI Planner ✨
+        </Link>
+      </motion.div>
+
+      {/* TAB CONTENT SWITCHER */}
       <AnimatePresence mode="wait">
         {activeTab === 'recent' && (
           <motion.div 
@@ -166,25 +267,31 @@ export default function Dashboard() {
                 <h3 className="text-2xl font-extrabold tracking-tight text-white flex items-center gap-2">
                   <Plane className="w-6 h-6 text-cyan-400" /> Your Recent Trips
                 </h3>
-                <p className="text-sm text-slate-400 mt-1">Manage and edit your current travel itineraries</p>
+                <p className="text-sm text-slate-400 mt-1">Manage and view your ongoing and upcoming trip itineraries</p>
               </div>
               <Link to="/trips" className="text-cyan-400 hover:text-cyan-300 text-sm font-bold transition-colors flex items-center gap-1">
-                View all ({data?.recentTrips?.length || 0}) <ArrowRight className="w-4 h-4" />
+                View All Trips <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {data?.recentTrips?.map((trip, i) => (
                 <motion.div
-                  initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
+                  initial={{ opacity: 0, y: 8 }} 
+                  animate={{ opacity: 1, y: 0 }} 
+                  transition={{ delay: i * 0.05 }}
                   key={trip.id}
-                  className="p-5 rounded-2xl bg-white/[0.04] border border-white/[0.08] hover:border-cyan-500/40 hover:bg-white/[0.06] transition-all group flex justify-between items-center"
+                  className="p-5 rounded-2xl bg-white/[0.03] border border-white/[0.08] hover:border-cyan-500/40 transition-all group flex justify-between items-center"
                 >
                   <div>
-                    <h4 className="font-bold text-lg text-white group-hover:text-cyan-400 transition-colors">{trip.name}</h4>
-                    <p className="text-sm text-slate-400 mt-1">{trip.startDate} → {trip.endDate}</p>
+                    <h4 className="font-bold text-lg text-white group-hover:text-cyan-400 transition-colors flex items-center gap-2">
+                      {trip.name}
+                    </h4>
+                    <p className="text-sm text-slate-400 mt-1 flex items-center gap-1.5 font-medium">
+                      📅 {trip.startDate} → {trip.endDate}
+                    </p>
                     {trip.budgetLimit && (
-                      <span className="inline-block mt-2 text-xs font-semibold text-cyan-300/80 bg-cyan-500/10 px-2 py-0.5 rounded-md">
+                      <span className="inline-block text-xs font-semibold text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-md mt-2 border border-emerald-500/20">
                         Budget: ₹{trip.budgetLimit.toLocaleString('en-IN')}
                       </span>
                     )}

@@ -2,8 +2,9 @@ import { useState, useMemo, useEffect } from "react";
 import { useNavigate, useSearchParams, useLocation } from "react-router-dom";
 import AppLayout from "../components/AppLayout";
 import PlacesAutocomplete from "../components/PlacesAutocomplete";
+import { upsertCity } from "../api/cities";
 import { createTrip } from "../api/trips";
-import { CalendarDays, DollarSign, FileText, Image, MapPin, AlertCircle, Sparkles } from "lucide-react";
+import { CalendarDays, DollarSign, FileText, Image, MapPin, AlertCircle, Sparkles, Home } from "lucide-react";
 
 export default function CreateTrip() {
   const [searchParams] = useSearchParams();
@@ -24,10 +25,11 @@ export default function CreateTrip() {
     budgetLimit: "",
   });
   
+  const [startPointQuery, setStartPointQuery] = useState("");
+  const [selectedStartPoint, setSelectedStartPoint] = useState(null);
   const [destinationQuery, setDestinationQuery] = useState(
     paramDestination ? `${paramDestination}${paramCountry ? `, ${paramCountry}` : ""}` : ""
   );
-  
   const [selectedPlace, setSelectedPlace] = useState(
     paramDestination ? { name: paramDestination, country: paramCountry } : null
   );
@@ -67,11 +69,19 @@ export default function CreateTrip() {
       setError("End date must be after start date.");
       return;
     }
+    if (!selectedStartPoint) {
+      setError("Please select a valid Starting Point from the suggestions.");
+      return;
+    }
     setError("");
     setLoading(true);
     try {
+      // Upsert the start city to get its ID
+      const startCity = await upsertCity(selectedStartPoint);
+
       const trip = await createTrip({
         ...formData,
+        startCityId: startCity.id,
         budgetLimit: formData.budgetLimit ? Number(formData.budgetLimit) : null,
       });
       navigate(`/trips/${trip.id}/build`);
@@ -141,6 +151,26 @@ export default function CreateTrip() {
                 placeholder="e.g., Summer in Europe"
                 className="w-full border-2 border-slate-200 bg-slate-50 rounded-xl py-2.5 px-4 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500 focus:bg-white transition-all"
               />
+            </div>
+
+            {/* Starting Point */}
+            <div>
+              <label className="block text-sm font-bold text-slate-700 mb-1.5">
+                <Home className="inline w-4 h-4 mr-1 text-slate-400" />
+                Starting Point (Home City) *
+              </label>
+              <PlacesAutocomplete
+                value={startPointQuery}
+                onChange={setStartPointQuery}
+                onSelect={setSelectedStartPoint}
+                placeholder="Where are you traveling from?"
+              />
+              {selectedStartPoint && (
+                <div className="mt-2 flex items-center gap-2 bg-emerald-50 border border-emerald-100 text-emerald-700 px-3 py-2 rounded-lg text-xs font-semibold">
+                  <Home className="w-3.5 h-3.5 shrink-0" />
+                  <span>{selectedStartPoint.name}, {selectedStartPoint.country}</span>
+                </div>
+              )}
             </div>
 
             {/* Destination */}

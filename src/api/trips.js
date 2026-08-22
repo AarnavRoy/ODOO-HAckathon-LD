@@ -8,15 +8,20 @@ export const getTrips = async () => {
   return await api.get('/trips');
 };
 
-export const createTrip = async ({ name, startDate, endDate, description, coverPhotoUrl, budgetLimit }) => {
+export const createTrip = async (tripData) => {
   return await api.post('/trips', {
-    name,
-    startDate,
-    endDate,
-    description,
-    coverPhotoUrl,
-    budgetLimit: budgetLimit ? Number(budgetLimit) : null
+    name: tripData.name,
+    startDate: tripData.startDate,
+    endDate: tripData.endDate,
+    description: tripData.description,
+    coverPhotoUrl: tripData.coverPhotoUrl,
+    budgetLimit: tripData.budgetLimit ? Number(tripData.budgetLimit) : null,
+    startCityId: tripData.startCityId || null,
   });
+};
+
+export const importAITrip = async (aiData) => {
+  return await api.post('/trips/ai-import', aiData);
 };
 
 export const getTrip = async (tripId) => {

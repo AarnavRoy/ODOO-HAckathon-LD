@@ -1,9 +1,9 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, MapPin, Calendar, Users, Wallet, CheckCircle, RefreshCw, Save, ArrowLeft, Loader2, TrendingDown, Coffee, Activity, Utensils, Edit3 } from 'lucide-react';
+import { Sparkles, MapPin, Calendar, Users, Wallet, CheckCircle, RefreshCw, Save, ArrowLeft, Loader2, TrendingDown, Coffee, Activity, Utensils, Edit3, Home } from 'lucide-react';
 import { generateTripItinerary, refineTripItinerary } from '../api/ai';
-import { createTrip } from '../api/trips';
+import { importAITrip } from '../api/trips';
 import { searchDestinations } from '../data/destinations';
 
 
@@ -13,6 +13,7 @@ export default function AITripAssistant() {
   
   // Input State
   const [preferences, setPreferences] = useState({
+    startCity: '',
     destination: '',
     duration: '5',
     budget: '20000',
@@ -108,19 +109,18 @@ export default function AITripAssistant() {
   const handleSaveTrip = async () => {
     setIsSaving(true);
     try {
-      // Map AI result to existing backend/mock structure
-      const newTrip = await createTrip({
-        name: tripData.tripName,
-        destination: tripData.destination, // Custom backend field or just use name
+      const payload = {
+        tripName: tripData.tripName,
+        startCityName: preferences.startCity,
+        destinationName: tripData.destination,
+        duration: tripData.duration,
+        budget: tripData.budget,
         startDate: new Date().toISOString().split('T')[0],
-        endDate: new Date(Date.now() + tripData.duration * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-        description: `AI Generated Trip for ${tripData.travelers} travelers. Style: ${preferences.style.join(', ')}`,
-        coverPhotoUrl: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800', // Default
-        budgetLimit: tripData.budget
-      });
-      // In a real app, we'd also iterate through tripData.days and add stops/activities
+        days: tripData.days
+      };
       
-      setSavedTripId(newTrip.id);
+      const newTrip = await importAITrip(payload);
+      setSavedTripId(newTrip.id || newTrip.data?.id);
     } catch (err) {
       console.error('Failed to save trip', err);
       alert('Failed to save trip.');
@@ -154,6 +154,20 @@ export default function AITripAssistant() {
               
               <form onSubmit={handleGenerate} className="space-y-8">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-bold text-slate-700 mb-2">Starting Point (Home City)</label>
+                    <div className="relative">
+                      <Home className="absolute left-4 top-3.5 w-5 h-5 text-slate-400 z-10" />
+                      <input
+                        type="text"
+                        value={preferences.startCity}
+                        onChange={e => setPreferences({...preferences, startCity: e.target.value})}
+                        placeholder="e.g. Mumbai, New York..."
+                        className="w-full pl-11 pr-4 py-3 bg-slate-50 text-slate-900 border border-slate-200 rounded-xl focus:ring-4 focus:ring-fuchsia-500/20 focus:border-fuchsia-500 font-medium transition-all"
+                      />
+                    </div>
+                  </div>
+
                   <div ref={destRef} className="relative">
                     <label className="block text-sm font-bold text-slate-700 mb-2">Where do you want to go?</label>
                     <div className="relative">

@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import AppLayout from "../components/AppLayout";
 import PlacesAutocomplete from "../components/PlacesAutocomplete";
@@ -183,6 +183,19 @@ export default function ItineraryBuilder() {
             <span className="ml-auto text-xs font-medium text-slate-400">{trip.stops.length} stop{trip.stops.length !== 1 ? "s" : ""}</span>
           </h3>
 
+          {/* Starting Point Banner */}
+          {trip.startCity && (
+            <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-4 flex items-center gap-3 text-emerald-800 my-2">
+              <div className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center shrink-0">
+                <Globe className="w-4 h-4 text-emerald-600" />
+              </div>
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-wider text-emerald-600/80 mb-0.5">Starting Point</p>
+                <p className="font-black text-sm">{trip.startCity.name}, {trip.startCity.country}</p>
+              </div>
+            </div>
+          )}
+
           {trip.stops.length === 0 && (
             <div className="text-center py-14 border-2 border-dashed border-slate-200 rounded-2xl text-slate-400">
               <MapPin className="w-8 h-8 mx-auto mb-3 opacity-50" />
@@ -199,13 +212,21 @@ export default function ItineraryBuilder() {
 
             return (
               <div key={stop.id}>
-                {/* Transport Leg BETWEEN stops (shown above every stop except the first) */}
-                {index > 0 && (
+                {/* Transport Leg */}
+                {index > 0 ? (
                   <TransportLeg
                     fromStop={trip.stops[index - 1]}
                     toStop={stop}
                     onUpdate={loadData}
                   />
+                ) : (
+                  trip.startCity && (
+                    <TransportLeg
+                      fromStop={{ city: trip.startCity }}
+                      toStop={stop}
+                      onUpdate={loadData}
+                    />
+                  )
                 )}
 
                 {/* Stop Card */}
