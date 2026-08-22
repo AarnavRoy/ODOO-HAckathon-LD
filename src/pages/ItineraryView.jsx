@@ -357,52 +357,63 @@ export default function ItineraryView() {
       )}
 
       {/* BUDGET & INSIGHTS VIEW */}
-      {viewMode === 'budget' && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Budget Breakdown */}
-          <div className="bg-white border border-slate-100 rounded-3xl p-8 shadow-sm">
-            <h3 className="text-xl font-black text-slate-900 mb-6 flex items-center">
-              <Wallet className="w-5 h-5 text-slate-900 mr-2" /> Expense Breakdown
-            </h3>
-            <div className="space-y-4">
-              {[
-                { label: 'Accommodation / Stay', cost: aiPlan?.expenses?.stay || 8000, color: 'bg-yellow-400' },
-                { label: 'Transport & Transfers', cost: aiPlan?.expenses?.transport || 4000, color: 'bg-slate-900' },
-                { label: 'Food & Dining', cost: aiPlan?.expenses?.food || 4500, color: 'bg-amber-500' },
-                { label: 'Activities & Sightseeing', cost: aiPlan?.expenses?.activities || 3500, color: 'bg-yellow-600' }
-              ].map((exp, i) => (
-                <div key={i} className="bg-[#FEFCE8]/40 p-4 rounded-2xl border border-yellow-100">
-                  <div className="flex justify-between items-center text-sm mb-2">
-                    <span className="text-slate-700 font-bold">{exp.label}</span>
-                    <span className="text-slate-900 font-black">₹{exp.cost.toLocaleString('en-IN')}</span>
-                  </div>
-                  <div className="w-full bg-slate-200 rounded-full h-2">
-                    <div 
-                      className={`h-2 rounded-full ${exp.color}`} 
-                      style={{ width: `${Math.min((exp.cost / (aiPlan?.estimatedCost || 20000)) * 100, 100)}%` }}
-                    ></div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+      {viewMode === 'budget' && (() => {
+        const totalB = aiPlan?.budget || trip?.budgetLimit || aiPlan?.estimatedCost || 5000;
+        const stayCost = aiPlan?.expenses?.stay ?? Math.floor(totalB * 0.35);
+        const transportCost = aiPlan?.expenses?.transport ?? Math.floor(totalB * 0.25);
+        const foodCost = aiPlan?.expenses?.food ?? Math.floor(totalB * 0.25);
+        const activitiesCost = aiPlan?.expenses?.activities ?? Math.floor(totalB * 0.15);
+        const totalEst = stayCost + transportCost + foodCost + activitiesCost;
 
-          {/* AI Insights & Recommendations */}
-          <div className="bg-white border border-slate-100 rounded-3xl p-8 shadow-sm">
-            <h3 className="text-xl font-black text-slate-900 mb-6 flex items-center">
-              <Sparkles className="w-5 h-5 text-yellow-500 mr-2" /> Smart Recommendations
-            </h3>
-            <div className="space-y-4">
-              {aiPlan?.recommendations?.map((rec, i) => (
-                <div key={i} className="flex items-start p-4 rounded-2xl bg-yellow-50/80 border border-yellow-200">
-                  <CheckCircle className="w-5 h-5 text-yellow-600 mr-3 shrink-0 mt-0.5" />
-                  <p className="text-sm font-medium text-slate-800 leading-relaxed">{rec}</p>
-                </div>
-              ))}
+        const expenseItems = [
+          { label: 'Accommodation / Stay', cost: stayCost, color: 'bg-yellow-400' },
+          { label: 'Transport & Transfers', cost: transportCost, color: 'bg-slate-900' },
+          { label: 'Food & Dining', cost: foodCost, color: 'bg-amber-500' },
+          { label: 'Activities & Sightseeing', cost: activitiesCost, color: 'bg-yellow-600' }
+        ];
+
+        return (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Budget Breakdown */}
+            <div className="bg-white border border-slate-100 rounded-3xl p-8 shadow-sm">
+              <h3 className="text-xl font-black text-slate-900 mb-6 flex items-center">
+                <Wallet className="w-5 h-5 text-slate-900 mr-2" /> Expense Breakdown
+              </h3>
+              <div className="space-y-4">
+                {expenseItems.map((exp, i) => (
+                  <div key={i} className="bg-[#FEFCE8]/40 p-4 rounded-2xl border border-yellow-100">
+                    <div className="flex justify-between items-center text-sm mb-2">
+                      <span className="text-slate-700 font-bold">{exp.label}</span>
+                      <span className="text-slate-900 font-black">₹{exp.cost.toLocaleString('en-IN')}</span>
+                    </div>
+                    <div className="w-full bg-slate-200 rounded-full h-2">
+                      <div 
+                        className={`h-2 rounded-full ${exp.color}`} 
+                        style={{ width: `${Math.min((exp.cost / (totalEst || 1)) * 100, 100)}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* AI Insights & Recommendations */}
+            <div className="bg-white border border-slate-100 rounded-3xl p-8 shadow-sm">
+              <h3 className="text-xl font-black text-slate-900 mb-6 flex items-center">
+                <Sparkles className="w-5 h-5 text-yellow-500 mr-2" /> Smart Recommendations
+              </h3>
+              <div className="space-y-4">
+                {aiPlan?.recommendations?.map((rec, i) => (
+                  <div key={i} className="flex items-start p-4 rounded-2xl bg-yellow-50/80 border border-yellow-200">
+                    <CheckCircle className="w-5 h-5 text-yellow-600 mr-3 shrink-0 mt-0.5" />
+                    <p className="text-sm font-medium text-slate-800 leading-relaxed">{rec}</p>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        );
+      })()}
     </AppLayout>
   );
 }

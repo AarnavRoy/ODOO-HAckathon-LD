@@ -218,13 +218,32 @@ export default function AITripAssistant() {
                     <label className="block text-sm font-bold text-slate-700 mb-2">How many days?</label>
                     <div className="relative">
                       <Calendar className="absolute left-4 top-3.5 w-5 h-5 text-slate-400" />
-                      <select value={preferences.duration} onChange={e => setPreferences({...preferences, duration: e.target.value})} className="w-full pl-11 pr-4 py-3 bg-white border border-slate-200 rounded-full focus:ring-1 focus:ring-black focus:border-black font-medium transition-all appearance-none shadow-sm">
-                        <option value="3">3 Days (Weekend)</option>
-                        <option value="5">5 Days</option>
-                        <option value="7">7 Days (1 Week)</option>
-                        <option value="10">10 Days</option>
-                        <option value="14">14 Days (2 Weeks)</option>
-                      </select>
+                      <input
+                        type="number"
+                        min="1"
+                        max="30"
+                        required
+                        value={preferences.duration}
+                        onChange={e => setPreferences({...preferences, duration: e.target.value})}
+                        placeholder="Enter days (e.g. 2, 4, 6, 8...)"
+                        className="w-full pl-11 pr-4 py-3 bg-white border border-slate-200 rounded-full focus:ring-1 focus:ring-black focus:border-black font-medium transition-all shadow-sm"
+                      />
+                    </div>
+                    <div className="flex flex-wrap gap-1.5 mt-2">
+                      {['2', '3', '5', '7', '10', '14'].map(d => (
+                        <button
+                          key={d}
+                          type="button"
+                          onClick={() => setPreferences({ ...preferences, duration: d })}
+                          className={`text-xs font-bold px-3 py-1 rounded-full border transition-all ${
+                            String(preferences.duration) === d
+                              ? 'bg-black text-white border-black'
+                              : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'
+                          }`}
+                        >
+                          {d} Days
+                        </button>
+                      ))}
                     </div>
                   </div>
                   <div>
