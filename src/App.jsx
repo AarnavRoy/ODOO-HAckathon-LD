@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './pages/Login';
+import AdminLogin from './pages/AdminLogin';
 import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
 import MyTrips from './pages/MyTrips';
@@ -20,6 +21,14 @@ import AITripAssistant from './pages/AITripAssistant';
 const ProtectedRoute = ({ children }) => {
   const isAuthenticated = localStorage.getItem('token');
   return isAuthenticated ? children : <Navigate to="/login" />;
+};
+
+const ProtectedAdminRoute = ({ children }) => {
+  const token = localStorage.getItem('token');
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  if (!token) return <Navigate to="/admin/login" />;
+  if (user.role !== 'ROLE_ADMIN') return <Navigate to="/dashboard" />; // redirect non-admins
+  return children;
 };
 
 function App() {
@@ -44,7 +53,8 @@ function App() {
         <Route path="/trips/:tripId/budget" element={<ProtectedRoute><TripBudget /></ProtectedRoute>} />
         <Route path="/trips/:tripId/calendar" element={<ProtectedRoute><TripCalendar /></ProtectedRoute>} />
         <Route path="/share/:shareToken" element={<SharedView />} />
-        <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route path="/admin" element={<ProtectedAdminRoute><AdminDashboard /></ProtectedAdminRoute>} />
       </Routes>
     </BrowserRouter>
   );

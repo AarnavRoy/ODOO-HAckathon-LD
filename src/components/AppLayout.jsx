@@ -1,10 +1,13 @@
+import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { LogOut, Home, Plane, User, Globe, ShieldCheck } from 'lucide-react';
+import { LogOut, Home, Plane, User, Globe, ShieldCheck, Map, Plus, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function AppLayout({ children, title }) {
   const navigate = useNavigate();
   const location = useLocation();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -12,11 +15,16 @@ export default function AppLayout({ children, title }) {
   };
 
   const navLinks = [
-    { to: '/', label: 'Dashboard', icon: Home, match: (p) => p === '/' },
-    { to: '/trips', label: 'My Trips', icon: Plane, match: (p) => p.startsWith('/trips') },
-    { to: '/admin', label: 'Admin', icon: ShieldCheck, match: (p) => p.startsWith('/admin') },
+    { to: '/', label: 'Home', icon: Home, match: (p) => p === '/' },
+    { to: '/trips', label: 'My Trips', icon: Map, match: (p) => p.startsWith('/trips') && !p.includes('/new') },
+    { to: '/trips/new', label: 'Plan Trip', icon: Plus, match: (p) => p === '/trips/new' },
+    { to: '/ai-planner', label: 'AI Planner', icon: Sparkles, match: (p) => p === '/ai-planner' },
     { to: '/profile', label: 'Profile', icon: User, match: (p) => p === '/profile' },
   ];
+
+  if (user?.role === 'ROLE_ADMIN') {
+    navLinks.push({ to: '/admin', label: 'Admin', icon: ShieldCheck, match: (p) => p.startsWith('/admin') });
+  }
 
   return (
     <div className="min-h-[100dvh] bg-gradient-to-br from-[#FEFCE8] to-[#f8f9fa] flex flex-col font-sans text-slate-900">
