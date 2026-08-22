@@ -8,6 +8,14 @@ import ItineraryBuilder from './pages/ItineraryBuilder';
 import Profile from './pages/Profile';
 import Placeholder from './pages/Placeholder';
 
+import ItineraryView from './pages/ItineraryView';
+import CitySearch from './pages/CitySearch';
+import ActivitySearch from './pages/ActivitySearch';
+import TripBudget from './pages/TripBudget';
+import TripCalendar from './pages/TripCalendar';
+import SharedView from './pages/SharedView';
+import AdminDashboard from './pages/AdminDashboard';
+
 const ProtectedRoute = ({ children }) => {
   const isAuthenticated = localStorage.getItem('token');
   return isAuthenticated ? children : <Navigate to="/login" />;
@@ -27,14 +35,14 @@ function App() {
         <Route path="/trips/:tripId/build" element={<ProtectedRoute><ItineraryBuilder /></ProtectedRoute>} />
         <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
         
-        {/* Placeholder Routes for F2 */}
-        <Route path="/trips/:tripId" element={<ProtectedRoute><Placeholder pageName="Itinerary View" /></ProtectedRoute>} />
-        <Route path="/trips/:tripId/cities" element={<ProtectedRoute><Placeholder pageName="City Search" /></ProtectedRoute>} />
-        <Route path="/trips/:tripId/activities" element={<ProtectedRoute><Placeholder pageName="Activity Search" /></ProtectedRoute>} />
-        <Route path="/trips/:tripId/budget" element={<ProtectedRoute><Placeholder pageName="Trip Budget" /></ProtectedRoute>} />
-        <Route path="/trips/:tripId/calendar" element={<ProtectedRoute><Placeholder pageName="Trip Calendar / Timeline" /></ProtectedRoute>} />
-        <Route path="/share/:shareToken" element={<Placeholder pageName="Shared Public View" />} />
-        <Route path="/admin" element={<ProtectedRoute><Placeholder pageName="Admin Dashboard" /></ProtectedRoute>} />
+        {/* F2 Routes */}
+        <Route path="/trips/:tripId" element={<ProtectedRoute><ItineraryView /></ProtectedRoute>} />
+        <Route path="/trips/:tripId/cities" element={<ProtectedRoute><CitySearch /></ProtectedRoute>} />
+        <Route path="/trips/:tripId/activities" element={<ProtectedRoute><ActivitySearch /></ProtectedRoute>} />
+        <Route path="/trips/:tripId/budget" element={<ProtectedRoute><TripBudget /></ProtectedRoute>} />
+        <Route path="/trips/:tripId/calendar" element={<ProtectedRoute><TripCalendar /></ProtectedRoute>} />
+        <Route path="/share/:shareToken" element={<SharedView />} />
+        <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
       </Routes>
     </BrowserRouter>
   );
