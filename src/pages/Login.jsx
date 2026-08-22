@@ -154,7 +154,7 @@ export default function Login() {
           
           <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
             <h2 className="text-4xl md:text-5xl font-black tracking-tighter text-white mb-2 flex items-center">
-              Welcome back <Sparkles className="w-6 h-6 ml-2 text-amber-400" />
+              Welcome <Sparkles className="w-6 h-6 ml-2 text-amber-400" />
             </h2>
             <p className="text-slate-400 mb-8 font-medium">Enter your username and password to access your trips.</p>
           </motion.div>
@@ -228,9 +228,7 @@ export default function Login() {
             <p className="text-sm font-medium text-slate-400">
               Don't have an account? <Link to="/signup" className="font-bold text-amber-400 hover:text-amber-400">Create one</Link>
             </p>
-            <p className="text-xs font-medium text-slate-400">
-              Are you an administrator? <Link to="/admin/login" className="font-bold text-slate-300 hover:text-amber-400">Admin Login</Link>
-            </p>
+            
           </div>
         </div>
       </motion.div>
@@ -433,6 +431,8 @@ export default function Login() {
     </div>
   );
 }
+
+
 
 
 
