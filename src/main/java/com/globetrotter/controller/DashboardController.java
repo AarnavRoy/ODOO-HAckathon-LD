@@ -78,4 +78,8 @@ public class DashboardController {
 
         return ResponseEntity.ok(new DashboardResponse(recentTrips, recommendedCities, budgetHighlights));
     }
+@GetMapping("/")
+public String home() {
+    return "redirect:/dashboard";
+}
 }
