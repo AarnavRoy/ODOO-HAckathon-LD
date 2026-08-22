@@ -3,11 +3,11 @@ import { useParams, Link } from 'react-router-dom';
 import AppLayout from '../components/AppLayout';
 import { getTrip, getTripItinerary } from '../api/trips';
 import { 
-  Calendar, MapPin, Clock, DollarSign, Sparkles, 
-  ChevronRight, ArrowLeft, Utensils, Camera, Moon, 
-  Compass, Wallet, CheckCircle, Edit3, Shield, Info, Eye
+  Calendar, MapPin, Clock, Sparkles, 
+  ArrowLeft, Utensils, Camera, Moon, 
+  Compass, Wallet, CheckCircle, Edit3
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 export default function ItineraryView() {
   const { tripId } = useParams();
@@ -15,7 +15,33 @@ export default function ItineraryView() {
   const [aiPlan, setAiPlan] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedDay, setSelectedDay] = useState('all'); // 'all' or day index 1..N
-  const [viewMode, setViewMode] = useState('timeline'); // 'timeline', 'budget', 'calendar'
+  const [viewMode, setViewMode] = useState('timeline'); // 'timeline', 'budget'
+
+  const generateSmartActivitiesForDay = (dayNum, dest) => {
+    const titleDest = dest || 'Destination';
+    
+    if (dayNum === 1) {
+      return [
+        { id: `auto-${dayNum}-1`, time: '09:30 AM', name: `Arrival & Hotel Check-in at ${titleDest}`, category: 'RELAXATION', cost: 0, description: 'Check-in to accommodation and refresh after travel.' },
+        { id: `auto-${dayNum}-2`, time: '01:00 PM', name: `Welcome Lunch & Local Cuisine in ${titleDest}`, category: 'FOOD', cost: 750, description: 'Try signature regional delicacies and popular local eateries.' },
+        { id: `auto-${dayNum}-3`, time: '04:30 PM', name: `${titleDest} City Center Exploration`, category: 'CULTURE', cost: 400, description: 'Walk through historic streets, heritage spots, and local markets.' },
+        { id: `auto-${dayNum}-4`, time: '08:00 PM', name: 'Sunset Dining & Evening Lounge', category: 'RELAXATION', cost: 1200, description: 'Relax with evening drinks and night views.' }
+      ];
+    } else if (dayNum % 2 === 0) {
+      return [
+        { id: `auto-${dayNum}-1`, time: '09:00 AM', name: `Highlight Sightseeing in ${titleDest}`, category: 'SIGHTSEEING', cost: 600, description: 'Visit top-rated monuments, beaches, or scenic viewpoints.' },
+        { id: `auto-${dayNum}-2`, time: '01:30 PM', name: 'Gourmet Lunch & Cafe Chill', category: 'FOOD', cost: 900, description: 'Enjoy specialty coffee, desserts, and artisanal dishes.' },
+        { id: `auto-${dayNum}-3`, time: '05:00 PM', name: 'Shopping & Artisan Souvenir Hunt', category: 'SHOPPING', cost: 1500, description: 'Pick up local crafts, clothing, and unique souvenirs.' },
+        { id: `auto-${dayNum}-4`, time: '08:30 PM', name: 'Night Market & Live Entertainment', category: 'CULTURE', cost: 1000, description: 'Experience the night market and local cultural performances.' }
+      ];
+    } else {
+      return [
+        { id: `auto-${dayNum}-1`, time: '10:00 AM', name: `Nature Park & Coastal Trail Walk`, category: 'NATURE', cost: 350, description: 'Enjoy tranquil natural beauty and photo stops.' },
+        { id: `auto-${dayNum}-2`, time: '02:00 PM', name: 'Leisurely Lunch & Street Food Tour', category: 'FOOD', cost: 650, description: 'Taste popular local street food favorites.' },
+        { id: `auto-${dayNum}-3`, time: '06:00 PM', name: 'Sunset Point & Chill Out Session', category: 'RELAXATION', cost: 500, description: 'Watch the sunset and enjoy peaceful evening vibes.' }
+      ];
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -24,54 +50,77 @@ export default function ItineraryView() {
         const tripData = await getTrip(tripId);
         setTrip(tripData);
 
+        const destName = tripData?.destination || tripData?.name || 'Destination';
+
         // Check if there is a saved AI plan for this trip in localStorage
         const storedAiPlan = localStorage.getItem(`ai_trip_plan_${tripId}`);
+        let planData = null;
+
         if (storedAiPlan) {
           try {
-            setAiPlan(JSON.parse(storedAiPlan));
+            planData = JSON.parse(storedAiPlan);
           } catch (e) {
             console.error('Failed to parse AI plan', e);
           }
-        } else {
-          // If no stored AI plan, fetch backend itinerary or generate a fallback day plan
+        }
+
+        if (!planData) {
           try {
             const itin = await getTripItinerary(tripId);
             if (itin && itin.days && itin.days.length > 0) {
-              setAiPlan({
+              planData = {
                 tripName: tripData?.name || 'My Trip',
-                destination: tripData?.destination || tripData?.name || 'Destination',
+                destination: destName,
                 duration: itin.days.length,
                 budget: tripData?.budgetLimit || 20000,
                 estimatedCost: tripData?.budgetLimit || 18000,
                 budgetStatus: 'within',
-                days: itin.days.map((d, idx) => ({
-                  dayNumber: idx + 1,
-                  title: `Day ${idx + 1} - ${new Date(d.date).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}`,
-                  activities: d.stops.flatMap(s => s.activities.map(a => ({
+                days: itin.days.map((d, idx) => {
+                  const rawActivities = d.stops.flatMap(s => s.activities.map(a => ({
                     id: a.id,
                     time: a.startTime || '10:00 AM',
                     name: a.activity?.name || 'Activity',
                     category: a.activity?.category || 'SIGHTSEEING',
                     cost: a.cost || 0,
                     description: a.notes || 'Explore and enjoy this location.',
-                  })))
-                })),
+                  })));
+
+                  return {
+                    dayNumber: idx + 1,
+                    title: `Day ${idx + 1} - ${new Date(d.date).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}`,
+                    activities: rawActivities.length > 0 ? rawActivities : generateSmartActivitiesForDay(idx + 1, destName)
+                  };
+                }),
                 recommendations: [
-                  'Keep local currency handy for minor expenses.',
+                  `Keep local currency handy for minor expenses in ${destName}.`,
                   'Pre-book popular attractions to skip queues.'
                 ]
-              });
-            } else {
-              // Generate standard fallback 3-day itinerary
-              setAiPlan(createFallbackPlan(tripData));
+              };
             }
-          } catch {
-            setAiPlan(createFallbackPlan(tripData));
+          } catch (err) {
+            console.error(err);
           }
         }
+
+        // Fallback plan if planData is still null
+        if (!planData || !planData.days || planData.days.length === 0) {
+          planData = createFallbackPlan(tripData);
+        }
+
+        // Ensure NO day has empty activities
+        if (planData && planData.days) {
+          planData.days = planData.days.map(day => ({
+            ...day,
+            activities: (day.activities && day.activities.length > 0)
+              ? day.activities
+              : generateSmartActivitiesForDay(day.dayNumber, destName)
+          }));
+        }
+
+        setAiPlan(planData);
       } catch (err) {
         console.error(err);
-      } finally {
+      } fontFinally: {
         setLoading(false);
       }
     };
@@ -80,7 +129,7 @@ export default function ItineraryView() {
   }, [tripId]);
 
   const createFallbackPlan = (tripData) => {
-    const dest = tripData?.name || 'Destination';
+    const dest = tripData?.destination || tripData?.name || 'Destination';
     return {
       tripName: tripData?.name || 'AI Trip Plan',
       destination: dest,
@@ -89,36 +138,11 @@ export default function ItineraryView() {
       estimatedCost: Math.floor((tripData?.budgetLimit || 25000) * 0.85),
       budgetStatus: 'within',
       expenses: { transport: 4000, stay: 9000, food: 5000, activities: 3000 },
-      days: [
-        {
-          dayNumber: 1,
-          title: 'Arrival & City Orientation',
-          activities: [
-            { id: 'f-1-1', time: '09:00 AM', name: `Arrive in ${dest} & Hotel Check-in`, category: 'RELAXATION', cost: 0, description: 'Settle down, unpack, and refresh after arrival.' },
-            { id: 'f-1-2', time: '01:00 PM', name: 'Welcome Lunch at Local Hotspot', category: 'FOOD', cost: 800, description: 'Enjoy authentic regional food and popular local dishes.' },
-            { id: 'f-1-3', time: '04:30 PM', name: 'Historic City Center Walking Tour', category: 'CULTURE', cost: 500, description: 'Explore iconic landmarks, street art, and culture.' },
-            { id: 'f-1-4', time: '08:00 PM', name: 'Sunset Dinner & Evening Promenade', category: 'RELAXATION', cost: 1200, description: 'Relax with evening drinks and ambient atmosphere.' }
-          ]
-        },
-        {
-          dayNumber: 2,
-          title: 'Adventure & Highlight Sightseeing',
-          activities: [
-            { id: 'f-2-1', time: '09:30 AM', name: 'Famous Landmark & Viewpoint Visit', category: 'SIGHTSEEING', cost: 600, description: 'Capture panoramic views and photography spots.' },
-            { id: 'f-2-2', time: '01:30 PM', name: 'Artisan Market & Shopping District', category: 'SHOPPING', cost: 1500, description: 'Shop for handcrafted souvenirs and local specialties.' },
-            { id: 'f-2-3', time: '06:00 PM', name: 'Cultural Performance & Gourmet Dinner', category: 'CULTURE', cost: 2000, description: 'Experience live cultural shows and fine local dining.' }
-          ]
-        },
-        {
-          dayNumber: 3,
-          title: 'Hidden Gems & Departure',
-          activities: [
-            { id: 'f-3-1', time: '10:00 AM', name: 'Scenic Nature Park Walk', category: 'NATURE', cost: 300, description: 'Unwind amidst peaceful gardens and lush natural surroundings.' },
-            { id: 'f-3-2', time: '02:00 PM', name: 'Farewell Cafe & Souvenir Pickup', category: 'FOOD', cost: 700, description: 'Last-minute coffee, dessert, and souvenir shopping.' },
-            { id: 'f-3-3', time: '06:00 PM', name: 'Departure Transfer', category: 'TRANSPORT', cost: 1000, description: 'Head to airport/station for departure.' }
-          ]
-        }
-      ],
+      days: [1, 2, 3].map(dayNum => ({
+        dayNumber: dayNum,
+        title: `Day ${dayNum}: Exploration of ${dest}`,
+        activities: generateSmartActivitiesForDay(dayNum, dest)
+      })),
       recommendations: [
         `Book local guides in advance during peak season in ${dest}.`,
         'Keep digital copies of tickets and travel IDs on your phone.'
@@ -180,9 +204,9 @@ export default function ItineraryView() {
               <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-extrabold bg-cyan-400/20 text-cyan-300 border border-cyan-400/30">
                 <Calendar className="w-3.5 h-3.5 mr-1.5" /> {trip?.startDate || '2026-08-22'} → {trip?.endDate || '2026-08-27'}
               </span>
-              {aiPlan?.duration && (
+              {aiPlan?.days?.length > 0 && (
                 <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-extrabold bg-purple-400/20 text-purple-300 border border-purple-400/30">
-                  {aiPlan.duration} Days Plan
+                  {aiPlan.days.length} Days Plan
                 </span>
               )}
             </div>
@@ -327,10 +351,6 @@ export default function ItineraryView() {
                     </div>
                   </div>
                 ))}
-
-                {(!day.activities || day.activities.length === 0) && (
-                  <p className="text-slate-500 text-sm italic py-4">No activities scheduled for this day.</p>
-                )}
               </div>
             </motion.div>
           ))}
