@@ -4,6 +4,9 @@ import com.globetrotter.model.Activity;
 import com.globetrotter.model.City;
 import com.globetrotter.repository.ActivityRepository;
 import com.globetrotter.repository.CityRepository;
+import com.globetrotter.model.User;
+import com.globetrotter.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -20,8 +23,24 @@ public class DatabaseSeeder implements CommandLineRunner {
     @Autowired
     private ActivityRepository activityRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Override
     public void run(String... args) throws Exception {
+        if (!userRepository.existsByUsernameIgnoreCase("admin")) {
+            User admin = new User();
+            admin.setName("System Admin");
+            admin.setUsername("admin");
+            admin.setEmail("admin@globetrotter.com");
+            admin.setPasswordHash(passwordEncoder.encode("Admin123!"));
+            admin.setRole("ROLE_ADMIN");
+            userRepository.save(admin);
+        }
+
         if (cityRepository.count() == 0) {
             City paris = createCity("Paris", "France", "Europe", 8.5, 9.8, "https://images.unsplash.com/photo-1502602898657-3e91760cbb34");
             City tokyo = createCity("Tokyo", "Japan", "Asia", 7.5, 9.9, "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf");
