@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 
 /**
- * TransportLeg — shows between two stops.
+ * TransportLeg â€” shows between two stops.
  * Props: fromStop, toStop, onUpdate (callback after save)
  */
 export default function TransportLeg({ fromStop, toStop, onUpdate }) {
@@ -165,7 +165,7 @@ export default function TransportLeg({ fromStop, toStop, onUpdate }) {
               <div className="bg-[#131A2A] border border-[#1F2937] rounded-lg p-3">
                 <p className="text-xs font-bold text-slate-400 mb-0.5">Distance</p>
                 <p className="text-lg font-black text-white">
-                  {displayDistance ? `${displayDistance.toLocaleString()} km` : "—"}
+                  {displayDistance ? `${displayDistance.toLocaleString()} km` : "â€”"}
                 </p>
                 <p className="text-[10px] text-slate-400">
                   {mode === "FLIGHT" ? "Air distance (Haversine)" : "Road distance (OSRM)"}
