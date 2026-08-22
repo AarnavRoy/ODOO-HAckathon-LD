@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, MapPin, Calendar, Users, Wallet, CheckCircle, RefreshCw, Save, ArrowLeft, Loader2, TrendingDown, Coffee, Activity, Utensils, Edit3 } from 'lucide-react';
 import { generateTripItinerary, refineTripItinerary } from '../api/ai';
@@ -11,9 +11,13 @@ export default function AITripAssistant() {
   const navigate = useNavigate();
   const [step, setStep] = useState('input'); // 'input', 'loading', 'result'
   
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const initialDestination = searchParams.get('destination') || '';
+
   // Input State
   const [preferences, setPreferences] = useState({
-    destination: '',
+    destination: initialDestination,
     duration: '5',
     budget: '20000',
     travelers: '2',

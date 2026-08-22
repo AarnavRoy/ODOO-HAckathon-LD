@@ -9,20 +9,39 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 const stagger = { hidden: { opacity: 0 }, show: { opacity: 1, transition: { staggerChildren: 0.1 } } };
 const fadeUp = { hidden: { opacity: 0, y: 16 }, show: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 120, damping: 20 } } };
 
-// Mock data for Iconic Landmarks
+// Mock data for 30 Iconic Landmarks
 const landmarks = [
   { id: 1, name: "Taj Mahal", location: "Agra, India", img: "https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&w=800&q=80" },
   { id: 2, name: "Grand Canyon", location: "Arizona, USA", img: "https://images.unsplash.com/photo-1474044159687-1ee9f3a51722?auto=format&fit=crop&w=800&q=80" },
   { id: 3, name: "Eiffel Tower", location: "Paris, France", img: "https://images.unsplash.com/photo-1511739001486-6bfe10ce785f?auto=format&fit=crop&w=800&q=80" },
   { id: 4, name: "Mount Fuji", location: "Honshu, Japan", img: "https://images.unsplash.com/photo-1490806843957-31f4c9a91c65?auto=format&fit=crop&w=800&q=80" },
   { id: 5, name: "Colosseum", location: "Rome, Italy", img: "https://images.unsplash.com/photo-1552832230-c0197dd311b5?auto=format&fit=crop&w=800&q=80" },
-  { id: 6, name: "Banff National Park", location: "Alberta, Canada", img: "https://images.unsplash.com/photo-1549880181-56a44cf4a9a5?auto=format&fit=crop&w=800&q=80" }
+  { id: 6, name: "Banff National Park", location: "Alberta, Canada", img: "https://images.unsplash.com/photo-1549880181-56a44cf4a9a5?auto=format&fit=crop&w=800&q=80" },
+  { id: 7, name: "Machu Picchu", location: "Cusco Region, Peru", img: "https://images.unsplash.com/photo-1587595431973-160d0d94add1?auto=format&fit=crop&w=800&q=80" },
+  { id: 8, name: "Great Wall", location: "Beijing, China", img: "https://images.unsplash.com/photo-1508804185872-d7bad10d0371?auto=format&fit=crop&w=800&q=80" },
+  { id: 9, name: "Santorini", location: "Cyclades, Greece", img: "https://images.unsplash.com/photo-1570077188670-e3a8d69ac542?auto=format&fit=crop&w=800&q=80" },
+  { id: 10, name: "Petra", location: "Ma'an, Jordan", img: "https://images.unsplash.com/photo-1579606037160-c3d386d495b4?auto=format&fit=crop&w=800&q=80" },
+  { id: 11, name: "Angkor Wat", location: "Siem Reap, Cambodia", img: "https://images.unsplash.com/photo-1563212869-7c189b2760bf?auto=format&fit=crop&w=800&q=80" },
+  { id: 12, name: "Pyramids of Giza", location: "Cairo, Egypt", img: "https://images.unsplash.com/photo-1503177119275-0aa32b3a9368?auto=format&fit=crop&w=800&q=80" },
+  { id: 13, name: "Bora Bora", location: "Society Islands, French Polynesia", img: "https://images.unsplash.com/photo-1533230615438-e4b2d182283f?auto=format&fit=crop&w=800&q=80" },
+  { id: 14, name: "Sydney Opera House", location: "Sydney, Australia", img: "https://images.unsplash.com/photo-1523428096881-5bd79d043006?auto=format&fit=crop&w=800&q=80" },
+  { id: 15, name: "Sagrada Familia", location: "Barcelona, Spain", img: "https://images.unsplash.com/photo-1567117540939-514df5a92d6e?auto=format&fit=crop&w=800&q=80" },
+  { id: 16, name: "Hawa Mahal", location: "Jaipur, India", img: "https://images.unsplash.com/photo-1599661559684-25bef6cbfb60?auto=format&fit=crop&w=800&q=80" },
+  { id: 17, name: "Niagara Falls", location: "Ontario/New York", img: "https://images.unsplash.com/photo-1489447068241-b3490214e879?auto=format&fit=crop&w=800&q=80" },
+  { id: 18, name: "Mount Everest", location: "Himalayas, Nepal", img: "https://images.unsplash.com/photo-1522163182402-834f871fd851?auto=format&fit=crop&w=800&q=80" },
+  { id: 19, name: "Big Ben", location: "London, UK", img: "https://images.unsplash.com/photo-1529655683823-dc58689f4175?auto=format&fit=crop&w=800&q=80" },
+  { id: 20, name: "Burj Khalifa", location: "Dubai, UAE", img: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=800&q=80" },
+  { id: 21, name: "Table Mountain", location: "Cape Town, SA", img: "https://images.unsplash.com/photo-1580060839134-75a5edca2e99?auto=format&fit=crop&w=800&q=80" },
+  { id: 22, name: "Golden Gate Bridge", location: "San Francisco, USA", img: "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?auto=format&fit=crop&w=800&q=80" },
+  { id: 23, name: "Venice Canals", location: "Venice, Italy", img: "https://images.unsplash.com/photo-1514890547357-a9ee288728e0?auto=format&fit=crop&w=800&q=80" },
+  { id: 24, name: "Yellowstone", location: "Wyoming, USA", img: "https://images.unsplash.com/photo-1503925785028-1b2ea13eb385?auto=format&fit=crop&w=800&q=80" }
 ];
 
 export default function Dashboard() {
   const [data, setData] = useState(null);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [viewAllLandmarks, setViewAllLandmarks] = useState(false);
 
   const carouselRef = useRef(null);
 
@@ -107,39 +126,53 @@ export default function Dashboard() {
             </h3>
             <p className="text-slate-400 text-sm">Must-see destinations around the globe</p>
           </div>
-          <div className="hidden md:flex space-x-2">
-            <button onClick={() => carouselRef.current.scrollBy({ left: -300, behavior: 'smooth' })} className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-white/10 transition-colors">
-              <ArrowRight className="w-5 h-5 rotate-180" />
+          <div className="flex items-center space-x-4">
+            <button 
+              onClick={() => setViewAllLandmarks(!viewAllLandmarks)} 
+              className="text-amber-400 hover:text-amber-300 text-sm font-bold transition-colors"
+            >
+              {viewAllLandmarks ? 'View Less' : 'View More'}
             </button>
-            <button onClick={() => carouselRef.current.scrollBy({ left: 300, behavior: 'smooth' })} className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-white/10 transition-colors">
-              <ArrowRight className="w-5 h-5" />
-            </button>
+            {!viewAllLandmarks && (
+              <div className="hidden md:flex space-x-2">
+                <button onClick={() => carouselRef.current.scrollBy({ left: -300, behavior: 'smooth' })} className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-white/10 transition-colors">
+                  <ArrowRight className="w-5 h-5 rotate-180" />
+                </button>
+                <button onClick={() => carouselRef.current.scrollBy({ left: 300, behavior: 'smooth' })} className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-white/10 transition-colors">
+                  <ArrowRight className="w-5 h-5" />
+                </button>
+              </div>
+            )}
           </div>
         </div>
         
         <div 
           ref={carouselRef}
-          className="flex space-x-5 overflow-x-auto pb-6 snap-x snap-mandatory scrollbar-hide"
-          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          className={viewAllLandmarks ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" : "flex space-x-5 overflow-x-auto pb-6 snap-x snap-mandatory scrollbar-hide"}
+          style={!viewAllLandmarks ? { scrollbarWidth: 'none', msOverflowStyle: 'none' } : {}}
         >
           {landmarks.map((landmark, i) => (
-            <motion.div 
+            <Link 
               key={landmark.id}
-              whileHover={{ y: -8 }}
-              className="relative shrink-0 w-72 md:w-80 h-96 rounded-3xl overflow-hidden snap-center group cursor-pointer border border-white/5"
+              to={`/ai-trip-assistant?destination=${encodeURIComponent(`${landmark.name}, ${landmark.location}`)}`}
             >
-              <img src={landmark.img} alt={landmark.name} className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0c0f1a] via-[#0c0f1a]/40 to-transparent opacity-80 group-hover:opacity-90 transition-opacity"></div>
-              
-              <div className="absolute inset-0 p-6 flex flex-col justify-end">
-                <div className="transform transition-transform duration-500 group-hover:-translate-y-2">
-                  <div className="flex items-center text-amber-400 text-xs font-bold uppercase tracking-widest mb-2">
-                    <Navigation className="w-3 h-3 mr-1" /> {landmark.location}
+              <motion.div 
+                whileHover={{ y: -8 }}
+                className={`relative rounded-3xl overflow-hidden group cursor-pointer border border-white/5 ${viewAllLandmarks ? 'w-full h-72' : 'shrink-0 w-72 md:w-80 h-96 snap-center'}`}
+              >
+                <img src={landmark.img} alt={landmark.name} className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0c0f1a] via-[#0c0f1a]/40 to-transparent opacity-80 group-hover:opacity-90 transition-opacity"></div>
+                
+                <div className="absolute inset-0 p-6 flex flex-col justify-end">
+                  <div className="transform transition-transform duration-500 group-hover:-translate-y-2">
+                    <div className="flex items-center text-amber-400 text-xs font-bold uppercase tracking-widest mb-2">
+                      <Navigation className="w-3 h-3 mr-1" /> {landmark.location}
+                    </div>
+                    <h4 className="text-2xl font-extrabold text-white leading-tight">{landmark.name}</h4>
                   </div>
-                  <h4 className="text-2xl font-extrabold text-white leading-tight">{landmark.name}</h4>
                 </div>
-              </div>
-            </motion.div>
+              </motion.div>
+            </Link>
           ))}
         </div>
       </motion.div>
