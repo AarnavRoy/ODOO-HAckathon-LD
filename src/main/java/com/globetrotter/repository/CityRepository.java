@@ -19,4 +19,5 @@ public interface CityRepository extends JpaRepository<City, Long> {
                             @Param("region") String region);
 
     Optional<City> findByNameIgnoreCaseAndCountryIgnoreCase(String name, String country);
+    Optional<City> findByNameIgnoreCase(String name);
 }

@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, MapPin, Calendar, Users, Wallet, CheckCircle, RefreshCw, Save, ArrowLeft, Loader2, TrendingDown, Coffee, Activity, Utensils, Edit3 } from 'lucide-react';
-import { generateTripItinerary, refineTripItinerary } from '../api/ai';
+import { generateTripItinerary, refineTripItinerary, saveAITrip } from '../api/ai';
 import { importAITrip } from '../api/trips';
 import { searchDestinations } from '../data/destinations';
 
@@ -108,28 +108,37 @@ export default function AITripAssistant() {
   const handleSaveTrip = async () => {
     setIsSaving(true);
     try {
-      const payload = {
-        tripName: tripData.tripName,
-        startCityName: "", 
-        destinationName: tripData.destination,
-        duration: tripData.duration,
-        budget: tripData.budget,
-        startDate: new Date().toISOString().split('T')[0],
-        days: tripData.days.map(day => ({
-           dayNumber: day.dayNumber,
-           title: day.title,
-           activities: day.activities.map(act => ({
-              name: act.name,
-              description: act.description,
-              category: act.category,
-              cost: act.cost,
-              time: act.time
-           }))
-        }))
-      };
+      let savedTrip = null;
+      try {
+        savedTrip = await saveAITrip(tripData);
+      } catch (e) {
+        console.warn('saveAITrip backend call failed, attempting fallback importAITrip', e);
+        const payload = {
+          tripName: tripData.tripName,
+          startCityName: "", 
+          destinationName: tripData.destination,
+          duration: tripData.duration,
+          budget: tripData.budget,
+          startDate: new Date().toISOString().split('T')[0],
+          days: (tripData.days || []).map(day => ({
+             dayNumber: day.dayNumber,
+             title: day.title,
+             activities: (day.activities || []).map(act => ({
+                name: act.name,
+                description: act.description,
+                category: act.category,
+                cost: act.cost || act.estimatedCost || 0,
+                time: act.startTime || act.time || "10:00"
+             }))
+          }))
+        };
+        savedTrip = await importAITrip(payload);
+      }
       
-      const newTrip = await importAITrip(payload);
-      setSavedTripId(newTrip.id);
+      if (savedTrip && savedTrip.id) {
+        localStorage.setItem(`ai_trip_plan_${savedTrip.id}`, JSON.stringify(tripData));
+        setSavedTripId(savedTrip.id);
+      }
     } catch (err) {
       console.error('Failed to save trip', err);
       alert('Failed to save trip.');

@@ -63,6 +63,7 @@ public class SecurityConfig {
             )
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/api/ai/generate-trip", "/api/ai/refine-trip").permitAll()
                 .requestMatchers("/api/locations/**").permitAll()
                 .requestMatchers("/api/uploads/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/public/trips/*/copy").authenticated()
