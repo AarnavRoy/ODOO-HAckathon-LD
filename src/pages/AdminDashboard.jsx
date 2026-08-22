@@ -134,7 +134,7 @@ export default function AdminDashboard() {
         <div className="flex flex-col items-center justify-center py-28 text-slate-400">
           <div className="w-12 h-12 border-4 border-amber-400/20 border-t-amber-400 rounded-full animate-spin mb-4" />
           <p className="font-bold text-lg text-white">Aggregating platform analytics...</p>
-          <p className="text-sm text-slate-500 mt-1">Fetching adoption rates, user behavior & trip statistics</p>
+          <p className="text-sm text-slate-400 mt-1">Fetching adoption rates, user behavior & trip statistics</p>
         </div>
       </AppLayout>
     );
@@ -172,7 +172,7 @@ export default function AdminDashboard() {
         <button
           onClick={() => { setRefreshing(true); loadAllData(); }}
           disabled={refreshing}
-          className="inline-flex items-center gap-2 bg-white/5 hover:bg-white/10 text-slate-200 border border-white/10 px-4 py-2.5 rounded-xl text-sm font-bold transition-all hover:scale-105 active:scale-95 self-start md:self-auto cursor-pointer"
+          className="inline-flex items-center gap-2 bg-[#131A2A]/5 hover:bg-[#131A2A]/10 text-slate-200 border border-white/10 px-4 py-2.5 rounded-xl text-sm font-bold transition-all hover:scale-105 active:scale-95 self-start md:self-auto cursor-pointer"
         >
           <RefreshCw className={`w-4 h-4 text-amber-400 ${refreshing ? 'animate-spin' : ''}`} />
           {refreshing ? 'Syncing...' : 'Sync Data'}
@@ -210,13 +210,13 @@ export default function AdminDashboard() {
               className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm transition-all whitespace-nowrap cursor-pointer ${
                 isActive
                   ? 'bg-amber-400 text-slate-950 shadow-lg shadow-amber-400/20'
-                  : 'bg-white/[0.03] text-slate-400 hover:text-white hover:bg-white/[0.06] border border-white/[0.05]'
+                  : 'bg-[#131A2A]/[0.03] text-slate-400 hover:text-white hover:bg-[#131A2A]/[0.06] border border-white/[0.05]'
               }`}
             >
               <Icon className="w-4 h-4" />
               <span>{tab.label}</span>
               {tab.count !== undefined && (
-                <span className={`text-[11px] px-2 py-0.5 rounded-md font-extrabold ${isActive ? 'bg-slate-900/30 text-slate-950' : 'bg-white/10 text-slate-300'}`}>
+                <span className={`text-[11px] px-2 py-0.5 rounded-md font-extrabold ${isActive ? 'bg-slate-900/30 text-slate-950' : 'bg-[#131A2A]/10 text-slate-300'}`}>
                   {tab.count}
                 </span>
               )}
@@ -304,7 +304,7 @@ export default function AdminDashboard() {
           </div>
 
           {/* Area Growth Chart */}
-          <div className="p-7 rounded-3xl bg-white/[0.03] border border-white/[0.08] backdrop-blur-sm">
+          <div className="p-7 rounded-3xl bg-[#131A2A]/[0.03] border border-white/[0.08] backdrop-blur-sm">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
               <div>
                 <h3 className="text-xl font-black text-white flex items-center gap-2">
@@ -312,13 +312,13 @@ export default function AdminDashboard() {
                 </h3>
                 <p className="text-xs text-slate-400 mt-1">Real-time daily new user signups and itinerary creations</p>
               </div>
-              <div className="flex gap-1.5 bg-white/5 p-1 rounded-xl border border-white/10">
+              <div className="flex gap-1.5 bg-[#131A2A]/5 p-1 rounded-xl border border-white/10">
                 {['7d', '14d', '30d'].map(p => (
                   <button
                     key={p}
                     onClick={() => setTrendPeriod(p)}
                     className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                      trendPeriod === p ? 'bg-amber-400 text-slate-900 shadow' : 'text-slate-400 hover:text-white'
+                      trendPeriod === p ? 'bg-amber-400 text-slate-950 shadow' : 'text-slate-400 hover:text-white'
                     }`}
                   >
                     {p.toUpperCase()}
@@ -357,7 +357,7 @@ export default function AdminDashboard() {
           {/* User Country Spread & Quick Top Destinations */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* User Country Distribution */}
-            <div className="p-6 rounded-3xl bg-white/[0.03] border border-white/[0.08]">
+            <div className="p-6 rounded-3xl bg-[#131A2A]/[0.03] border border-white/[0.08]">
               <h3 className="text-lg font-bold text-white mb-1 flex items-center gap-2">
                 <Globe className="w-5 h-5 text-cyan-400" /> User Demographic Distribution
               </h3>
@@ -365,9 +365,9 @@ export default function AdminDashboard() {
               
               <div className="space-y-3">
                 {overview?.userCountries?.map((uc, i) => (
-                  <div key={uc.country} className="flex justify-between items-center p-3 rounded-xl bg-white/[0.02] border border-white/[0.04]">
+                  <div key={uc.country} className="flex justify-between items-center p-3 rounded-xl bg-[#131A2A]/[0.02] border border-white/[0.04]">
                     <span className="text-sm font-semibold text-white flex items-center gap-2">
-                      <span className="w-5 text-xs text-slate-500 font-bold">#{i + 1}</span> {uc.country}
+                      <span className="w-5 text-xs text-slate-400 font-bold">#{i + 1}</span> {uc.country}
                     </span>
                     <span className="text-xs font-bold px-2.5 py-1 rounded-md bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
                       {uc.userCount} user{uc.userCount !== 1 ? 's' : ''}
@@ -375,13 +375,13 @@ export default function AdminDashboard() {
                   </div>
                 ))}
                 {(!overview?.userCountries || overview?.userCountries.length === 0) && (
-                  <p className="text-xs text-slate-500 py-4 text-center">No location records yet.</p>
+                  <p className="text-xs text-slate-400 py-4 text-center">No location records yet.</p>
                 )}
               </div>
             </div>
 
             {/* Top Destinations Preview */}
-            <div className="p-6 rounded-3xl bg-white/[0.03] border border-white/[0.08]">
+            <div className="p-6 rounded-3xl bg-[#131A2A]/[0.03] border border-white/[0.08]">
               <h3 className="text-lg font-bold text-white mb-1 flex items-center gap-2">
                 <MapPin className="w-5 h-5 text-rose-400" /> Most Added Cities
               </h3>
@@ -389,7 +389,7 @@ export default function AdminDashboard() {
 
               <div className="space-y-3">
                 {stats?.topCities?.slice(0, 5).map((c, i) => (
-                  <div key={c.id} className="flex justify-between items-center p-3 rounded-xl bg-white/[0.02] border border-white/[0.04]">
+                  <div key={c.id} className="flex justify-between items-center p-3 rounded-xl bg-[#131A2A]/[0.02] border border-white/[0.04]">
                     <div className="flex items-center gap-3">
                       <img src={c.imageUrl} alt={c.name} className="w-10 h-10 rounded-xl object-cover border border-white/10" />
                       <div>
@@ -415,7 +415,7 @@ export default function AdminDashboard() {
       {activeTab === 'trends' && (
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
           {/* Spending & Adoption Bar Chart */}
-          <div className="p-7 rounded-3xl bg-white/[0.03] border border-white/[0.08]">
+          <div className="p-7 rounded-3xl bg-[#131A2A]/[0.03] border border-white/[0.08]">
             <h3 className="text-xl font-black text-white mb-2 flex items-center gap-2">
               <IndianRupee className="w-5 h-5 text-emerald-400" /> Daily Itinerary Spending Trajectory
             </h3>
@@ -439,19 +439,19 @@ export default function AdminDashboard() {
 
           {/* User Engagement Matrix */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            <div className="p-6 rounded-3xl bg-white/[0.03] border border-white/[0.08]">
+            <div className="p-6 rounded-3xl bg-[#131A2A]/[0.03] border border-white/[0.08]">
               <h4 className="text-xs font-extrabold uppercase tracking-wider text-slate-400 mb-2">Trip Creation Frequency</h4>
               <p className="text-2xl font-black text-white">{overview?.engagement?.avgTripsPerUser} trips / user</p>
               <p className="text-xs text-slate-400 mt-2">Consistent repeat vacation planner usage across registered travelers.</p>
             </div>
 
-            <div className="p-6 rounded-3xl bg-white/[0.03] border border-white/[0.08]">
+            <div className="p-6 rounded-3xl bg-[#131A2A]/[0.03] border border-white/[0.08]">
               <h4 className="text-xs font-extrabold uppercase tracking-wider text-slate-400 mb-2">Multi-City Depth</h4>
               <p className="text-2xl font-black text-cyan-400">{overview?.engagement?.avgStopsPerTrip} cities / trip</p>
               <p className="text-xs text-slate-400 mt-2">Average destinations linked together in unified multi-stop itineraries.</p>
             </div>
 
-            <div className="p-6 rounded-3xl bg-white/[0.03] border border-white/[0.08]">
+            <div className="p-6 rounded-3xl bg-[#131A2A]/[0.03] border border-white/[0.08]">
               <h4 className="text-xs font-extrabold uppercase tracking-wider text-slate-400 mb-2">Activity Richness</h4>
               <p className="text-2xl font-black text-amber-400">{overview?.engagement?.avgActivitiesPerTrip} items / trip</p>
               <p className="text-xs text-slate-400 mt-2">Sightseeing, dining, and adventure items per vacation schedule.</p>
@@ -465,7 +465,7 @@ export default function AdminDashboard() {
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
           {/* Category Distribution Donut Chart */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="p-6 rounded-3xl bg-white/[0.03] border border-white/[0.08] lg:col-span-1">
+            <div className="p-6 rounded-3xl bg-[#131A2A]/[0.03] border border-white/[0.08] lg:col-span-1">
               <h3 className="text-lg font-bold text-white mb-1 flex items-center gap-2">
                 <PieIcon className="w-5 h-5 text-fuchsia-400" /> Activity Category Split
               </h3>
@@ -510,7 +510,7 @@ export default function AdminDashboard() {
             </div>
 
             {/* Top 6 Popular Cities Leaderboard */}
-            <div className="p-6 rounded-3xl bg-white/[0.03] border border-white/[0.08] lg:col-span-2">
+            <div className="p-6 rounded-3xl bg-[#131A2A]/[0.03] border border-white/[0.08] lg:col-span-2">
               <h3 className="text-lg font-bold text-white mb-1 flex items-center gap-2">
                 <MapPin className="w-5 h-5 text-rose-400" /> Top Ranked Destinations
               </h3>
@@ -518,7 +518,7 @@ export default function AdminDashboard() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {stats?.topCities?.map((city) => (
-                  <div key={city.id} className="p-4 rounded-2xl bg-white/[0.02] border border-white/[0.06] flex items-center gap-4 hover:border-amber-400/40 transition-all">
+                  <div key={city.id} className="p-4 rounded-2xl bg-[#131A2A]/[0.02] border border-white/[0.06] flex items-center gap-4 hover:border-amber-400/40 transition-all">
                     <img src={city.imageUrl} alt={city.name} className="w-16 h-16 rounded-xl object-cover border border-white/10 shrink-0" />
                     <div className="min-w-0 flex-1">
                       <div className="flex justify-between items-start">
@@ -539,7 +539,7 @@ export default function AdminDashboard() {
           </div>
 
           {/* Top Activities Catalog */}
-          <div className="p-6 rounded-3xl bg-white/[0.03] border border-white/[0.08]">
+          <div className="p-6 rounded-3xl bg-[#131A2A]/[0.03] border border-white/[0.08]">
             <h3 className="text-lg font-bold text-white mb-1 flex items-center gap-2">
               <Activity className="w-5 h-5 text-emerald-400" /> Top Scheduled Activities
             </h3>
@@ -547,11 +547,11 @@ export default function AdminDashboard() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {stats?.topActivities?.map((act) => (
-                <div key={act.id} className="p-4 rounded-2xl bg-white/[0.02] border border-white/[0.06] flex items-center gap-3.5">
+                <div key={act.id} className="p-4 rounded-2xl bg-[#131A2A]/[0.02] border border-white/[0.06] flex items-center gap-3.5">
                   <img src={act.imageUrl} alt={act.name} className="w-12 h-12 rounded-xl object-cover border border-white/10 shrink-0" />
                   <div className="min-w-0 flex-1">
                     <h5 className="font-bold text-white text-sm truncate">{act.name}</h5>
-                    <span className="inline-block text-[10px] uppercase font-bold text-slate-400 bg-white/5 px-2 py-0.5 rounded mt-1">
+                    <span className="inline-block text-[10px] uppercase font-bold text-slate-400 bg-[#131A2A]/5 px-2 py-0.5 rounded mt-1">
                       {act.category}
                     </span>
                     <div className="flex justify-between items-center mt-2">
@@ -577,7 +577,7 @@ export default function AdminDashboard() {
                 placeholder="Search trip name or creator..."
                 value={tripSearch}
                 onChange={e => setTripSearch(e.target.value)}
-                className="w-full bg-white/[0.04] border border-white/[0.1] rounded-xl py-2.5 pl-10 pr-4 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-400/40"
+                className="w-full bg-[#131A2A]/[0.04] border border-white/[0.1] rounded-xl py-2.5 pl-10 pr-4 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-400/40"
               />
             </div>
             <span className="text-xs font-bold text-slate-400">
@@ -585,10 +585,10 @@ export default function AdminDashboard() {
             </span>
           </div>
 
-          <div className="rounded-3xl border border-white/[0.08] overflow-hidden bg-white/[0.02] shadow-xl">
+          <div className="rounded-3xl border border-white/[0.08] overflow-hidden bg-[#131A2A]/[0.02] shadow-xl">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm text-slate-300">
-                <thead className="bg-white/[0.05] text-xs uppercase font-extrabold text-slate-400 tracking-wider border-b border-white/[0.08]">
+                <thead className="bg-[#131A2A]/[0.05] text-xs uppercase font-extrabold text-slate-400 tracking-wider border-b border-white/[0.08]">
                   <tr>
                     <th className="p-4">Trip Name</th>
                     <th className="p-4">Traveler / Creator</th>
@@ -602,10 +602,10 @@ export default function AdminDashboard() {
                   {trips.map(t => {
                     const pct = t.budgetLimit > 0 ? Math.min(Math.round((t.totalSpent / t.budgetLimit) * 100), 100) : 0;
                     return (
-                      <tr key={t.id} className="hover:bg-white/[0.02] transition-colors">
+                      <tr key={t.id} className="hover:bg-[#131A2A]/[0.02] transition-colors">
                         <td className="p-4 font-bold text-white">
                           {t.name}
-                          <span className="block text-[11px] font-mono text-slate-500 mt-0.5">ID: #{t.id}</span>
+                          <span className="block text-[11px] font-mono text-slate-400 mt-0.5">ID: #{t.id}</span>
                         </td>
                         <td className="p-4">
                           <p className="font-semibold text-white">{t.userName}</p>
@@ -618,9 +618,9 @@ export default function AdminDashboard() {
                           <div className="w-36">
                             <div className="flex justify-between text-xs font-bold mb-1">
                               <span className="text-amber-400">₹{t.totalSpent.toLocaleString('en-IN')}</span>
-                              <span className="text-slate-500">₹{t.budgetLimit.toLocaleString('en-IN')}</span>
+                              <span className="text-slate-400">₹{t.budgetLimit.toLocaleString('en-IN')}</span>
                             </div>
-                            <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
+                            <div className="w-full bg-[#131A2A]/10 h-1.5 rounded-full overflow-hidden">
                               <div className="bg-amber-400 h-full rounded-full" style={{ width: `${pct}%` }} />
                             </div>
                           </div>
@@ -648,7 +648,7 @@ export default function AdminDashboard() {
                   })}
                   {trips.length === 0 && (
                     <tr>
-                      <td colSpan={6} className="p-8 text-center text-slate-500">
+                      <td colSpan={6} className="p-8 text-center text-slate-400">
                         No trip records found matching your search.
                       </td>
                     </tr>
@@ -671,7 +671,7 @@ export default function AdminDashboard() {
                 placeholder="Search user name, username, email..."
                 value={userSearch}
                 onChange={e => setUserSearch(e.target.value)}
-                className="w-full bg-white/[0.04] border border-white/[0.1] rounded-xl py-2.5 pl-10 pr-4 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-400/40"
+                className="w-full bg-[#131A2A]/[0.04] border border-white/[0.1] rounded-xl py-2.5 pl-10 pr-4 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-400/40"
               />
             </div>
             <span className="text-xs font-bold text-slate-400">
@@ -679,10 +679,10 @@ export default function AdminDashboard() {
             </span>
           </div>
 
-          <div className="rounded-3xl border border-white/[0.08] overflow-hidden bg-white/[0.02] shadow-xl">
+          <div className="rounded-3xl border border-white/[0.08] overflow-hidden bg-[#131A2A]/[0.02] shadow-xl">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm text-slate-300">
-                <thead className="bg-white/[0.05] text-xs uppercase font-extrabold text-slate-400 tracking-wider border-b border-white/[0.08]">
+                <thead className="bg-[#131A2A]/[0.05] text-xs uppercase font-extrabold text-slate-400 tracking-wider border-b border-white/[0.08]">
                   <tr>
                     <th className="p-4">User</th>
                     <th className="p-4">Verified Location</th>
@@ -694,7 +694,7 @@ export default function AdminDashboard() {
                 </thead>
                 <tbody className="divide-y divide-white/[0.05]">
                   {users.map(u => (
-                    <tr key={u.id} className="hover:bg-white/[0.02] transition-colors">
+                    <tr key={u.id} className="hover:bg-[#131A2A]/[0.02] transition-colors">
                       <td className="p-4">
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 rounded-xl overflow-hidden bg-slate-800 border border-white/10 flex items-center justify-center font-bold text-white text-base shrink-0">
@@ -721,11 +721,11 @@ export default function AdminDashboard() {
                             📍 {[u.city, u.state, u.country].filter(Boolean).join(', ')}
                           </span>
                         ) : (
-                          <span className="text-slate-500">Not specified</span>
+                          <span className="text-slate-400">Not specified</span>
                         )}
                       </td>
                       <td className="p-4">
-                        <span className="text-xs font-bold px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-white">
+                        <span className="text-xs font-bold px-2.5 py-1 rounded-md bg-[#131A2A]/5 border border-white/10 text-white">
                           {u.tripsCount} trips
                         </span>
                       </td>
@@ -733,7 +733,7 @@ export default function AdminDashboard() {
                         <span className={`text-xs font-bold px-2.5 py-1 rounded-lg border ${
                           u.role === 'ROLE_ADMIN' 
                             ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' 
-                            : 'bg-slate-500/10 text-slate-400 border-slate-500/20'
+                            : 'bg-[#131A2A]0/10 text-slate-400 border-slate-500/20'
                         }`}>
                           {u.role === 'ROLE_ADMIN' ? 'ADMIN' : 'USER'}
                         </span>
@@ -755,7 +755,7 @@ export default function AdminDashboard() {
                             title={u.role === 'ROLE_ADMIN' ? 'Demote to User' : 'Promote to Admin'}
                             className={`p-2 rounded-xl text-xs font-bold border transition-all hover:scale-105 cursor-pointer ${
                               u.role === 'ROLE_ADMIN'
-                                ? 'bg-slate-500/10 text-slate-300 border-slate-500/20 hover:bg-slate-500/20'
+                                ? 'bg-[#131A2A]0/10 text-slate-300 border-slate-500/20 hover:bg-[#131A2A]0/20'
                                 : 'bg-amber-500/10 text-amber-400 border-amber-500/20 hover:bg-amber-500/20'
                             }`}
                           >
@@ -777,7 +777,7 @@ export default function AdminDashboard() {
                           <button
                             onClick={() => handleDeleteUser(u.id, u.name)}
                             title="Delete User"
-                            className="p-2 rounded-xl text-xs font-bold bg-white/5 text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 border border-white/10 hover:border-rose-500/30 transition-all hover:scale-105 cursor-pointer"
+                            className="p-2 rounded-xl text-xs font-bold bg-[#131A2A]/5 text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 border border-white/10 hover:border-rose-500/30 transition-all hover:scale-105 cursor-pointer"
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>
@@ -787,7 +787,7 @@ export default function AdminDashboard() {
                   ))}
                   {users.length === 0 && (
                     <tr>
-                      <td colSpan={6} className="p-8 text-center text-slate-500">
+                      <td colSpan={6} className="p-8 text-center text-slate-400">
                         No users found matching your search.
                       </td>
                     </tr>
@@ -801,3 +801,7 @@ export default function AdminDashboard() {
     </AppLayout>
   );
 }
+
+
+
+

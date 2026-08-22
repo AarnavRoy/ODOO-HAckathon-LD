@@ -149,12 +149,12 @@ export default function Login() {
         
         <div className="w-full max-w-sm bg-[#131A2A] p-10 rounded-[2.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-[#1F2937]">
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }} className="flex items-center text-white mb-8 font-black text-3xl tracking-tighter">
-            <Plane className="w-8 h-8 mr-3 text-black" /> GlobeTrotter
+            <Plane className="w-8 h-8 mr-3 text-amber-400" /> GlobeTrotter
           </motion.div>
           
           <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
             <h2 className="text-4xl md:text-5xl font-black tracking-tighter text-white mb-2 flex items-center">
-              Welcome back <Sparkles className="w-6 h-6 ml-2 text-yellow-500" />
+              Welcome back <Sparkles className="w-6 h-6 ml-2 text-amber-400" />
             </h2>
             <p className="text-slate-400 mb-8 font-medium">Enter your username and password to access your trips.</p>
           </motion.div>
@@ -168,7 +168,7 @@ export default function Login() {
           
           <form className="space-y-5" onSubmit={handleLogin}>
             <div className="flex flex-col gap-2">
-              <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">Username or Email</label>
+              <label className="text-xs font-bold text-slate-300 uppercase tracking-wider">Username or Email</label>
               <input 
                 type="text" 
                 required 
@@ -181,11 +181,11 @@ export default function Login() {
 
             <div className="flex flex-col gap-2">
               <div className="flex justify-between items-center">
-                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">Password</label>
+                <label className="text-xs font-bold text-slate-300 uppercase tracking-wider">Password</label>
                 <button 
                   type="button" 
                   onClick={() => setShowForgotModal(true)} 
-                  className="text-xs font-bold text-slate-400 hover:text-black transition-colors cursor-pointer"
+                  className="text-xs font-bold text-slate-400 hover:text-amber-400 transition-colors cursor-pointer"
                 >
                   Forgot?
                 </button>
@@ -226,10 +226,10 @@ export default function Login() {
           
           <div className="mt-8 text-center space-y-3">
             <p className="text-sm font-medium text-slate-400">
-              Don't have an account? <Link to="/signup" className="font-bold text-black hover:text-amber-400">Create one</Link>
+              Don't have an account? <Link to="/signup" className="font-bold text-amber-400 hover:text-amber-400">Create one</Link>
             </p>
             <p className="text-xs font-medium text-slate-400">
-              Are you an administrator? <Link to="/admin/login" className="font-bold text-slate-300 hover:text-black">Admin Login</Link>
+              Are you an administrator? <Link to="/admin/login" className="font-bold text-slate-300 hover:text-amber-400">Admin Login</Link>
             </p>
           </div>
         </div>
@@ -244,7 +244,7 @@ export default function Login() {
           initial={{ scale: 1.1 }} animate={{ scale: 1 }} transition={{ duration: 10, ease: "easeOut" }}
           src="https://images.unsplash.com/photo-1506012787146-f92b2d7d6d96?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80" alt="Beautiful destination" className="absolute inset-0 w-full h-full object-cover opacity-70 mix-blend-overlay" 
         />
-        <div className="absolute inset-0 bg-black/40 flex items-end p-16">
+        <div className="absolute inset-0 bg-amber-400/40 flex items-end p-16">
           <motion.blockquote initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }} className="text-white">
             <p className="text-3xl font-black tracking-tighter mb-4 leading-tight">"The world is a book and those who do not travel read only one page."</p>
             <footer className="text-[#EAB308] font-bold">— Saint Augustine</footer>
@@ -264,13 +264,13 @@ export default function Login() {
             >
               <button 
                 onClick={closeForgotModal} 
-                className="absolute top-6 right-6 text-slate-400 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 p-2 rounded-full transition-colors cursor-pointer"
+                className="absolute top-6 right-6 text-slate-400 hover:text-slate-300 bg-[#1F2937] hover:bg-slate-200 p-2 rounded-full transition-colors cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
 
               <div className="flex items-center gap-3 mb-4">
-                <div className="p-3 bg-yellow-100 text-amber-400 rounded-2xl">
+                <div className="p-3 bg-amber-400 text-slate-950 rounded-2xl">
                   <KeyRound className="w-6 h-6" />
                 </div>
                 <div>
@@ -303,7 +303,7 @@ export default function Login() {
                   </p>
 
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">Email Address</label>
+                    <label className="text-xs font-bold text-slate-300 uppercase tracking-wider">Email Address</label>
                     <input 
                       type="email" 
                       required 
@@ -315,7 +315,7 @@ export default function Login() {
                   </div>
 
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">Full Name</label>
+                    <label className="text-xs font-bold text-slate-300 uppercase tracking-wider">Full Name</label>
                     <input 
                       type="text" 
                       required 
@@ -338,7 +338,7 @@ export default function Login() {
                     <button 
                       type="submit" 
                       disabled={forgotLoading} 
-                      className="flex-1 py-3 bg-black text-white hover:bg-yellow-400 hover:text-black rounded-full text-sm font-bold shadow-md transition-all cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2"
+                      className="flex-1 py-3 bg-amber-400 text-slate-950 hover:bg-amber-500 hover:text-slate-950 rounded-full text-sm font-bold shadow-md transition-all cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2"
                     >
                       {forgotLoading ? (
                         <>
@@ -354,7 +354,7 @@ export default function Login() {
               {forgotStep === 2 && (
                 <form onSubmit={handleResetPassword} className="space-y-4">
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">New Password</label>
+                    <label className="text-xs font-bold text-slate-300 uppercase tracking-wider">New Password</label>
                     <div className="relative">
                       <input 
                         type={showNewPassword ? "text" : "password"} 
@@ -377,7 +377,7 @@ export default function Login() {
                   </div>
 
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">Confirm New Password</label>
+                    <label className="text-xs font-bold text-slate-300 uppercase tracking-wider">Confirm New Password</label>
                     <div className="relative">
                       <input 
                         type={showConfirmNewPassword ? "text" : "password"} 
@@ -415,7 +415,7 @@ export default function Login() {
                     <button 
                       type="submit" 
                       disabled={forgotLoading || (confirmNewPassword.length > 0 && newPassword !== confirmNewPassword)} 
-                      className="flex-1 py-3 bg-black text-white hover:bg-yellow-400 hover:text-black rounded-full text-sm font-bold shadow-md transition-all cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2"
+                      className="flex-1 py-3 bg-amber-400 text-slate-950 hover:bg-amber-500 hover:text-slate-950 rounded-full text-sm font-bold shadow-md transition-all cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2"
                     >
                       {forgotLoading ? (
                         <>
@@ -433,4 +433,8 @@ export default function Login() {
     </div>
   );
 }
+
+
+
+
 

@@ -239,8 +239,8 @@ export default function ItineraryBuilder() {
 
   if (loading) return (
     <AppLayout title="Itinerary Builder">
-      <div className="flex items-center gap-3 py-10 text-slate-500">
-        <span className="w-5 h-5 border-2 border-slate-300 border-t-amber-500 rounded-full animate-spin" />
+      <div className="flex items-center gap-3 py-10 text-slate-400">
+        <span className="w-5 h-5 border-2 border-[#1F2937] border-t-amber-500 rounded-full animate-spin" />
         Loading trip builder...
       </div>
     </AppLayout>
@@ -255,7 +255,7 @@ export default function ItineraryBuilder() {
             {trip?.name}
             <button 
               onClick={() => setShowSettingsModal(true)} 
-              className="ml-3 p-2 bg-white/5 hover:bg-white/10 text-slate-400 hover:text-amber-400 rounded-xl transition-all"
+              className="ml-3 p-2 bg-[#131A2A]/5 hover:bg-[#131A2A]/10 text-slate-400 hover:text-amber-400 rounded-xl transition-all"
               title="Edit Trip Settings"
             >
               <Settings className="w-5 h-5" />
@@ -275,7 +275,7 @@ export default function ItineraryBuilder() {
         <div className="flex flex-wrap gap-3">
           <button
             onClick={() => setShowSettingsModal(true)}
-            className="bg-white/5 border border-white/10 hover:bg-white/10 text-white px-4 py-2.5 rounded-xl text-sm font-bold transition-all flex items-center"
+            className="bg-[#131A2A]/5 border border-white/10 hover:bg-[#131A2A]/10 text-white px-4 py-2.5 rounded-xl text-sm font-bold transition-all flex items-center"
           >
             <Edit3 className="w-4 h-4 mr-2 text-amber-400" /> Edit Trip Info
           </button>
@@ -287,7 +287,7 @@ export default function ItineraryBuilder() {
           </button>
           <Link
             to={`/trips/${tripId}`}
-            className="bg-white/5 border border-white/10 hover:bg-white/10 text-cyan-400 px-4 py-2.5 rounded-xl text-sm font-bold transition-all flex items-center"
+            className="bg-[#131A2A]/5 border border-white/10 hover:bg-[#131A2A]/10 text-cyan-400 px-4 py-2.5 rounded-xl text-sm font-bold transition-all flex items-center"
           >
             View Itinerary
           </Link>
@@ -300,7 +300,7 @@ export default function ItineraryBuilder() {
         <div className="lg:col-span-2 space-y-8">
           
           {/* Day-wise Activity List Editor */}
-          <div className="bg-white/[0.03] border border-white/[0.06] rounded-3xl p-6">
+          <div className="bg-[#131A2A]/[0.03] border border-white/[0.06] rounded-3xl p-6">
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-xl font-extrabold text-white flex items-center">
                 <Sparkles className="w-5 h-5 text-amber-400 mr-2" /> Day-by-Day Activities
@@ -314,7 +314,7 @@ export default function ItineraryBuilder() {
             </div>
 
             {aiPlan?.days?.map((day) => (
-              <div key={day.dayNumber} className="mb-6 last:mb-0 bg-white/5 border border-white/5 rounded-2xl p-5">
+              <div key={day.dayNumber} className="mb-6 last:mb-0 bg-[#131A2A]/5 border border-white/5 rounded-2xl p-5">
                 <div className="flex justify-between items-center mb-4 pb-2 border-b border-white/5">
                   <h4 className="font-extrabold text-amber-400 text-sm">{day.title || `Day ${day.dayNumber}`}</h4>
                   <button 
@@ -327,13 +327,13 @@ export default function ItineraryBuilder() {
 
                 <div className="space-y-3">
                   {day.activities?.map((act) => (
-                    <div key={act.id} className="bg-white/[0.03] border border-white/[0.06] rounded-xl p-4 flex justify-between items-start group">
+                    <div key={act.id} className="bg-[#131A2A]/[0.03] border border-white/[0.06] rounded-xl p-4 flex justify-between items-start group">
                       <div>
                         <div className="flex items-center gap-2 mb-1">
                           <span className="text-xs font-bold text-cyan-400 bg-cyan-400/10 px-2 py-0.5 rounded">
                             {act.time}
                           </span>
-                          <span className="text-xs font-semibold text-slate-400 bg-white/5 px-2 py-0.5 rounded uppercase">
+                          <span className="text-xs font-semibold text-slate-400 bg-[#131A2A]/5 px-2 py-0.5 rounded uppercase">
                             {act.category}
                           </span>
                           {act.cost > 0 && (
@@ -345,14 +345,14 @@ export default function ItineraryBuilder() {
                       </div>
                       <button 
                         onClick={() => handleDeleteActivity(day.dayNumber, act.id)}
-                        className="text-slate-600 hover:text-red-400 p-1.5 rounded-lg transition-colors"
+                        className="text-slate-300 hover:text-red-400 p-1.5 rounded-lg transition-colors"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
                   ))}
                   {(!day.activities || day.activities.length === 0) && (
-                    <p className="text-xs text-slate-500 italic py-2">No activities added yet for this day.</p>
+                    <p className="text-xs text-slate-400 italic py-2">No activities added yet for this day.</p>
                   )}
                 </div>
               </div>
@@ -360,25 +360,25 @@ export default function ItineraryBuilder() {
           </div>
 
           {/* Stops List */}
-          <div className="bg-white/[0.03] border border-white/[0.06] rounded-3xl p-6">
+          <div className="bg-[#131A2A]/[0.03] border border-white/[0.06] rounded-3xl p-6">
             <h3 className="text-xl font-extrabold text-white flex items-center mb-6">
               <MapPin className="w-5 h-5 text-rose-400 mr-2" /> City Destinations & Accommodation
             </h3>
 
             {trip?.stops?.length === 0 && (
-              <div className="text-center py-10 border border-dashed border-white/10 rounded-2xl text-slate-500">
+              <div className="text-center py-10 border border-dashed border-white/10 rounded-2xl text-slate-400">
                 <p className="font-medium">No destination stops added yet.</p>
               </div>
             )}
 
             {trip?.stops?.map((stop, index) => (
-              <div key={stop.id} className="mb-4 bg-white/5 border border-white/5 rounded-2xl p-5">
+              <div key={stop.id} className="mb-4 bg-[#131A2A]/5 border border-white/5 rounded-2xl p-5">
                 <div className="flex justify-between items-center">
                   <div>
                     <h4 className="font-extrabold text-white text-lg">{stop.city?.name || `Stop #${index + 1}`}</h4>
                     <p className="text-xs text-slate-400 mt-0.5">{stop.startDate} → {stop.endDate}</p>
                   </div>
-                  <button onClick={() => handleDeleteStop(stop.id)} className="text-slate-500 hover:text-red-400 p-2">
+                  <button onClick={() => handleDeleteStop(stop.id)} className="text-slate-400 hover:text-red-400 p-2">
                     <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
@@ -393,7 +393,7 @@ export default function ItineraryBuilder() {
 
         {/* Right Column: Add Stop Form */}
         <div className="space-y-6">
-          <div className="bg-white/[0.03] border border-white/[0.06] rounded-3xl p-6 sticky top-24">
+          <div className="bg-[#131A2A]/[0.03] border border-white/[0.06] rounded-3xl p-6 sticky top-24">
             <h3 className="text-lg font-extrabold text-white mb-4 flex items-center">
               <Plus className="w-5 h-5 text-amber-400 mr-2" /> Add City Stop
             </h3>
@@ -448,7 +448,7 @@ export default function ItineraryBuilder() {
 
       {/* MODAL 1: TRIP SETTINGS EDITOR */}
       {showSettingsModal && (
-        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 bg-amber-400/70 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-[#0c0f1a] border border-white/10 rounded-3xl p-6 md:p-8 max-w-lg w-full text-white shadow-2xl">
             <h3 className="text-2xl font-extrabold mb-4 flex items-center">
               <Settings className="w-6 h-6 text-amber-400 mr-2" /> Edit Trip Details
@@ -521,7 +521,7 @@ export default function ItineraryBuilder() {
                 <button
                   type="button"
                   onClick={() => setShowSettingsModal(false)}
-                  className="px-5 py-2.5 bg-white/5 hover:bg-white/10 text-slate-300 font-bold text-sm rounded-xl"
+                  className="px-5 py-2.5 bg-[#131A2A]/5 hover:bg-[#131A2A]/10 text-slate-300 font-bold text-sm rounded-xl"
                 >
                   Cancel
                 </button>
@@ -540,7 +540,7 @@ export default function ItineraryBuilder() {
 
       {/* MODAL 2: ADD ACTIVITY MODAL */}
       {showAddActivityModal && (
-        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 bg-amber-400/70 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-[#0c0f1a] border border-white/10 rounded-3xl p-6 md:p-8 max-w-lg w-full text-white shadow-2xl">
             <h3 className="text-2xl font-extrabold mb-4 flex items-center">
               <Plus className="w-6 h-6 text-amber-400 mr-2" /> Add Custom Activity
@@ -625,7 +625,7 @@ export default function ItineraryBuilder() {
                 <button
                   type="button"
                   onClick={() => setShowAddActivityModal(false)}
-                  className="px-5 py-2.5 bg-white/5 hover:bg-white/10 text-slate-300 font-bold text-sm rounded-xl"
+                  className="px-5 py-2.5 bg-[#131A2A]/5 hover:bg-[#131A2A]/10 text-slate-300 font-bold text-sm rounded-xl"
                 >
                   Cancel
                 </button>
@@ -644,3 +644,7 @@ export default function ItineraryBuilder() {
     </AppLayout>
   );
 }
+
+
+
+

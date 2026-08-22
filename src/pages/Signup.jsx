@@ -170,12 +170,12 @@ export default function Signup() {
         
         <div className="w-full max-w-md p-10 bg-[#131A2A] rounded-[2.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-[#1F2937]">
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }} className="flex items-center text-white mb-6 font-black text-3xl tracking-tighter">
-            <Plane className="w-8 h-8 mr-3 text-black" /> GlobeTrotter
+            <Plane className="w-8 h-8 mr-3 text-amber-400" /> GlobeTrotter
           </motion.div>
           
           <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
             <h2 className="text-3xl md:text-4xl font-black tracking-tighter text-white mb-2 flex items-center">
-              Join the journey <Sparkles className="w-6 h-6 ml-2 text-yellow-500" />
+              Join the journey <Sparkles className="w-6 h-6 ml-2 text-amber-400" />
             </h2>
             <p className="text-slate-400 mb-6 font-medium text-sm">Create an account to start planning your next adventure.</p>
           </motion.div>
@@ -190,7 +190,7 @@ export default function Signup() {
           <form className="space-y-4" onSubmit={handleSubmit}>
             {/* 1. Full Name */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">Full Name</label>
+              <label className="text-xs font-bold text-slate-300 uppercase tracking-wider">Full Name</label>
               <input 
                 type="text" 
                 required 
@@ -215,7 +215,7 @@ export default function Signup() {
             {/* 2. Username */}
             <div className="flex flex-col gap-1.5">
               <div className="flex justify-between items-center">
-                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">Username</label>
+                <label className="text-xs font-bold text-slate-300 uppercase tracking-wider">Username</label>
                 {usernameStatus === 'checking' && (
                   <span className="text-xs text-slate-400 flex items-center gap-1">
                     <Loader2 className="w-3 h-3 animate-spin" /> Checking...
@@ -254,7 +254,7 @@ export default function Signup() {
             {/* 3. Email Address (Gmail with Verification) */}
             <div className="flex flex-col gap-1.5">
               <div className="flex justify-between items-center">
-                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">Email (@gmail.com)</label>
+                <label className="text-xs font-bold text-slate-300 uppercase tracking-wider">Email (@gmail.com)</label>
                 {emailStatus === 'verifying' && (
                   <span className="text-xs text-blue-500 flex items-center gap-1 font-medium">
                     <Loader2 className="w-3 h-3 animate-spin" /> Verifying...
@@ -292,7 +292,7 @@ export default function Signup() {
 
             {/* 4. Password */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">Password</label>
+              <label className="text-xs font-bold text-slate-300 uppercase tracking-wider">Password</label>
               <div className="relative">
                 <input 
                   type={showPassword ? "text" : "password"} 
@@ -314,13 +314,13 @@ export default function Signup() {
               {/* Password strength checklist */}
               {password.length > 0 && (
                 <div className="flex flex-wrap gap-2 pt-1 text-[11px] font-semibold">
-                  <span className={`px-2 py-0.5 rounded-md flex items-center gap-1 ${hasMinLength ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-400'}`}>
+                  <span className={`px-2 py-0.5 rounded-md flex items-center gap-1 ${hasMinLength ? 'bg-emerald-100 text-emerald-700' : 'bg-[#1F2937] text-slate-400'}`}>
                     {hasMinLength ? <CheckCircle2 className="w-2.5 h-2.5" /> : '•'} 8+ chars
                   </span>
-                  <span className={`px-2 py-0.5 rounded-md flex items-center gap-1 ${hasNumber ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-400'}`}>
+                  <span className={`px-2 py-0.5 rounded-md flex items-center gap-1 ${hasNumber ? 'bg-emerald-100 text-emerald-700' : 'bg-[#1F2937] text-slate-400'}`}>
                     {hasNumber ? <CheckCircle2 className="w-2.5 h-2.5" /> : '•'} Number (0-9)
                   </span>
-                  <span className={`px-2 py-0.5 rounded-md flex items-center gap-1 ${hasSymbol ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-400'}`}>
+                  <span className={`px-2 py-0.5 rounded-md flex items-center gap-1 ${hasSymbol ? 'bg-emerald-100 text-emerald-700' : 'bg-[#1F2937] text-slate-400'}`}>
                     {hasSymbol ? <CheckCircle2 className="w-2.5 h-2.5" /> : '•'} Symbol (!@#$)
                   </span>
                 </div>
@@ -330,7 +330,7 @@ export default function Signup() {
             {/* 5. Confirm Password (Real-time Match) */}
             <div className="flex flex-col gap-1.5">
               <div className="flex justify-between items-center">
-                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">Confirm Password</label>
+                <label className="text-xs font-bold text-slate-300 uppercase tracking-wider">Confirm Password</label>
                 {confirmPassword.length > 0 && (
                   isConfirmPasswordMatch ? (
                     <span className="text-xs text-emerald-600 font-semibold flex items-center gap-1">
@@ -384,7 +384,7 @@ export default function Signup() {
           </form>
           
           <p className="mt-6 text-center text-sm font-medium text-slate-400">
-            Already have an account? <Link to="/login" className="font-bold text-black hover:text-amber-400">Sign in</Link>
+            Already have an account? <Link to="/login" className="font-bold text-amber-400 hover:text-amber-400">Sign in</Link>
           </p>
         </div>
       </motion.div>
@@ -398,7 +398,7 @@ export default function Signup() {
           initial={{ scale: 1.1 }} animate={{ scale: 1 }} transition={{ duration: 10, ease: "easeOut" }}
           src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80" alt="Adventure travel" className="absolute inset-0 w-full h-full object-cover opacity-70 mix-blend-overlay" 
         />
-        <div className="absolute inset-0 bg-black/40 flex items-end p-16">
+        <div className="absolute inset-0 bg-amber-400/40 flex items-end p-16">
           <motion.blockquote initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }} className="text-white">
             <p className="text-3xl font-black tracking-tighter mb-4 leading-tight">"Not all those who wander are lost."</p>
             <footer className="text-[#EAB308] font-bold">— J.R.R. Tolkien</footer>
@@ -408,4 +408,8 @@ export default function Signup() {
     </div>
   );
 }
+
+
+
+
 

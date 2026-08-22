@@ -1,22 +1,22 @@
-ï»¿import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { getLiveCurrencyRates } from "../api/travel";
 import { RefreshCw, X, DollarSign } from "lucide-react";
 
 const POPULAR_CURRENCIES = [
-  { code: "INR", symbol: "â‚¹", name: "Indian Rupee" },
+  { code: "INR", symbol: "?", name: "Indian Rupee" },
   { code: "USD", symbol: "$", name: "US Dollar" },
-  { code: "EUR", symbol: "â‚¬", name: "Euro" },
-  { code: "GBP", symbol: "Â£", name: "British Pound" },
-  { code: "JPY", symbol: "Â¥", name: "Japanese Yen" },
+  { code: "EUR", symbol: "€", name: "Euro" },
+  { code: "GBP", symbol: "£", name: "British Pound" },
+  { code: "JPY", symbol: "¥", name: "Japanese Yen" },
   { code: "AUD", symbol: "A$", name: "Australian Dollar" },
   { code: "CAD", symbol: "C$", name: "Canadian Dollar" },
   { code: "CHF", symbol: "Fr", name: "Swiss Franc" },
   { code: "SGD", symbol: "S$", name: "Singapore Dollar" },
-  { code: "THB", symbol: "à¸¿", name: "Thai Baht" },
+  { code: "THB", symbol: "?", name: "Thai Baht" },
 ];
 
 /**
- * CurrencyWidget â€” floating bottom-right widget for live currency conversion.
+ * CurrencyWidget — floating bottom-right widget for live currency conversion.
  */
 export default function CurrencyWidget() {
   const [open, setOpen] = useState(false);
@@ -53,7 +53,7 @@ export default function CurrencyWidget() {
   }
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 w-80 bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden">
+    <div className="fixed bottom-6 right-6 z-50 w-80 bg-[#131A2A] rounded-2xl shadow-2xl border border-[#1F2937] overflow-hidden">
       {/* Header */}
       <div className="bg-gradient-to-r from-emerald-500 to-teal-600 px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
@@ -84,7 +84,7 @@ export default function CurrencyWidget() {
           <select
             value={baseCurrency}
             onChange={(e) => setBaseCurrency(e.target.value)}
-            className="border border-slate-200 rounded-lg py-1.5 px-2 text-xs font-bold bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+            className="border border-[#1F2937] rounded-lg py-1.5 px-2 text-xs font-bold bg-[#131A2A] focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
           >
             {POPULAR_CURRENCIES.map((c) => (
               <option key={c.code} value={c.code}>{c.symbol} {c.code}</option>
@@ -95,14 +95,14 @@ export default function CurrencyWidget() {
             min="0"
             value={amount}
             onChange={(e) => setAmount(Number(e.target.value))}
-            className="flex-1 border border-slate-200 rounded-lg py-1.5 px-2 text-xs font-bold bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+            className="flex-1 border border-[#1F2937] rounded-lg py-1.5 px-2 text-xs font-bold bg-[#131A2A] focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
           />
         </div>
 
         {/* Rates */}
         {loading ? (
           <div className="flex items-center justify-center gap-2 py-4 text-xs text-slate-400">
-            <span className="w-4 h-4 border-2 border-slate-200 border-t-emerald-500 rounded-full animate-spin" />
+            <span className="w-4 h-4 border-2 border-[#1F2937] border-t-emerald-500 rounded-full animate-spin" />
             Fetching live rates...
           </div>
         ) : rates ? (
@@ -110,13 +110,13 @@ export default function CurrencyWidget() {
             {POPULAR_CURRENCIES.filter((c) => c.code !== baseCurrency && rates[c.code]).map((c) => {
               const converted = (amount * rates[c.code]).toFixed(2);
               return (
-                <div key={c.code} className="flex items-center justify-between py-1.5 px-2 rounded-lg hover:bg-slate-50 transition-colors">
+                <div key={c.code} className="flex items-center justify-between py-1.5 px-2 rounded-lg hover:bg-[#131A2A] transition-colors">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-black text-slate-700">{c.symbol}</span>
-                    <span className="text-xs text-slate-500">{c.code}</span>
+                    <span className="text-xs font-black text-slate-300">{c.symbol}</span>
+                    <span className="text-xs text-slate-400">{c.code}</span>
                   </div>
                   <div className="text-right">
-                    <span className="text-sm font-black text-slate-800">{Number(converted).toLocaleString()}</span>
+                    <span className="text-sm font-black text-white">{Number(converted).toLocaleString()}</span>
                     <span className="text-[10px] text-slate-400 ml-1.5">({rates[c.code].toFixed(4)})</span>
                   </div>
                 </div>
@@ -136,3 +136,5 @@ export default function CurrencyWidget() {
     </div>
   );
 }
+
+

@@ -61,7 +61,7 @@ export default function AppLayout({ children, title }) {
                     key={link.to} 
                     to={link.to} 
                     className={`px-4 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-semibold flex items-center gap-1.5 transition-all duration-200 whitespace-nowrap focus-visible:ring focus-visible:ring-amber-400 ${
-                      active ? 'bg-[#EAB308] text-slate-950 shadow-sm font-bold' : 'text-slate-400 hover:text-white hover:bg-white/10'
+                      active ? 'bg-[#EAB308] text-slate-950 shadow-sm font-bold' : 'text-slate-400 hover:text-white hover:bg-[#131A2A]/10'
                     }`}
                   >
                     <Icon className="w-3.5 h-3.5" />
@@ -74,7 +74,7 @@ export default function AppLayout({ children, title }) {
             {/* Logout */}
             <button 
               onClick={handleLogout} 
-              className="flex items-center text-xs sm:text-sm font-semibold transition-colors active:scale-95 px-4 py-2 rounded-full cursor-pointer text-slate-300 hover:text-[#F87171] hover:bg-white/5 focus-visible:ring focus-visible:ring-amber-400"
+              className="flex items-center text-xs sm:text-sm font-semibold transition-colors active:scale-95 px-4 py-2 rounded-full cursor-pointer text-slate-300 hover:text-[#F87171] hover:bg-[#131A2A]/5 focus-visible:ring focus-visible:ring-amber-400"
             >
               <LogOut className="w-4 h-4 mr-1.5" /> Logout
             </button>
@@ -97,7 +97,7 @@ export default function AppLayout({ children, title }) {
               initial={{ opacity: 0, x: -16 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.08, duration: 0.35 }}
-              className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 mb-8"
+              className="text-4xl md:text-5xl font-extrabold tracking-tight text-white mb-8"
             >
               {title}
             </motion.h1>
@@ -108,3 +108,5 @@ export default function AppLayout({ children, title }) {
     </div>
   );
 }
+
+

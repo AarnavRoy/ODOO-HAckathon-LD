@@ -125,13 +125,13 @@ export default function Dashboard() {
         <div className="flex items-center gap-3 self-start md:self-auto flex-wrap">
           <Link 
             to="/admin" 
-            className="inline-flex items-center gap-2 bg-[#131A2A]/80 border border-[#1F2937] hover:bg-white/5 text-slate-200 font-bold px-6 py-3.5 rounded-full shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all text-sm"
+            className="inline-flex items-center gap-2 bg-[#131A2A]/80 border border-[#1F2937] hover:bg-[#131A2A]/5 text-slate-200 font-bold px-6 py-3.5 rounded-full shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all text-sm"
           >
             <ShieldCheck className="w-4 h-4 text-amber-500" /> Admin Portal
           </Link>
           <Link 
             to="/trips/new" 
-            className="inline-flex items-center gap-2 bg-[#EAB308] text-white hover:bg-yellow-400 hover:text-white font-bold px-8 py-3.5 rounded-full shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all text-sm"
+            className="inline-flex items-center gap-2 bg-[#EAB308] text-white hover:bg-amber-400 hover:text-white font-bold px-8 py-3.5 rounded-full shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all text-sm"
           >
             <Sparkles className="w-4 h-4" /> Plan a New Trip
           </Link>
@@ -160,7 +160,7 @@ export default function Dashboard() {
                 <div className={`p-3.5 rounded-full ${tab.bg} ${tab.color}`}>
                   <Icon className="w-6 h-6" />
                 </div>
-                <span className={`text-xs font-bold px-3 py-1 rounded-full ${isActive ? 'bg-[#EAB308] text-white' : 'bg-slate-100 text-slate-400'} transition-all`}>
+                <span className={`text-xs font-bold px-3 py-1 rounded-full ${isActive ? 'bg-[#EAB308] text-white' : 'bg-[#1F2937] text-slate-400'} transition-all`}>
                   {isActive ? 'Active View' : 'Tap to View'}
                 </span>
               </div>
@@ -183,19 +183,19 @@ export default function Dashboard() {
           <div className="flex items-center gap-2">
             <button 
               onClick={() => scrollCarousel('left')}
-              className="p-2.5 rounded-full bg-[#131A2A] border border-[#1F2937] text-slate-200 hover:bg-white/5 transition-all hover:-translate-y-0.5 shadow-sm"
+              className="p-2.5 rounded-full bg-[#131A2A] border border-[#1F2937] text-slate-200 hover:bg-[#131A2A]/5 transition-all hover:-translate-y-0.5 shadow-sm"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
             <button 
               onClick={() => scrollCarousel('right')}
-              className="p-2.5 rounded-full bg-[#131A2A] border border-[#1F2937] text-slate-200 hover:bg-white/5 transition-all hover:-translate-y-0.5 shadow-sm"
+              className="p-2.5 rounded-full bg-[#131A2A] border border-[#1F2937] text-slate-200 hover:bg-[#131A2A]/5 transition-all hover:-translate-y-0.5 shadow-sm"
             >
               <ChevronRight className="w-5 h-5" />
             </button>
             <button
               onClick={() => setViewAllLandmarks(!viewAllLandmarks)}
-              className="ml-2 bg-[#EAB308] hover:bg-yellow-400 text-white hover:text-white px-6 py-2.5 rounded-full text-sm font-bold transition-all shadow-md"
+              className="ml-2 bg-[#EAB308] hover:bg-amber-400 text-slate-950 hover:text-white px-6 py-2.5 rounded-full text-sm font-bold transition-all shadow-md"
             >
               {viewAllLandmarks ? 'Show Carousel' : 'View All'}
             </button>
@@ -247,7 +247,7 @@ export default function Dashboard() {
       {/* AI Assistant Banner */}
       <motion.div variants={fadeUp} initial="hidden" animate="show" className="mb-12 p-6 rounded-3xl bg-[#131A2A] border border-[#1F2937] shadow-md flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-4">
-          <div className="p-4 bg-yellow-400 text-white rounded-full shadow-inner">
+          <div className="p-4 bg-amber-400 text-slate-950 rounded-full shadow-inner">
             <Navigation className="w-6 h-6" />
           </div>
           <div>
@@ -255,7 +255,7 @@ export default function Dashboard() {
             <p className="text-sm text-slate-400 font-medium mt-1">Generate personalized multi-city itineraries, smart budget splits, and packing checklists.</p>
           </div>
         </div>
-        <Link to="/ai-planner" className="bg-[#EAB308] text-white hover:bg-yellow-400 hover:text-white font-bold px-6 py-3 rounded-full text-sm transition-all shrink-0 shadow-lg">
+        <Link to="/ai-planner" className="bg-[#EAB308] text-white hover:bg-amber-400 hover:text-white font-bold px-6 py-3 rounded-full text-sm transition-all shrink-0 shadow-lg">
           Try AI Planner ✨
         </Link>
       </motion.div>
@@ -301,7 +301,7 @@ export default function Dashboard() {
                     </p>
                     {trip.budgetLimit && (
                       <div className="mt-3 inline-flex">
-                        <span className="text-xs font-bold text-slate-700 bg-slate-100 px-3 py-1 rounded-full">
+                        <span className="text-xs font-bold text-slate-300 bg-[#1F2937] px-3 py-1 rounded-full">
                           Budget: ₹{trip.budgetLimit.toLocaleString('en-IN')}
                         </span>
                       </div>
@@ -310,7 +310,7 @@ export default function Dashboard() {
                   <div className="flex items-center justify-end">
                     <Link 
                       to={`/trips/${trip.id}/build`} 
-                      className="bg-[#EAB308] hover:bg-yellow-400 text-white hover:text-white px-6 py-2.5 rounded-full text-sm font-bold transition-all shadow-md"
+                      className="bg-[#EAB308] hover:bg-amber-400 text-slate-950 hover:text-white px-6 py-2.5 rounded-full text-sm font-bold transition-all shadow-md"
                     >
                       Edit Trip
                     </Link>
@@ -323,7 +323,7 @@ export default function Dashboard() {
                   <Plane className="w-12 h-12 text-slate-300 mx-auto mb-4" />
                   <p className="text-xl font-bold text-slate-200">No trips planned yet</p>
                   <p className="text-sm text-slate-400 mt-1 mb-6">Start creating your first adventure itinerary today.</p>
-                  <Link to="/trips/new" className="inline-flex items-center gap-2 bg-[#EAB308] text-white px-6 py-3 rounded-full font-bold text-sm hover:bg-yellow-400 hover:text-white transition-all shadow-lg">
+                  <Link to="/trips/new" className="inline-flex items-center gap-2 bg-[#EAB308] text-white px-6 py-3 rounded-full font-bold text-sm hover:bg-amber-400 hover:text-white transition-all shadow-lg">
                     Create a Trip <ArrowRight className="w-4 h-4" />
                   </Link>
                 </div>
@@ -463,7 +463,7 @@ export default function Dashboard() {
                           <span className="font-bold text-slate-200 text-lg">{trip.name}</span>
                           <span className="text-xs text-slate-400 font-medium block mt-1">{trip.startDate}</span>
                         </div>
-                        <div className="text-right bg-slate-50 px-4 py-2 rounded-2xl">
+                        <div className="text-right bg-[#131A2A] px-4 py-2 rounded-2xl">
                           <span className={`text-base font-black ${isOver ? 'text-red-500' : 'text-slate-200'}`}>
                             ₹{spent.toLocaleString('en-IN')}
                           </span>
@@ -471,13 +471,13 @@ export default function Dashboard() {
                         </div>
                       </div>
                       
-                      <div className="w-full bg-slate-100 rounded-full h-4 overflow-hidden shadow-inner">
+                      <div className="w-full bg-[#1F2937] rounded-full h-4 overflow-hidden shadow-inner">
                         <div 
                           className={`h-full rounded-full transition-all duration-700 ${
                             isOver 
                               ? 'bg-red-500' 
                               : pct > 80 
-                              ? 'bg-yellow-400' 
+                              ? 'bg-amber-400' 
                               : 'bg-[#EAB308]'
                           }`}
                           style={{ width: `${limit > 0 ? pct : 0}%` }}
@@ -501,4 +501,8 @@ export default function Dashboard() {
     </AppLayout>
   );
 }
+
+
+
+
 

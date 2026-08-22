@@ -83,7 +83,7 @@ export default function LocationSelector({ country = '', state = '', city = '', 
     onChange({ country, state, city: newCity });
   };
 
-  const selectClasses = "w-full bg-white/[0.04] border border-white/[0.12] rounded-xl py-3 pl-10 pr-9 text-white font-medium text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/40 focus:border-amber-500/60 transition-all appearance-none cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:border-white/[0.12]";
+  const selectClasses = "w-full bg-[#131A2A]/[0.04] border border-white/[0.12] rounded-xl py-3 pl-10 pr-9 text-white font-medium text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/40 focus:border-amber-500/60 transition-all appearance-none cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:border-white/[0.12]";
 
   return (
     <div className="space-y-4">
@@ -220,3 +220,5 @@ export default function LocationSelector({ country = '', state = '', city = '', 
     </div>
   );
 }
+
+

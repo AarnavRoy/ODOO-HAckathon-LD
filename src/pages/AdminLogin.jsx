@@ -155,14 +155,14 @@ export default function AdminLogin() {
         className="w-full md:w-1/2 flex items-center justify-center p-8 lg:p-24 bg-transparent z-10 relative"
       >
         
-        <div className="w-full max-w-md p-10 bg-white rounded-[2.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100">
+        <div className="w-full max-w-md p-10 bg-[#131A2A] rounded-[2.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100">
             {/* Admin Header */}
             <div className="mb-10 text-center">
-              <motion.div initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ type: "spring", stiffness: 200, damping: 15 }} className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-black mb-6 shadow-xl shadow-black/20">
-                <Plane className="w-8 h-8 text-yellow-400 -rotate-45" />
+              <motion.div initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ type: "spring", stiffness: 200, damping: 15 }} className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-amber-400 mb-6 shadow-xl shadow-black/20">
+                <Plane className="w-8 h-8 text-amber-400 -rotate-45" />
               </motion.div>
-              <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight mb-2">Admin Portal</h2>
-              <p className="text-slate-500 font-medium text-sm">Secure access for administrators</p>
+              <h2 className="text-3xl font-extrabold text-white tracking-tight mb-2">Admin Portal</h2>
+              <p className="text-slate-400 font-medium text-sm">Secure access for administrators</p>
             </div>
 
             {error && (
@@ -174,23 +174,23 @@ export default function AdminLogin() {
 
             <form onSubmit={handleLogin} className="space-y-5">
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">Admin Username / Email</label>
+                <label className="text-xs font-bold text-slate-300 uppercase tracking-wider">Admin Username / Email</label>
                 <input 
                   type="text" 
                   value={username} 
                   onChange={(e) => setUsername(e.target.value)} 
-                  className="w-full border border-slate-200 bg-slate-50 rounded-full py-3.5 px-5 focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-black focus:bg-white transition-all font-medium text-sm" 
+                  className="w-full border border-[#1F2937] bg-[#131A2A] rounded-full py-3.5 px-5 focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-black focus:bg-[#131A2A] transition-all font-medium text-sm" 
                   placeholder="admin@globetrotter.com" 
                 />
               </div>
 
             <div className="flex flex-col gap-2">
               <div className="flex justify-between items-center">
-                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">Password</label>
+                <label className="text-xs font-bold text-slate-300 uppercase tracking-wider">Password</label>
                 <button 
                   type="button" 
                   onClick={() => setShowForgotModal(true)} 
-                  className="text-xs font-bold text-slate-500 hover:text-black transition-colors cursor-pointer"
+                  className="text-xs font-bold text-slate-400 hover:text-amber-400 transition-colors cursor-pointer"
                 >
                   Forgot?
                 </button>
@@ -201,13 +201,13 @@ export default function AdminLogin() {
                   required 
                   value={password} 
                   onChange={e => setPassword(e.target.value)} 
-                  className="w-full border border-slate-200 bg-slate-50 rounded-full py-3 pl-5 pr-11 focus:outline-none focus:ring-1 focus:ring-black focus:border-black focus:bg-white transition-all font-medium sm:text-sm" 
+                  className="w-full border border-[#1F2937] bg-[#131A2A] rounded-full py-3 pl-5 pr-11 focus:outline-none focus:ring-1 focus:ring-black focus:border-black focus:bg-[#131A2A] transition-all font-medium sm:text-sm" 
                   placeholder="••••••••"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1 transition-colors cursor-pointer"
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-300 p-1 transition-colors cursor-pointer"
                   title={showPassword ? "Hide password" : "Show password"}
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -219,7 +219,7 @@ export default function AdminLogin() {
               whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}
               type="submit" 
               disabled={loading}
-              className="w-full flex justify-center py-3.5 px-4 rounded-full shadow-md text-sm font-bold text-white bg-black hover:bg-yellow-400 hover:text-black transition-all duration-200 cursor-pointer disabled:opacity-60"
+              className="w-full flex justify-center py-3.5 px-4 rounded-full shadow-md text-sm font-bold text-slate-950 bg-amber-400 hover:bg-amber-500 hover:text-slate-950 transition-all duration-200 cursor-pointer disabled:opacity-60"
             >
               {loading ? (
                 <span className="flex items-center gap-2">
@@ -240,10 +240,10 @@ export default function AdminLogin() {
           initial={{ scale: 1.1 }} animate={{ scale: 1 }} transition={{ duration: 10, ease: "easeOut" }}
           src="https://images.unsplash.com/photo-1555529733-0e67056058e1?auto=format&fit=crop&w=1600&q=80" alt="Admin Dashboard" className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-overlay" 
         />
-        <div className="absolute inset-0 bg-black/50 flex items-end p-16">
+        <div className="absolute inset-0 bg-amber-400/50 flex items-end p-16">
           <motion.blockquote initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }} className="text-white">
             <p className="text-3xl font-black tracking-tighter mb-4 leading-tight">"The world is a book and those who do not travel read only one page."</p>
-            <footer className="text-yellow-400 font-bold">— Saint Augustine</footer>
+            <footer className="text-amber-400 font-bold">— Saint Augustine</footer>
           </motion.blockquote>
         </div>
       </motion.div>
@@ -256,22 +256,22 @@ export default function AdminLogin() {
               initial={{ opacity: 0, scale: 0.9, y: 20 }} 
               animate={{ opacity: 1, scale: 1, y: 0 }} 
               exit={{ opacity: 0, scale: 0.9, y: 20 }} 
-              className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 sm:p-8 relative border border-slate-100"
+              className="bg-[#131A2A] rounded-3xl shadow-2xl max-w-md w-full p-6 sm:p-8 relative border border-slate-100"
             >
               <button 
                 onClick={closeForgotModal} 
-                className="absolute top-6 right-6 text-slate-400 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 p-2 rounded-full transition-colors cursor-pointer"
+                className="absolute top-6 right-6 text-slate-400 hover:text-slate-300 bg-[#1F2937] hover:bg-slate-200 p-2 rounded-full transition-colors cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
 
               <div className="flex items-center gap-3 mb-4">
-                <div className="p-3 bg-yellow-100 text-yellow-600 rounded-2xl">
+                <div className="p-3 bg-amber-400 text-slate-950 rounded-2xl">
                   <KeyRound className="w-6 h-6" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-black text-slate-900 tracking-tight">Reset Password</h3>
-                  <p className="text-xs text-slate-500 font-semibold">
+                  <h3 className="text-xl font-black text-white tracking-tight">Reset Password</h3>
+                  <p className="text-xs text-slate-400 font-semibold">
                     {forgotStep === 1 ? 'Step 1 of 2: Name Verification' : 'Step 2 of 2: Set New Password'}
                   </p>
                 </div>
@@ -294,30 +294,30 @@ export default function AdminLogin() {
               {/* Step 1: Email + Full Name Matching */}
               {forgotStep === 1 && (
                 <form onSubmit={handleVerifyName} className="space-y-4">
-                  <p className="text-sm text-slate-600 font-medium leading-relaxed">
+                  <p className="text-sm text-slate-300 font-medium leading-relaxed">
                     Enter your registered email address and full name. Your identity will be verified immediately without OTP or email links.
                   </p>
 
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">Email Address</label>
+                    <label className="text-xs font-bold text-slate-300 uppercase tracking-wider">Email Address</label>
                     <input 
                       type="email" 
                       required 
                       value={forgotEmail} 
                       onChange={e => setForgotEmail(e.target.value)} 
-                      className="w-full border border-slate-200 bg-slate-50 rounded-full py-2.5 px-4 focus:outline-none focus:ring-1 focus:ring-black focus:border-black focus:bg-white transition-all font-medium text-sm" 
+                      className="w-full border border-[#1F2937] bg-[#131A2A] rounded-full py-2.5 px-4 focus:outline-none focus:ring-1 focus:ring-black focus:border-black focus:bg-[#131A2A] transition-all font-medium text-sm" 
                       placeholder="e.g. name@gmail.com" 
                     />
                   </div>
 
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">Full Name</label>
+                    <label className="text-xs font-bold text-slate-300 uppercase tracking-wider">Full Name</label>
                     <input 
                       type="text" 
                       required 
                       value={forgotName} 
                       onChange={e => setForgotName(e.target.value)} 
-                      className="w-full border border-slate-200 bg-slate-50 rounded-full py-2.5 px-4 focus:outline-none focus:ring-1 focus:ring-black focus:border-black focus:bg-white transition-all font-medium text-sm" 
+                      className="w-full border border-[#1F2937] bg-[#131A2A] rounded-full py-2.5 px-4 focus:outline-none focus:ring-1 focus:ring-black focus:border-black focus:bg-[#131A2A] transition-all font-medium text-sm" 
                       placeholder="e.g. Jane Doe" 
                     />
                     <span className="text-[11px] text-slate-400">Must match the exact name registered on your account</span>
@@ -327,14 +327,14 @@ export default function AdminLogin() {
                     <button 
                       type="button" 
                       onClick={closeForgotModal} 
-                      className="flex-1 py-3 border border-slate-200 rounded-full text-sm font-bold text-slate-600 hover:bg-slate-50 transition-all cursor-pointer"
+                      className="flex-1 py-3 border border-[#1F2937] rounded-full text-sm font-bold text-slate-300 hover:bg-[#131A2A] transition-all cursor-pointer"
                     >
                       Cancel
                     </button>
                     <button 
                       type="submit" 
                       disabled={forgotLoading} 
-                      className="flex-1 py-3 bg-black text-white hover:bg-yellow-400 hover:text-black rounded-full text-sm font-bold shadow-md transition-all cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2"
+                      className="flex-1 py-3 bg-amber-400 text-slate-950 hover:bg-amber-500 hover:text-slate-950 rounded-full text-sm font-bold shadow-md transition-all cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2"
                     >
                       {forgotLoading ? (
                         <>
@@ -350,20 +350,20 @@ export default function AdminLogin() {
               {forgotStep === 2 && (
                 <form onSubmit={handleResetPassword} className="space-y-4">
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">New Password</label>
+                    <label className="text-xs font-bold text-slate-300 uppercase tracking-wider">New Password</label>
                     <div className="relative">
                       <input 
                         type={showNewPassword ? "text" : "password"} 
                         required 
                         value={newPassword} 
                         onChange={e => setNewPassword(e.target.value)} 
-                        className="w-full border border-slate-200 bg-slate-50 rounded-full py-2.5 pl-4 pr-10 focus:outline-none focus:ring-1 focus:ring-black focus:border-black focus:bg-white transition-all font-medium text-sm" 
+                        className="w-full border border-[#1F2937] bg-[#131A2A] rounded-full py-2.5 pl-4 pr-10 focus:outline-none focus:ring-1 focus:ring-black focus:border-black focus:bg-[#131A2A] transition-all font-medium text-sm" 
                         placeholder="••••••••" 
                       />
                       <button
                         type="button"
                         onClick={() => setShowNewPassword(!showNewPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1 transition-colors cursor-pointer"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-300 p-1 transition-colors cursor-pointer"
                         title={showNewPassword ? "Hide password" : "Show password"}
                       >
                         {showNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -373,7 +373,7 @@ export default function AdminLogin() {
                   </div>
 
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">Confirm New Password</label>
+                    <label className="text-xs font-bold text-slate-300 uppercase tracking-wider">Confirm New Password</label>
                     <div className="relative">
                       <input 
                         type={showConfirmNewPassword ? "text" : "password"} 
@@ -385,14 +385,14 @@ export default function AdminLogin() {
                             ? 'border-red-300 bg-red-50 focus:border-red-500 focus:ring-red-500' 
                             : confirmNewPassword && newPassword === confirmNewPassword
                             ? 'border-emerald-300 bg-emerald-50 focus:border-emerald-500 focus:ring-emerald-500'
-                            : 'border-slate-200 bg-slate-50 focus:border-black focus:ring-black focus:bg-white'
+                            : 'border-[#1F2937] bg-[#131A2A] focus:border-black focus:ring-black focus:bg-[#131A2A]'
                         }`}
                         placeholder="••••••••" 
                       />
                       <button
                         type="button"
                         onClick={() => setShowConfirmNewPassword(!showConfirmNewPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1 transition-colors cursor-pointer"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-300 p-1 transition-colors cursor-pointer"
                         title={showConfirmNewPassword ? "Hide password" : "Show password"}
                       >
                         {showConfirmNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -404,14 +404,14 @@ export default function AdminLogin() {
                     <button 
                       type="button" 
                       onClick={() => setForgotStep(1)} 
-                      className="py-3 px-4 border border-slate-200 rounded-full text-sm font-bold text-slate-600 hover:bg-slate-50 transition-all cursor-pointer flex items-center gap-1.5"
+                      className="py-3 px-4 border border-[#1F2937] rounded-full text-sm font-bold text-slate-300 hover:bg-[#131A2A] transition-all cursor-pointer flex items-center gap-1.5"
                     >
                       <ArrowLeft className="w-4 h-4" /> Back
                     </button>
                     <button 
                       type="submit" 
                       disabled={forgotLoading || (confirmNewPassword.length > 0 && newPassword !== confirmNewPassword)} 
-                      className="flex-1 py-3 bg-black text-white hover:bg-yellow-400 hover:text-black rounded-full text-sm font-bold shadow-md transition-all cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2"
+                      className="flex-1 py-3 bg-amber-400 text-slate-950 hover:bg-amber-500 hover:text-slate-950 rounded-full text-sm font-bold shadow-md transition-all cursor-pointer disabled:opacity-60 flex items-center justify-center gap-2"
                     >
                       {forgotLoading ? (
                         <>
@@ -429,3 +429,7 @@ export default function AdminLogin() {
     </div>
   );
 }
+
+
+
+

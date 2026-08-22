@@ -26,7 +26,7 @@ export default function TripCalendar() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {itinerary.days.map(day => (
-          <div key={day.date} className="border rounded bg-white shadow-sm flex flex-col h-full min-h-[200px]">
+          <div key={day.date} className="border rounded bg-[#131A2A] shadow-sm flex flex-col h-full min-h-[200px]">
             <div className="bg-blue-600 text-white px-3 py-2 font-bold text-sm">
               {new Date(day.date).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}
             </div>
@@ -49,3 +49,7 @@ export default function TripCalendar() {
     </div>
   );
 }
+
+
+
+

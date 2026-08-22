@@ -156,7 +156,7 @@ export default function AITripAssistant() {
             <ArrowLeft className="w-5 h-5 text-white" />
           </Link>
           <h1 className="font-black tracking-tighter text-xl flex items-center text-white">
-            <Sparkles className="w-5 h-5 text-yellow-500 mr-2" /> AI Trip Assistant
+            <Sparkles className="w-5 h-5 text-amber-400 mr-2" /> AI Trip Assistant
           </h1>
         </div>
       </div>
@@ -173,7 +173,7 @@ export default function AITripAssistant() {
               <form onSubmit={handleGenerate} className="space-y-8">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div ref={destRef} className="relative">
-                    <label className="block text-sm font-bold text-slate-700 mb-2">Where do you want to go?</label>
+                    <label className="block text-sm font-bold text-slate-300 mb-2">Where do you want to go?</label>
                     <div className="relative">
                       <MapPin className="absolute left-4 top-3.5 w-5 h-5 text-slate-400 z-10" />
                       <input
@@ -207,7 +207,7 @@ export default function AITripAssistant() {
                               <li
                                 key={i}
                                 onMouseDown={() => handleSelectDestination(name)}
-                                className="flex items-center justify-between gap-3 px-4 py-3 hover:bg-white/10 cursor-pointer transition-colors text-sm border-b border-[#1F2937] last:border-0"
+                                className="flex items-center justify-between gap-3 px-4 py-3 hover:bg-[#131A2A]/10 cursor-pointer transition-colors text-sm border-b border-[#1F2937] last:border-0"
                               >
                                 <div className="flex items-center gap-3">
                                   <MapPin className="w-4 h-4 text-white shrink-0" />
@@ -224,7 +224,7 @@ export default function AITripAssistant() {
                     </AnimatePresence>
                   </div>
                   <div>
-                    <label className="block text-sm font-bold text-slate-700 mb-2">How many days?</label>
+                    <label className="block text-sm font-bold text-slate-300 mb-2">How many days?</label>
                     <div className="relative">
                       <Calendar className="absolute left-4 top-3.5 w-5 h-5 text-slate-400" />
                       <input
@@ -247,7 +247,7 @@ export default function AITripAssistant() {
                           className={`text-xs font-bold px-3 py-1 rounded-full border transition-all ${
                             String(preferences.duration) === d
                               ? 'bg-[#EAB308] text-slate-950 border-[#EAB308]'
-                              : 'bg-slate-50 text-slate-600 border-[#1F2937] hover:bg-slate-100'
+                              : 'bg-[#131A2A] text-slate-300 border-[#1F2937] hover:bg-[#1F2937]'
                           }`}
                         >
                           {d} Days
@@ -256,14 +256,14 @@ export default function AITripAssistant() {
                     </div>
                   </div>
                   <div>
-                    <label className="block text-sm font-bold text-slate-700 mb-2">What's your budget? (₹)</label>
+                    <label className="block text-sm font-bold text-slate-300 mb-2">What's your budget? (₹)</label>
                     <div className="relative">
                       <Wallet className="absolute left-4 top-3.5 w-5 h-5 text-slate-400" />
                       <input type="number" required value={preferences.budget} onChange={e => setPreferences({...preferences, budget: e.target.value})} placeholder="e.g. 20000" className="w-full pl-11 pr-4 py-3 bg-[#131A2A] border border-[#1F2937] rounded-full focus:ring-1 focus:ring-amber-400 focus:border-amber-400 font-medium transition-all shadow-sm" />
                     </div>
                   </div>
                   <div>
-                    <label className="block text-sm font-bold text-slate-700 mb-2">Who's traveling?</label>
+                    <label className="block text-sm font-bold text-slate-300 mb-2">Who's traveling?</label>
                     <div className="relative">
                       <Users className="absolute left-4 top-3.5 w-5 h-5 text-slate-400" />
                       <select value={preferences.travelers} onChange={e => setPreferences({...preferences, travelers: e.target.value})} className="w-full pl-11 pr-4 py-3 bg-[#131A2A] border border-[#1F2937] rounded-full focus:ring-1 focus:ring-amber-400 focus:border-amber-400 font-medium transition-all appearance-none shadow-sm">
@@ -277,7 +277,7 @@ export default function AITripAssistant() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-bold text-slate-700 mb-3">Travel Style (Select multiple)</label>
+                  <label className="block text-sm font-bold text-slate-300 mb-3">Travel Style (Select multiple)</label>
                   <div className="flex flex-wrap gap-3">
                     {[
                       { id: 'relaxation', label: '🏖️ Relaxation' },
@@ -288,7 +288,7 @@ export default function AITripAssistant() {
                       { id: 'shopping', label: '🛍️ Shopping' },
                       { id: 'nightlife', label: '🌃 Nightlife' }
                     ].map(style => (
-                      <button type="button" key={style.id} onClick={() => handleStyleToggle(style.id)} className={`px-4 py-2 rounded-full text-sm font-bold border transition-all ${preferences.style.includes(style.id) ? 'bg-amber-400/10 border-yellow-400 text-amber-400' : 'bg-[#131A2A] border-[#1F2937] text-slate-600 hover:bg-slate-50 shadow-sm'}`}>
+                      <button type="button" key={style.id} onClick={() => handleStyleToggle(style.id)} className={`px-4 py-2 rounded-full text-sm font-bold border transition-all ${preferences.style.includes(style.id) ? 'bg-amber-400/10 border-yellow-400 text-amber-400' : 'bg-[#131A2A] border-[#1F2937] text-slate-300 hover:bg-[#131A2A] shadow-sm'}`}>
                         {style.label}
                       </button>
                     ))}
@@ -296,7 +296,7 @@ export default function AITripAssistant() {
                 </div>
 
                 <div className="pt-4">
-                  <button type="submit" className="w-full md:w-auto px-8 py-4 bg-black text-white rounded-full font-bold text-lg shadow-md hover:bg-[#EAB308] hover:text-white hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center">
+                  <button type="submit" className="w-full md:w-auto px-8 py-4 bg-amber-400 text-slate-950 rounded-full font-bold text-lg shadow-md hover:bg-[#EAB308] hover:text-white hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center">
                     <Sparkles className="w-5 h-5 mr-2" /> Generate My Trip
                   </button>
                 </div>
@@ -308,7 +308,7 @@ export default function AITripAssistant() {
           {step === 'loading' && (
             <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="py-32 flex flex-col items-center justify-center text-center">
               <div className="relative w-24 h-24 mb-8">
-                <div className="absolute inset-0 bg-yellow-200 rounded-full blur-xl opacity-40 animate-pulse"></div>
+                <div className="absolute inset-0 bg-amber-400 rounded-full blur-xl opacity-40 animate-pulse"></div>
                 <Loader2 className="w-24 h-24 text-white animate-spin relative z-10" />
                 <Sparkles className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 text-white z-20" />
               </div>
@@ -342,12 +342,12 @@ export default function AITripAssistant() {
                       <CheckCircle className="w-5 h-5 mr-2" /> View My Trip
                     </Link>
                   ) : (
-                    <button onClick={handleSaveTrip} disabled={isSaving} className="flex items-center justify-center px-6 py-3 bg-black text-white rounded-full font-bold shadow-md hover:bg-[#1F2937] transition-colors">
+                    <button onClick={handleSaveTrip} disabled={isSaving} className="flex items-center justify-center px-6 py-3 bg-amber-400 text-slate-950 rounded-full font-bold shadow-md hover:bg-[#1F2937] transition-colors">
                       {isSaving ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : <Save className="w-5 h-5 mr-2" />}
                       Save Trip
                     </button>
                   )}
-                  <button onClick={() => setStep('input')} className="flex items-center justify-center px-6 py-3 bg-slate-100 text-slate-700 rounded-full font-bold hover:bg-slate-200 transition-colors">
+                  <button onClick={() => setStep('input')} className="flex items-center justify-center px-6 py-3 bg-[#1F2937] text-slate-300 rounded-full font-bold hover:bg-slate-200 transition-colors">
                     <RefreshCw className="w-5 h-5 mr-2" /> Regenerate
                   </button>
                 </div>
@@ -373,7 +373,7 @@ export default function AITripAssistant() {
                               <h5 className="font-bold text-slate-200">{act.name}</h5>
                               <p className="text-sm text-slate-400 mt-1">{act.description}</p>
                               <div className="flex items-center mt-2 text-xs font-bold text-slate-400">
-                                <span className="bg-slate-100 px-2 py-1 rounded text-slate-600 mr-2">{act.category}</span>
+                                <span className="bg-[#1F2937] px-2 py-1 rounded text-slate-300 mr-2">{act.category}</span>
                                 ₹{act.cost.toLocaleString()}
                               </div>
                             </div>
@@ -390,19 +390,19 @@ export default function AITripAssistant() {
                   {/* Optimization Tools */}
                   <div className="bg-[#131A2A] rounded-3xl p-6 border border-[#1F2937] shadow-sm">
                     <h3 className="text-lg font-black tracking-tighter mb-4 flex items-center text-slate-200">
-                      <Sparkles className="w-5 h-5 mr-2 text-yellow-500" /> Optimize Trip
+                      <Sparkles className="w-5 h-5 mr-2 text-amber-400" /> Optimize Trip
                     </h3>
                     <div className="grid grid-cols-2 gap-3">
-                      <button onClick={() => handleRefine('reduce-cost')} className="bg-slate-50 border border-[#1F2937] text-slate-700 text-sm font-bold py-2 px-3 rounded-xl flex items-center justify-center hover:border-black transition-colors">
+                      <button onClick={() => handleRefine('reduce-cost')} className="bg-[#131A2A] border border-[#1F2937] text-slate-300 text-sm font-bold py-2 px-3 rounded-xl flex items-center justify-center hover:border-black transition-colors">
                         <TrendingDown className="w-4 h-4 mr-1" /> Reduce Cost
                       </button>
-                      <button onClick={() => handleRefine('relax')} className="bg-slate-50 border border-[#1F2937] text-slate-700 text-sm font-bold py-2 px-3 rounded-xl flex items-center justify-center hover:border-black transition-colors">
+                      <button onClick={() => handleRefine('relax')} className="bg-[#131A2A] border border-[#1F2937] text-slate-300 text-sm font-bold py-2 px-3 rounded-xl flex items-center justify-center hover:border-black transition-colors">
                         <Coffee className="w-4 h-4 mr-1" /> More Relaxed
                       </button>
-                      <button onClick={() => handleRefine('add-activities')} className="bg-slate-50 border border-[#1F2937] text-slate-700 text-sm font-bold py-2 px-3 rounded-xl flex items-center justify-center hover:border-black transition-colors">
+                      <button onClick={() => handleRefine('add-activities')} className="bg-[#131A2A] border border-[#1F2937] text-slate-300 text-sm font-bold py-2 px-3 rounded-xl flex items-center justify-center hover:border-black transition-colors">
                         <Activity className="w-4 h-4 mr-1" /> Action Packed
                       </button>
-                      <button onClick={() => handleRefine('add-food')} className="bg-slate-50 border border-[#1F2937] text-slate-700 text-sm font-bold py-2 px-3 rounded-xl flex items-center justify-center hover:border-black transition-colors">
+                      <button onClick={() => handleRefine('add-food')} className="bg-[#131A2A] border border-[#1F2937] text-slate-300 text-sm font-bold py-2 px-3 rounded-xl flex items-center justify-center hover:border-black transition-colors">
                         <Utensils className="w-4 h-4 mr-1" /> More Food
                       </button>
                     </div>
@@ -423,7 +423,7 @@ export default function AITripAssistant() {
                   </div>
 
                   {/* Budget */}
-                  <div className="bg-black rounded-3xl p-6 shadow-sm text-white">
+                  <div className="bg-amber-400 rounded-3xl p-6 shadow-sm text-white">
                     <h3 className="text-lg font-black tracking-tighter mb-4 flex items-center">
                       <Wallet className="w-5 h-5 mr-2 text-[#EAB308]" /> Estimated Budget
                     </h3>
@@ -460,5 +460,9 @@ export default function AITripAssistant() {
     </div>
   );
 }
+
+
+
+
 
 

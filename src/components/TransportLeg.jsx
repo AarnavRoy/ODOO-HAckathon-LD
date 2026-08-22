@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { patchStop } from "../api/stops";
 import {
   getRouteInfo, getFlightDistance, estimateFlightTime,
@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 
 /**
- * TransportLeg — shows between two stops.
+ * TransportLeg � shows between two stops.
  * Props: fromStop, toStop, onUpdate (callback after save)
  */
 export default function TransportLeg({ fromStop, toStop, onUpdate }) {
@@ -105,20 +105,20 @@ export default function TransportLeg({ fromStop, toStop, onUpdate }) {
       {/* Connecting line */}
       <div className="absolute left-[13px] top-0 bottom-0 w-0.5 bg-gradient-to-b from-violet-300 to-fuchsia-300" />
 
-      <div className="ml-5 bg-slate-50 border border-slate-200 rounded-xl overflow-hidden">
+      <div className="ml-5 bg-[#131A2A] border border-[#1F2937] rounded-xl overflow-hidden">
         {/* Compact header bar */}
         <button
           type="button"
           onClick={() => setExpanded(!expanded)}
-          className="w-full flex items-center gap-2 px-4 py-2.5 text-left hover:bg-slate-100 transition-colors"
+          className="w-full flex items-center gap-2 px-4 py-2.5 text-left hover:bg-[#1F2937] transition-colors"
         >
-          <span className="text-base">{modeInfo?.emoji || "🔄"}</span>
-          <span className="text-xs font-bold text-slate-600 flex-1">
-            {fromCity?.name} → {toCity?.name}
+          <span className="text-base">{modeInfo?.emoji || "??"}</span>
+          <span className="text-xs font-bold text-slate-300 flex-1">
+            {fromCity?.name} ? {toCity?.name}
           </span>
 
           {displayDistance && (
-            <span className="text-xs bg-white border border-slate-200 px-2 py-0.5 rounded-full text-slate-500 font-semibold">
+            <span className="text-xs bg-[#131A2A] border border-[#1F2937] px-2 py-0.5 rounded-full text-slate-400 font-semibold">
               {formatDistance(displayDistance)}
             </span>
           )}
@@ -138,10 +138,10 @@ export default function TransportLeg({ fromStop, toStop, onUpdate }) {
 
         {/* Expanded form */}
         {expanded && (
-          <div className="px-4 pb-4 pt-2 border-t border-slate-200 space-y-3">
+          <div className="px-4 pb-4 pt-2 border-t border-[#1F2937] space-y-3">
             {/* Mode selector */}
             <div>
-              <label className="block text-xs font-bold text-slate-500 mb-1.5">Mode of Travel</label>
+              <label className="block text-xs font-bold text-slate-400 mb-1.5">Mode of Travel</label>
               <div className="flex flex-wrap gap-1.5">
                 {TRANSPORT_MODES.map((m) => (
                   <button
@@ -151,7 +151,7 @@ export default function TransportLeg({ fromStop, toStop, onUpdate }) {
                     className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
                       mode === m.value
                         ? "bg-violet-600 text-white shadow-md shadow-violet-500/30"
-                        : "bg-white border border-slate-200 text-slate-600 hover:bg-slate-50"
+                        : "bg-[#131A2A] border border-[#1F2937] text-slate-300 hover:bg-[#131A2A]"
                     }`}
                   >
                     {m.emoji} {m.label}
@@ -162,18 +162,18 @@ export default function TransportLeg({ fromStop, toStop, onUpdate }) {
 
             {/* Distance + Duration (read-only, from APIs) */}
             <div className="grid grid-cols-2 gap-3">
-              <div className="bg-white border border-slate-200 rounded-lg p-3">
+              <div className="bg-[#131A2A] border border-[#1F2937] rounded-lg p-3">
                 <p className="text-xs font-bold text-slate-400 mb-0.5">Distance</p>
-                <p className="text-lg font-black text-slate-800">
-                  {displayDistance ? `${displayDistance.toLocaleString()} km` : "—"}
+                <p className="text-lg font-black text-white">
+                  {displayDistance ? `${displayDistance.toLocaleString()} km` : "�"}
                 </p>
                 <p className="text-[10px] text-slate-400">
                   {mode === "FLIGHT" ? "Air distance (Haversine)" : "Road distance (OSRM)"}
                 </p>
               </div>
-              <div className="bg-white border border-slate-200 rounded-lg p-3">
+              <div className="bg-[#131A2A] border border-[#1F2937] rounded-lg p-3">
                 <p className="text-xs font-bold text-slate-400 mb-0.5">Est. Travel Time</p>
-                <p className="text-lg font-black text-slate-800">{formatDuration(displayDuration)}</p>
+                <p className="text-lg font-black text-white">{formatDuration(displayDuration)}</p>
                 <p className="text-[10px] text-slate-400">
                   {mode === "FLIGHT" ? "~800 km/h avg + 30min taxi" : "Driving estimate"}
                 </p>
@@ -184,7 +184,7 @@ export default function TransportLeg({ fromStop, toStop, onUpdate }) {
             {mode && ["FLIGHT", "TRAIN", "BUS"].includes(mode) && (
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 mb-1">
+                  <label className="block text-xs font-bold text-slate-400 mb-1">
                     <MapPin className="inline w-3 h-3 mr-0.5" />Departure ({fromCity?.name})
                   </label>
                   {loadingTerminals ? (
@@ -194,7 +194,7 @@ export default function TransportLeg({ fromStop, toStop, onUpdate }) {
                       <select
                         value={depTerminal}
                         onChange={(e) => setDepTerminal(e.target.value)}
-                        className="w-full border border-slate-200 rounded-lg py-1.5 px-2 text-xs font-medium bg-white focus:outline-none focus:ring-2 focus:ring-violet-500/20"
+                        className="w-full border border-[#1F2937] rounded-lg py-1.5 px-2 text-xs font-medium bg-[#131A2A] focus:outline-none focus:ring-2 focus:ring-violet-500/20"
                       >
                         <option value="">Select or type below</option>
                         {getTerminalOptions("from").map((name, i) => (
@@ -206,13 +206,13 @@ export default function TransportLeg({ fromStop, toStop, onUpdate }) {
                         value={depTerminal}
                         onChange={(e) => setDepTerminal(e.target.value)}
                         placeholder="Or type terminal name..."
-                        className="w-full mt-1 border border-slate-200 rounded-lg py-1.5 px-2 text-xs font-medium bg-white focus:outline-none focus:ring-2 focus:ring-violet-500/20"
+                        className="w-full mt-1 border border-[#1F2937] rounded-lg py-1.5 px-2 text-xs font-medium bg-[#131A2A] focus:outline-none focus:ring-2 focus:ring-violet-500/20"
                       />
                     </>
                   )}
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 mb-1">
+                  <label className="block text-xs font-bold text-slate-400 mb-1">
                     <MapPin className="inline w-3 h-3 mr-0.5" />Arrival ({toCity?.name})
                   </label>
                   {loadingTerminals ? (
@@ -222,7 +222,7 @@ export default function TransportLeg({ fromStop, toStop, onUpdate }) {
                       <select
                         value={arrTerminal}
                         onChange={(e) => setArrTerminal(e.target.value)}
-                        className="w-full border border-slate-200 rounded-lg py-1.5 px-2 text-xs font-medium bg-white focus:outline-none focus:ring-2 focus:ring-violet-500/20"
+                        className="w-full border border-[#1F2937] rounded-lg py-1.5 px-2 text-xs font-medium bg-[#131A2A] focus:outline-none focus:ring-2 focus:ring-violet-500/20"
                       >
                         <option value="">Select or type below</option>
                         {getTerminalOptions("to").map((name, i) => (
@@ -234,7 +234,7 @@ export default function TransportLeg({ fromStop, toStop, onUpdate }) {
                         value={arrTerminal}
                         onChange={(e) => setArrTerminal(e.target.value)}
                         placeholder="Or type terminal name..."
-                        className="w-full mt-1 border border-slate-200 rounded-lg py-1.5 px-2 text-xs font-medium bg-white focus:outline-none focus:ring-2 focus:ring-violet-500/20"
+                        className="w-full mt-1 border border-[#1F2937] rounded-lg py-1.5 px-2 text-xs font-medium bg-[#131A2A] focus:outline-none focus:ring-2 focus:ring-violet-500/20"
                       />
                     </>
                   )}
@@ -245,21 +245,21 @@ export default function TransportLeg({ fromStop, toStop, onUpdate }) {
             {/* Times */}
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-bold text-slate-500 mb-1">Departure Time</label>
+                <label className="block text-xs font-bold text-slate-400 mb-1">Departure Time</label>
                 <input
                   type="time"
                   value={depTime}
                   onChange={(e) => setDepTime(e.target.value)}
-                  className="w-full border border-slate-200 rounded-lg py-1.5 px-2 text-xs font-medium bg-white focus:outline-none focus:ring-2 focus:ring-violet-500/20"
+                  className="w-full border border-[#1F2937] rounded-lg py-1.5 px-2 text-xs font-medium bg-[#131A2A] focus:outline-none focus:ring-2 focus:ring-violet-500/20"
                 />
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-500 mb-1">Arrival Time</label>
+                <label className="block text-xs font-bold text-slate-400 mb-1">Arrival Time</label>
                 <input
                   type="time"
                   value={arrTime}
                   onChange={(e) => setArrTime(e.target.value)}
-                  className="w-full border border-slate-200 rounded-lg py-1.5 px-2 text-xs font-medium bg-white focus:outline-none focus:ring-2 focus:ring-violet-500/20"
+                  className="w-full border border-[#1F2937] rounded-lg py-1.5 px-2 text-xs font-medium bg-[#131A2A] focus:outline-none focus:ring-2 focus:ring-violet-500/20"
                 />
               </div>
             </div>
@@ -267,7 +267,7 @@ export default function TransportLeg({ fromStop, toStop, onUpdate }) {
             {/* Booking ref + Cost */}
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-bold text-slate-500 mb-1">
+                <label className="block text-xs font-bold text-slate-400 mb-1">
                   <Ticket className="inline w-3 h-3 mr-0.5" />Booking / PNR
                 </label>
                 <input
@@ -275,18 +275,18 @@ export default function TransportLeg({ fromStop, toStop, onUpdate }) {
                   value={bookingRef}
                   onChange={(e) => setBookingRef(e.target.value)}
                   placeholder="e.g., PNR123456"
-                  className="w-full border border-slate-200 rounded-lg py-1.5 px-2 text-xs font-medium bg-white focus:outline-none focus:ring-2 focus:ring-violet-500/20"
+                  className="w-full border border-[#1F2937] rounded-lg py-1.5 px-2 text-xs font-medium bg-[#131A2A] focus:outline-none focus:ring-2 focus:ring-violet-500/20"
                 />
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-500 mb-1">Transport Cost (₹)</label>
+                <label className="block text-xs font-bold text-slate-400 mb-1">Transport Cost (?)</label>
                 <input
                   type="number"
                   min="0"
                   value={cost}
                   onChange={(e) => setCost(e.target.value)}
                   placeholder="0"
-                  className="w-full border border-slate-200 rounded-lg py-1.5 px-2 text-xs font-medium bg-white focus:outline-none focus:ring-2 focus:ring-violet-500/20"
+                  className="w-full border border-[#1F2937] rounded-lg py-1.5 px-2 text-xs font-medium bg-[#131A2A] focus:outline-none focus:ring-2 focus:ring-violet-500/20"
                 />
               </div>
             </div>
@@ -306,3 +306,5 @@ export default function TransportLeg({ fromStop, toStop, onUpdate }) {
     </div>
   );
 }
+
+

@@ -1,4 +1,4 @@
-﻿import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { MapPin, Loader2, X } from "lucide-react";
 
 /**
@@ -127,18 +127,18 @@ export default function PlacesAutocomplete({
           onFocus={() => suggestions.length > 0 && setOpen(true)}
           placeholder={placeholder}
           autoComplete="off"
-          className="w-full pl-9 pr-9 py-2.5 border-2 border-slate-200 bg-slate-50 rounded-xl text-sm font-medium focus:outline-none focus:border-violet-500 focus:ring-4 focus:ring-violet-500/10 focus:bg-white transition-all placeholder:text-slate-400"
+          className="w-full pl-9 pr-9 py-2.5 border-2 border-[#1F2937] bg-[#131A2A] rounded-xl text-sm font-medium focus:outline-none focus:border-violet-500 focus:ring-4 focus:ring-violet-500/10 focus:bg-[#131A2A] transition-all placeholder:text-slate-400"
         />
         {loading && <Loader2 className="absolute right-3 w-4 h-4 text-slate-400 animate-spin" />}
         {!loading && value && (
-          <button type="button" onClick={handleClear} className="absolute right-3 text-slate-400 hover:text-slate-600">
+          <button type="button" onClick={handleClear} className="absolute right-3 text-slate-400 hover:text-slate-300">
             <X className="w-4 h-4" />
           </button>
         )}
       </div>
 
       {open && suggestions.length > 0 && (
-        <ul className="absolute z-50 mt-1 w-full bg-white border border-slate-200 rounded-xl shadow-xl overflow-hidden" role="listbox">
+        <ul className="absolute z-50 mt-1 w-full bg-[#131A2A] border border-[#1F2937] rounded-xl shadow-xl overflow-hidden" role="listbox">
           {suggestions.map((s, i) => (
             <li
               key={`${s.name}-${s.country}-${i}`}
@@ -146,12 +146,12 @@ export default function PlacesAutocomplete({
               aria-selected={i === activeIndex}
               onMouseDown={() => handleSelect(s)}
               onMouseEnter={() => setActiveIndex(i)}
-              className={`flex items-start gap-3 px-4 py-3 cursor-pointer transition-colors text-sm ${i === activeIndex ? "bg-violet-50" : "hover:bg-slate-50"} ${i > 0 ? "border-t border-slate-100" : ""}`}
+              className={`flex items-start gap-3 px-4 py-3 cursor-pointer transition-colors text-sm ${i === activeIndex ? "bg-violet-50" : "hover:bg-[#131A2A]"} ${i > 0 ? "border-t border-slate-100" : ""}`}
             >
               <span className="text-lg leading-none mt-0.5 select-none">{countryFlag(s.countryCode)}</span>
               <div className="min-w-0">
-                <p className="font-semibold text-slate-800 truncate">{s.name}</p>
-                <p className="text-xs text-slate-500 truncate">{s.country}</p>
+                <p className="font-semibold text-white truncate">{s.name}</p>
+                <p className="text-xs text-slate-400 truncate">{s.country}</p>
               </div>
             </li>
           ))}
@@ -162,7 +162,9 @@ export default function PlacesAutocomplete({
 }
 
 function countryFlag(code) {
-  if (!code || code.length !== 2) return "🌍";
+  if (!code || code.length !== 2) return "??";
   const offset = 127397;
   return String.fromCodePoint(...[...code.toUpperCase()].map((c) => c.charCodeAt(0) + offset));
 }
+
+

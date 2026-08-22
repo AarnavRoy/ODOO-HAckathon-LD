@@ -34,7 +34,7 @@ export default function SharedView() {
 
   return (
     <div className="max-w-4xl mx-auto p-4 mt-8">
-      <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+      <div className="bg-[#131A2A] rounded-xl shadow-lg overflow-hidden">
         <img src={trip.coverPhotoUrl} alt={trip.name} className="w-full h-64 object-cover" />
         <div className="p-8">
           <div className="flex justify-between items-start mb-6">
@@ -63,7 +63,7 @@ export default function SharedView() {
                   {new Date(stop.startDate).toLocaleDateString()} to {new Date(stop.endDate).toLocaleDateString()}
                 </div>
                 <div className="mt-2 pl-4">
-                  <div className="font-medium text-sm text-gray-700 mb-1">Activities:</div>
+                  <div className="font-medium text-sm text-slate-300 mb-1">Activities:</div>
                   <ul className="list-disc pl-4 text-sm text-gray-600">
                     {stop.activities.map(act => (
                       <li key={act.id}>Activity ID: {act.activityId} at {act.startTime}</li>
@@ -78,3 +78,7 @@ export default function SharedView() {
     </div>
   );
 }
+
+
+
+
