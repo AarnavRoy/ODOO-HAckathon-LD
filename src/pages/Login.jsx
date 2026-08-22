@@ -174,7 +174,7 @@ export default function Login() {
                 required 
                 value={username} 
                 onChange={e => setUsername(e.target.value)} 
-                className="w-full border border-[#1F2937] bg-[#131A2A] rounded-full py-3 px-5 focus:outline-none focus:ring-1 focus:ring-black focus:border-black focus:bg-[#131A2A] transition-all font-medium sm:text-sm" 
+                className="w-full border border-[#1F2937] bg-[#131A2A] rounded-full py-3 px-5 focus:outline-none focus:ring-1 focus:ring-amber-400 focus:border-amber-400 focus:bg-[#131A2A] transition-all font-medium sm:text-sm" 
                 placeholder="Enter your username or email" 
               />
             </div>
@@ -196,7 +196,7 @@ export default function Login() {
                   required 
                   value={password} 
                   onChange={e => setPassword(e.target.value)} 
-                  className="w-full border border-[#1F2937] bg-[#131A2A] rounded-full py-3 pl-5 pr-11 focus:outline-none focus:ring-1 focus:ring-black focus:border-black focus:bg-[#131A2A] transition-all font-medium sm:text-sm" 
+                  className="w-full border border-[#1F2937] bg-[#131A2A] rounded-full py-3 pl-5 pr-11 focus:outline-none focus:ring-1 focus:ring-amber-400 focus:border-amber-400 focus:bg-[#131A2A] transition-all font-medium sm:text-sm" 
                   placeholder="••••••••"
                 />
                 <button
@@ -242,9 +242,9 @@ export default function Login() {
       >
         <motion.img 
           initial={{ scale: 1.1 }} animate={{ scale: 1 }} transition={{ duration: 10, ease: "easeOut" }}
-          src="https://images.unsplash.com/photo-1506012787146-f92b2d7d6d96?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80" alt="Beautiful destination" className="absolute inset-0 w-full h-full object-cover opacity-70 mix-blend-overlay" 
+          src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=1600&q=80" alt="Beautiful destination" className="absolute inset-0 w-full h-full object-cover opacity-90" 
         />
-        <div className="absolute inset-0 bg-amber-400/40 flex items-end p-16">
+        <div className="absolute inset-0 bg-[#0B0F19]/50 flex items-end p-16">
           <motion.blockquote initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }} className="text-white">
             <p className="text-3xl font-black tracking-tighter mb-4 leading-tight">"The world is a book and those who do not travel read only one page."</p>
             <footer className="text-[#EAB308] font-bold">— Saint Augustine</footer>
@@ -282,14 +282,14 @@ export default function Login() {
               </div>
 
               {forgotError && (
-                <div className="bg-red-50 text-red-600 p-3 mb-4 rounded-xl text-xs font-bold border border-red-100 flex items-center gap-2">
+                <div className="bg-red-400/10 text-red-400 p-3 mb-4 rounded-xl text-xs font-bold border border-red-400/20 flex items-center gap-2">
                   <XCircle className="w-4 h-4 flex-shrink-0" />
                   <span>{forgotError}</span>
                 </div>
               )}
 
               {forgotSuccess && (
-                <div className="bg-emerald-50 text-emerald-700 p-3 mb-4 rounded-xl text-xs font-bold border border-emerald-100 flex items-center gap-2">
+                <div className="bg-emerald-400/10 text-emerald-400 p-3 mb-4 rounded-xl text-xs font-bold border border-emerald-400/20 flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
                   <span>{forgotSuccess}</span>
                 </div>
@@ -309,7 +309,7 @@ export default function Login() {
                       required 
                       value={forgotEmail} 
                       onChange={e => setForgotEmail(e.target.value)} 
-                      className="w-full border border-[#1F2937] bg-[#131A2A] rounded-full py-2.5 px-4 focus:outline-none focus:ring-1 focus:ring-black focus:border-black focus:bg-[#131A2A] transition-all font-medium text-sm" 
+                      className="w-full border border-[#1F2937] bg-[#131A2A] rounded-full py-2.5 px-4 focus:outline-none focus:ring-1 focus:ring-amber-400 focus:border-amber-400 focus:bg-[#131A2A] transition-all font-medium text-sm" 
                       placeholder="e.g. name@gmail.com" 
                     />
                   </div>
@@ -321,7 +321,7 @@ export default function Login() {
                       required 
                       value={forgotName} 
                       onChange={e => setForgotName(e.target.value)} 
-                      className="w-full border border-[#1F2937] bg-[#131A2A] rounded-full py-2.5 px-4 focus:outline-none focus:ring-1 focus:ring-black focus:border-black focus:bg-[#131A2A] transition-all font-medium text-sm" 
+                      className="w-full border border-[#1F2937] bg-[#131A2A] rounded-full py-2.5 px-4 focus:outline-none focus:ring-1 focus:ring-amber-400 focus:border-amber-400 focus:bg-[#131A2A] transition-all font-medium text-sm" 
                       placeholder="e.g. Jane Doe" 
                     />
                     <span className="text-[11px] text-slate-400">Must match the exact name registered on your account</span>
@@ -361,7 +361,7 @@ export default function Login() {
                         required 
                         value={newPassword} 
                         onChange={e => setNewPassword(e.target.value)} 
-                        className="w-full border border-[#1F2937] bg-[#131A2A] rounded-full py-2.5 pl-4 pr-10 focus:outline-none focus:ring-1 focus:ring-black focus:border-black focus:bg-[#131A2A] transition-all font-medium text-sm" 
+                        className="w-full border border-[#1F2937] bg-[#131A2A] rounded-full py-2.5 pl-4 pr-10 focus:outline-none focus:ring-1 focus:ring-amber-400 focus:border-amber-400 focus:bg-[#131A2A] transition-all font-medium text-sm" 
                         placeholder="••••••••" 
                       />
                       <button
@@ -386,9 +386,9 @@ export default function Login() {
                         onChange={e => setConfirmNewPassword(e.target.value)} 
                         className={`w-full border rounded-full py-2.5 pl-4 pr-10 focus:outline-none focus:ring-1 transition-all font-medium text-sm ${
                           confirmNewPassword && newPassword !== confirmNewPassword 
-                            ? 'border-red-300 bg-red-50 focus:border-red-500 focus:ring-red-500' 
+                            ? 'border-red-400/50 bg-red-400/10 focus:border-red-400 focus:ring-red-400' 
                             : confirmNewPassword && newPassword === confirmNewPassword
-                            ? 'border-emerald-300 bg-emerald-50 focus:border-emerald-500 focus:ring-emerald-500'
+                            ? 'border-emerald-400/50 bg-emerald-400/10 focus:border-emerald-400 focus:ring-emerald-400'
                             : 'border-[#1F2937] bg-[#131A2A] focus:border-black focus:ring-black focus:bg-[#131A2A]'
                         }`}
                         placeholder="••••••••" 
@@ -433,6 +433,8 @@ export default function Login() {
     </div>
   );
 }
+
+
 
 
 

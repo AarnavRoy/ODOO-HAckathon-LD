@@ -201,7 +201,7 @@ export default function Signup() {
                     ? 'border-red-300 bg-red-50 focus:ring-red-500 focus:border-red-500' 
                     : isNameValid 
                     ? 'border-emerald-300 bg-emerald-50 focus:ring-emerald-500 focus:border-emerald-500'
-                    : 'border-[#1F2937] bg-[#131A2A] focus:ring-black focus:border-black focus:bg-[#131A2A]'
+                    : 'border-[#1F2937] bg-[#131A2A] focus:ring-amber-400 focus:border-amber-400 focus:bg-[#131A2A]'
                 }`}
                 placeholder="e.g. Alexander Walker" 
               />
@@ -242,7 +242,7 @@ export default function Signup() {
                     ? 'border-red-300 bg-red-50 focus:ring-red-500 focus:border-red-500'
                     : usernameStatus === 'available'
                     ? 'border-emerald-300 bg-emerald-50 focus:ring-emerald-500 focus:border-emerald-500'
-                    : 'border-[#1F2937] bg-[#131A2A] focus:ring-black focus:border-black focus:bg-[#131A2A]'
+                    : 'border-[#1F2937] bg-[#131A2A] focus:ring-amber-400 focus:border-amber-400 focus:bg-[#131A2A]'
                 }`}
                 placeholder="e.g. alexander99" 
               />
@@ -281,7 +281,7 @@ export default function Signup() {
                     ? 'border-red-300 bg-red-50 focus:ring-red-500 focus:border-red-500'
                     : emailStatus === 'valid'
                     ? 'border-emerald-300 bg-emerald-50 focus:ring-emerald-500 focus:border-emerald-500'
-                    : 'border-[#1F2937] bg-[#131A2A] focus:ring-black focus:border-black focus:bg-[#131A2A]'
+                    : 'border-[#1F2937] bg-[#131A2A] focus:ring-amber-400 focus:border-amber-400 focus:bg-[#131A2A]'
                 }`}
                 placeholder="yourname@gmail.com" 
               />
@@ -299,7 +299,7 @@ export default function Signup() {
                   required 
                   value={password} 
                   onChange={e => setPassword(e.target.value)} 
-                  className="w-full border border-[#1F2937] bg-[#131A2A] rounded-full py-2.5 pl-4 pr-10 focus:outline-none focus:ring-1 focus:ring-black focus:border-black focus:bg-[#131A2A] transition-all font-medium text-sm" 
+                  className="w-full border border-[#1F2937] bg-[#131A2A] rounded-full py-2.5 pl-4 pr-10 focus:outline-none focus:ring-1 focus:ring-amber-400 focus:border-amber-400 focus:bg-[#131A2A] transition-all font-medium text-sm" 
                   placeholder="••••••••"
                 />
                 <button
@@ -354,7 +354,7 @@ export default function Signup() {
                       ? 'border-red-300 bg-red-50 focus:ring-red-500 focus:border-red-500'
                       : confirmPassword.length > 0 && isConfirmPasswordMatch
                       ? 'border-emerald-300 bg-emerald-50 focus:ring-emerald-500 focus:border-emerald-500'
-                      : 'border-[#1F2937] bg-[#131A2A] focus:ring-black focus:border-black focus:bg-[#131A2A]'
+                      : 'border-[#1F2937] bg-[#131A2A] focus:ring-amber-400 focus:border-amber-400 focus:bg-[#131A2A]'
                   }`}
                   placeholder="••••••••"
                 />
@@ -396,9 +396,9 @@ export default function Signup() {
       >
         <motion.img 
           initial={{ scale: 1.1 }} animate={{ scale: 1 }} transition={{ duration: 10, ease: "easeOut" }}
-          src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80" alt="Adventure travel" className="absolute inset-0 w-full h-full object-cover opacity-70 mix-blend-overlay" 
+          src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=1600&q=80" alt="Adventure travel" className="absolute inset-0 w-full h-full object-cover opacity-90" 
         />
-        <div className="absolute inset-0 bg-amber-400/40 flex items-end p-16">
+        <div className="absolute inset-0 bg-[#0B0F19]/50 flex items-end p-16">
           <motion.blockquote initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }} className="text-white">
             <p className="text-3xl font-black tracking-tighter mb-4 leading-tight">"Not all those who wander are lost."</p>
             <footer className="text-[#EAB308] font-bold">— J.R.R. Tolkien</footer>
@@ -408,6 +408,8 @@ export default function Signup() {
     </div>
   );
 }
+
+
 
 
 
