@@ -39,6 +39,12 @@ export const updateMe = async ({ name, profilePhotoUrl, languagePreference }) =>
   return { user };
 };
 
+export const uploadProfilePhoto = async (file) => {
+  const formData = new FormData();
+  formData.append('file', file);
+  return await api.postFormData('/users/me/photo', formData);
+};
+
 export const deleteMe = async () => {
   const res = await api.delete('/users/me');
   localStorage.removeItem('token');
