@@ -7,7 +7,7 @@ export const getDashboard = async () => {
   return {
     recentTrips: mockTrips.slice(0, 3),
     recommendedCities: mockCities.slice(0, 4),
-    budgetHighlights: { totalSpent: 2500, saved: 500 }
+    budgetHighlights: { totalSpent: 200000, saved: 40000 }
   };
 };
 

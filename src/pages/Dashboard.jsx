@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import AppLayout from '../components/AppLayout';
 import { getDashboard } from '../api/trips';
 import { getMe } from '../api/auth';
-import { Plane, MapPin, DollarSign, ArrowRight } from 'lucide-react';
+import { Plane, MapPin, IndianRupee, ArrowRight } from 'lucide-react';
 
 export default function Dashboard() {
   const [data, setData] = useState(null);
@@ -50,10 +50,10 @@ export default function Dashboard() {
         </div>
         <div className="flex flex-col md:border-l border-slate-200/60 md:pl-8">
           <div className="flex items-center text-slate-500 mb-2">
-            <DollarSign className="w-4 h-4 mr-2" />
+            <IndianRupee className="w-4 h-4 mr-2" />
             <h3 className="text-sm font-medium uppercase tracking-wider">Budget Spent</h3>
           </div>
-          <p className="text-5xl font-bold tracking-tighter text-slate-900">${data?.budgetHighlights?.totalSpent || 0}</p>
+          <p className="text-5xl font-bold tracking-tighter text-slate-900">₹{data?.budgetHighlights?.totalSpent?.toLocaleString('en-IN') || 0}</p>
         </div>
       </div>
 

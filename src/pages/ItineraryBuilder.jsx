@@ -129,7 +129,7 @@ export default function ItineraryBuilder() {
                         {stop.activities?.map(act => (
                           <li key={act.id} className="text-sm bg-white p-2 rounded border shadow-sm flex justify-between">
                             <span>{act.dayDate} at {act.startTime}</span>
-                            <span className="text-gray-500">${act.cost}</span>
+                            <span className="text-gray-500">₹{act.cost}</span>
                           </li>
                         ))}
                       </ul>
