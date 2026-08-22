@@ -1,22 +1,23 @@
-# Use an image with both Java and Node.js
-FROM openjdk:17-node
+# Use official Node image
+FROM node:18-slim
 
 WORKDIR /app
 
-# Copy your code
-COPY . .
+# Install Java (OpenJDK 17) and Maven
+RUN apt-get update && apt-get install -y openjdk-17-jdk maven && rm -rf /var/lib/apt/lists/*
 
-# Install dependencies and build React (adjust paths if your folders are named differently)
+# Set Java Home
+ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+
+# Copy and build frontend
+COPY . .
 RUN cd frontend && npm install && npm run build
 
-# Build Spring Boot JAR (ensure you have Maven/Gradle wrapper)
-RUN chmod +x mvnw && ./mvnw clean package -DskipTests
+# Build backend
+RUN cd backend && mvn clean package -DskipTests
 
-# Make your script executable
+# Make script executable
 RUN chmod +x start.sh
 
-# Expose the port your app runs on (usually 8080 or 3000)
 EXPOSE 8080
-
-# Run your script
 CMD ["./start.sh"]   
