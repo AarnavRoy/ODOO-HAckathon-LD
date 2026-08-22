@@ -18,7 +18,14 @@ export default function Profile() {
 
   useEffect(() => {
     getMe().then(data => {
-      setUser(data.user);
+      setUser(data.user || data);
+      setLoading(false);
+    }).catch(err => {
+      console.error(err);
+      if (err.status === 401 || err.status === 403) {
+        localStorage.removeItem('token');
+        window.location.href = '/login';
+      }
       setLoading(false);
     });
   }, []);
