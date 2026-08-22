@@ -37,7 +37,11 @@ public class TripController {
     private CityRepository cityRepository;
 
     public record TripRequest(String name, LocalDate startDate, LocalDate endDate, String description, String coverPhotoUrl, Double budgetLimit) {}
-    public record StopRequest(Long cityId, LocalDate startDate, LocalDate endDate, Double transportCost, Double accommodationCost) {}
+    public record StopRequest(Long cityId, LocalDate startDate, LocalDate endDate, Double transportCost, Double accommodationCost,
+                              String transportMode, String departureTerminal, String arrivalTerminal,
+                              String departureTime, String arrivalTime, String bookingReference, Double distanceKm,
+                              String accommodationName, String accommodationCheckin, String accommodationCheckout,
+                              String accommodationBookingRef, String accommodationNotes, String notes) {}
     public record ReorderRequest(List<Long> stopIds) {}
     public record MessageResponse(String message) {}
 
@@ -141,12 +145,54 @@ public class TripController {
         stop.setEndDate(request.endDate());
         stop.setTransportCost(request.transportCost());
         stop.setAccommodationCost(request.accommodationCost());
+        if (request.transportMode() != null) stop.setTransportMode(request.transportMode());
+        if (request.departureTerminal() != null) stop.setDepartureTerminal(request.departureTerminal());
+        if (request.arrivalTerminal() != null) stop.setArrivalTerminal(request.arrivalTerminal());
+        if (request.departureTime() != null) stop.setDepartureTime(request.departureTime());
+        if (request.arrivalTime() != null) stop.setArrivalTime(request.arrivalTime());
+        if (request.bookingReference() != null) stop.setBookingReference(request.bookingReference());
+        if (request.distanceKm() != null) stop.setDistanceKm(request.distanceKm());
+        if (request.accommodationName() != null) stop.setAccommodationName(request.accommodationName());
+        if (request.accommodationCheckin() != null) stop.setAccommodationCheckin(request.accommodationCheckin());
+        if (request.accommodationCheckout() != null) stop.setAccommodationCheckout(request.accommodationCheckout());
+        if (request.accommodationBookingRef() != null) stop.setAccommodationBookingRef(request.accommodationBookingRef());
+        if (request.accommodationNotes() != null) stop.setAccommodationNotes(request.accommodationNotes());
+        if (request.notes() != null) stop.setNotes(request.notes());
         
         int orderIndex = trip.getStops() == null ? 0 : trip.getStops().size();
         stop.setOrderIndex(orderIndex);
 
         Stop savedStop = stopRepository.save(stop);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedStop);
+    }
+
+    @PatchMapping("/stops/{stopId}")
+    public ResponseEntity<?> updateStop(@PathVariable Long stopId, @RequestBody StopRequest request) {
+        User user = getCurrentUser();
+        Optional<Stop> stopOpt = stopRepository.findById(stopId);
+        if (stopOpt.isEmpty() || !stopOpt.get().getTrip().getUser().getId().equals(user.getId())) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse("Stop not found"));
+        }
+        Stop stop = stopOpt.get();
+        if (request.startDate() != null) stop.setStartDate(request.startDate());
+        if (request.endDate() != null) stop.setEndDate(request.endDate());
+        if (request.transportCost() != null) stop.setTransportCost(request.transportCost());
+        if (request.accommodationCost() != null) stop.setAccommodationCost(request.accommodationCost());
+        if (request.transportMode() != null) stop.setTransportMode(request.transportMode());
+        if (request.departureTerminal() != null) stop.setDepartureTerminal(request.departureTerminal());
+        if (request.arrivalTerminal() != null) stop.setArrivalTerminal(request.arrivalTerminal());
+        if (request.departureTime() != null) stop.setDepartureTime(request.departureTime());
+        if (request.arrivalTime() != null) stop.setArrivalTime(request.arrivalTime());
+        if (request.bookingReference() != null) stop.setBookingReference(request.bookingReference());
+        if (request.distanceKm() != null) stop.setDistanceKm(request.distanceKm());
+        if (request.accommodationName() != null) stop.setAccommodationName(request.accommodationName());
+        if (request.accommodationCheckin() != null) stop.setAccommodationCheckin(request.accommodationCheckin());
+        if (request.accommodationCheckout() != null) stop.setAccommodationCheckout(request.accommodationCheckout());
+        if (request.accommodationBookingRef() != null) stop.setAccommodationBookingRef(request.accommodationBookingRef());
+        if (request.accommodationNotes() != null) stop.setAccommodationNotes(request.accommodationNotes());
+        if (request.notes() != null) stop.setNotes(request.notes());
+        stopRepository.save(stop);
+        return ResponseEntity.ok(stop);
     }
 
     @PutMapping("/{tripId}/stops/reorder")

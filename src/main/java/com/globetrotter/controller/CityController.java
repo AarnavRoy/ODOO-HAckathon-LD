@@ -16,6 +16,8 @@ public class CityController {
     @Autowired
     private CityActivityService cityActivityService;
 
+    public record UpsertCityRequest(String name, String country, Double latitude, Double longitude) {}
+
     @GetMapping
     public ResponseEntity<List<City>> getCities(
             @RequestParam(required = false) String search,
@@ -23,6 +25,13 @@ public class CityController {
             @RequestParam(required = false) String region) {
         List<City> cities = cityActivityService.searchCities(search, country, region);
         return ResponseEntity.ok(cities);
+    }
+
+    @PostMapping("/upsert")
+    public ResponseEntity<City> upsertCity(@RequestBody UpsertCityRequest request) {
+        City city = cityActivityService.upsertCity(
+                request.name(), request.country(), request.latitude(), request.longitude());
+        return ResponseEntity.ok(city);
     }
 
     @GetMapping("/{cityId}/activities")
@@ -35,3 +44,4 @@ public class CityController {
         return ResponseEntity.ok(activities);
     }
 }
+

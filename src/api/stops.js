@@ -1,4 +1,4 @@
-import api from './client';
+import api, { request } from './client';
 
 export const getTripStops = async (tripId) => {
   return await api.get(`/trips/${tripId}/stops`);
@@ -18,6 +18,17 @@ export const updateStop = async (stopId, updates) => {
   return await api.put(`/stops/${stopId}`, updates);
 };
 
+/**
+ * Partial update on a stop: transport leg, accommodation, notes.
+ * Uses PATCH /api/trips/stops/{stopId}
+ */
+export const patchStop = async (stopId, updates) => {
+  return await request(`/trips/stops/${stopId}`, {
+    method: 'PATCH',
+    body: JSON.stringify(updates),
+  });
+};
+
 export const deleteStop = async (stopId) => {
   return await api.delete(`/stops/${stopId}`);
 };
@@ -25,3 +36,4 @@ export const deleteStop = async (stopId) => {
 export const reorderStops = async (tripId, { stopIds }) => {
   return await api.put(`/trips/${tripId}/stops/reorder`, { stopIds });
 };
+

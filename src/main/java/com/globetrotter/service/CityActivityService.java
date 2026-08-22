@@ -33,6 +33,29 @@ public class CityActivityService {
         return cityRepository.searchCities(searchParam, countryParam, regionParam);
     }
 
+    @Transactional
+    public City upsertCity(String name, String country, Double latitude, Double longitude) {
+        return cityRepository.findByNameIgnoreCaseAndCountryIgnoreCase(name, country)
+                .map(existing -> {
+                    // Update coords if they were missing
+                    if (existing.getLatitude() == null && latitude != null) {
+                        existing.setLatitude(latitude);
+                        existing.setLongitude(longitude);
+                        cityRepository.save(existing);
+                    }
+                    return existing;
+                })
+                .orElseGet(() -> {
+                    City city = new City();
+                    city.setName(name);
+                    city.setCountry(country);
+                    city.setLatitude(latitude);
+                    city.setLongitude(longitude);
+                    return cityRepository.save(city);
+                });
+    }
+
+
     public List<Activity> getCityActivities(Long cityId, String categoryStr, Double maxCost, Integer maxDuration) {
         Activity.ActivityCategory category = null;
         if (categoryStr != null && !categoryStr.trim().isEmpty()) {
