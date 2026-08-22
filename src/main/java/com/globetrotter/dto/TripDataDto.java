@@ -135,6 +135,74 @@ public class TripDataDto {
             EngagementDto engagement
     ) {}
 
+    public record AdminOverviewResponse(
+            Long totalUsers,
+            Long totalTrips,
+            Long totalCities,
+            Long totalActivities,
+            Double totalBudgetPlanned,
+            Double totalBudgetSpent,
+            EngagementDto engagement,
+            List<UserCountryDistributionDto> userCountries
+    ) {}
+
+    public record AdminTrendPointDto(
+            String date,
+            Long newUsers,
+            Long newTrips,
+            Double budgetSpent
+    ) {}
+
+    public record CategoryDistributionDto(
+            String category,
+            Long count,
+            Double percentage
+    ) {}
+
+    public record UserCountryDistributionDto(
+            String country,
+            Long userCount
+    ) {}
+
+    public record AdminUserDto(
+            Long id,
+            String name,
+            String username,
+            String email,
+            String country,
+            String state,
+            String city,
+            String profilePhotoUrl,
+            String role,
+            boolean isBanned,
+            Long tripsCount,
+            LocalDateTime createdAt,
+            LocalDateTime lastLoginAt
+    ) {}
+
+    public record AdminTripDto(
+            Long id,
+            String name,
+            Long userId,
+            String userName,
+            String userEmail,
+            LocalDate startDate,
+            LocalDate endDate,
+            Double budgetLimit,
+            Double totalSpent,
+            Integer stopsCount,
+            Integer activitiesCount,
+            LocalDateTime createdAt
+    ) {}
+
+    public record UpdateUserRoleRequest(
+            String role
+    ) {}
+
+    public record UpdateUserStatusRequest(
+            boolean isBanned
+    ) {}
+
     public record TopCityDto(
             Long id,
             String name,

@@ -42,11 +42,22 @@ export default function Login() {
 
     setLoading(true);
     try {
-      const { token } = await login({ username: username.trim(), password });
+      const identifier = username.trim();
+      const payload = identifier.includes('@')
+        ? { email: identifier, username: identifier, password }
+        : { username: identifier, password };
+
+      const { token } = await login(payload);
       localStorage.setItem('token', token);
       navigate('/');
     } catch (err) {
-      setError(err.message || 'Invalid username or password');
+      if (err.message && (err.message.includes('Failed to fetch') || err.message.includes('NetworkError'))) {
+        setError('Cannot connect to backend server. Please run ./start.sh or mvn spring-boot:run in terminal.');
+      } else if (err.status === 401) {
+        setError('Invalid username or password. Please try again.');
+      } else {
+        setError(err.message || 'Authentication failed. Please check your credentials.');
+      }
     } finally {
       setLoading(false);
     }
@@ -158,14 +169,14 @@ export default function Login() {
           
           <form className="space-y-5" onSubmit={handleLogin}>
             <div className="flex flex-col gap-2">
-              <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">Username</label>
+              <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">Username or Email</label>
               <input 
                 type="text" 
                 required 
                 value={username} 
                 onChange={e => setUsername(e.target.value)} 
                 className="w-full border-2 border-slate-200 bg-slate-50 rounded-xl py-3 px-4 focus:outline-none focus:ring-4 focus:ring-violet-500/20 focus:border-violet-500 focus:bg-white transition-all font-medium sm:text-sm" 
-                placeholder="Enter your username" 
+                placeholder="Enter your username or email" 
               />
             </div>
 

@@ -60,7 +60,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/api/public/trips/*/copy").authenticated()
                 .requestMatchers("/api/public/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/cities", "/api/cities/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/admin/**").permitAll()
+                .requestMatchers("/api/admin/**").permitAll()
                 .anyRequest().authenticated()
             );
 

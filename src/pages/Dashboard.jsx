@@ -121,12 +121,20 @@ export default function Dashboard() {
           </h2>
           <p className="text-slate-500 mt-1 text-base font-medium">Ready to design your next journey across the world?</p>
         </div>
-        <Link 
-          to="/trips/new" 
-          className="inline-flex items-center gap-2 bg-black text-white hover:bg-yellow-400 hover:text-black font-bold px-8 py-3.5 rounded-full shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all text-sm self-start md:self-auto"
-        >
-          <Sparkles className="w-4 h-4" /> Plan a New Trip
-        </Link>
+        <div className="flex items-center gap-3 self-start md:self-auto flex-wrap">
+          <Link 
+            to="/admin" 
+            className="inline-flex items-center gap-2 bg-white/80 border border-slate-200 hover:bg-slate-100 text-slate-800 font-bold px-6 py-3.5 rounded-full shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all text-sm"
+          >
+            <ShieldCheck className="w-4 h-4 text-amber-500" /> Admin Portal
+          </Link>
+          <Link 
+            to="/trips/new" 
+            className="inline-flex items-center gap-2 bg-black text-white hover:bg-yellow-400 hover:text-black font-bold px-8 py-3.5 rounded-full shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all text-sm"
+          >
+            <Sparkles className="w-4 h-4" /> Plan a New Trip
+          </Link>
+        </div>
       </motion.div>
 
       {/* Interactive Tabs Top Grid */}

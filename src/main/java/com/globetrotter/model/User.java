@@ -31,6 +31,11 @@ public class User {
     private String country;
     private String state;
     private String city;
+
+    // Role and Moderation
+    private String role = "ROLE_USER";
+    private boolean isBanned = false;
+    private LocalDateTime lastLoginAt;
     
     @Column(updatable = false)
     private LocalDateTime createdAt;
@@ -41,7 +46,12 @@ public class User {
 
     @PrePersist
     protected void onCreate() {
-        createdAt = LocalDateTime.now();
+        if (createdAt == null) {
+            createdAt = LocalDateTime.now();
+        }
+        if (role == null) {
+            role = "ROLE_USER";
+        }
     }
 
     // Getters and Setters
@@ -65,6 +75,12 @@ public class User {
     public void setState(String state) { this.state = state; }
     public String getCity() { return city; }
     public void setCity(String city) { this.city = city; }
+    public String getRole() { return role; }
+    public void setRole(String role) { this.role = role; }
+    public boolean isBanned() { return isBanned; }
+    public void setBanned(boolean banned) { isBanned = banned; }
+    public LocalDateTime getLastLoginAt() { return lastLoginAt; }
+    public void setLastLoginAt(LocalDateTime lastLoginAt) { this.lastLoginAt = lastLoginAt; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
     public List<Trip> getTrips() { return trips; }

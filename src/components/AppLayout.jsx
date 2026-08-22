@@ -1,5 +1,5 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { LogOut, Home, Plane, User, Globe } from 'lucide-react';
+import { LogOut, Home, Plane, User, Globe, ShieldCheck } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function AppLayout({ children, title }) {
@@ -14,6 +14,7 @@ export default function AppLayout({ children, title }) {
   const navLinks = [
     { to: '/', label: 'Dashboard', icon: Home, match: (p) => p === '/' },
     { to: '/trips', label: 'My Trips', icon: Plane, match: (p) => p.startsWith('/trips') },
+    { to: '/admin', label: 'Admin', icon: ShieldCheck, match: (p) => p.startsWith('/admin') },
     { to: '/profile', label: 'Profile', icon: User, match: (p) => p === '/profile' },
   ];
 
@@ -22,7 +23,7 @@ export default function AppLayout({ children, title }) {
       {/* Navbar */}
       <header className="sticky top-4 z-50 px-4 sm:px-6 lg:px-8 mt-4">
         <div className="max-w-7xl mx-auto">
-          <div className="flex justify-between items-center bg-transparent">
+          <div className="flex flex-wrap justify-between items-center bg-white/70 backdrop-blur-md border border-slate-200/60 p-3 rounded-3xl shadow-sm gap-3">
             {/* Logo */}
             <Link to="/" className="flex-shrink-0 flex items-center text-2xl font-extrabold tracking-tight text-slate-900 hover:scale-105 transition-transform">
               <Globe className="w-7 h-7 mr-2 text-black" />
@@ -30,19 +31,30 @@ export default function AppLayout({ children, title }) {
             </Link>
             
             {/* Pill Navigation */}
-            <nav className="hidden md:flex space-x-1 items-center bg-black rounded-full px-2 py-2 shadow-xl shadow-black/10">
+            <nav className="flex space-x-1 items-center bg-black rounded-full px-2 py-1.5 shadow-md shadow-black/10 overflow-x-auto max-w-full">
               {navLinks.map(link => {
+                const Icon = link.icon;
                 const active = link.match(location.pathname);
                 return (
-                  <Link key={link.to} to={link.to} className={`px-5 py-2 rounded-full text-sm font-semibold flex items-center transition-all duration-200 ${active ? 'bg-yellow-400 text-black' : 'text-slate-300 hover:text-white hover:bg-white/10'}`}>
-                    {link.label}
+                  <Link 
+                    key={link.to} 
+                    to={link.to} 
+                    className={`px-4 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-semibold flex items-center gap-1.5 transition-all duration-200 whitespace-nowrap ${
+                      active ? 'bg-yellow-400 text-black shadow-sm font-bold' : 'text-slate-300 hover:text-white hover:bg-white/10'
+                    }`}
+                  >
+                    <Icon className="w-3.5 h-3.5" />
+                    <span>{link.label}</span>
                   </Link>
                 );
               })}
             </nav>
 
             {/* Logout */}
-            <button onClick={handleLogout} className="text-slate-600 hover:text-red-500 flex items-center text-sm font-semibold transition-colors active:scale-95 hover:bg-black/5 px-4 py-2 rounded-full">
+            <button 
+              onClick={handleLogout} 
+              className="text-slate-600 hover:text-red-500 flex items-center text-xs sm:text-sm font-semibold transition-colors active:scale-95 hover:bg-black/5 px-4 py-2 rounded-full cursor-pointer"
+            >
               <LogOut className="w-4 h-4 mr-1.5" /> Logout
             </button>
           </div>
@@ -57,7 +69,7 @@ export default function AppLayout({ children, title }) {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -16 }}
           transition={{ duration: 0.25, ease: 'easeOut' }}
-          className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-12"
+          className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-10"
         >
           {title && (
             <motion.h1
